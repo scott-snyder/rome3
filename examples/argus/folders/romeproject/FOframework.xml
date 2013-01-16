@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ROMEFrameworkDefinition [
+  <!ENTITY folderEntries SYSTEM "../folderEntries.xml">
+]>
+<ROMEFrameworkDefinition>
+  <Experiment>
+    <ExperimentName>Demo rome project</ExperimentName>
+    <ExperimentShortCut>FO</ExperimentShortCut>
+    <ProgramName>framework</ProgramName>
+    <FrameworkDescription>Demo rome project.</FrameworkDescription>
+  </Experiment>
+  <Author>
+    <AuthorName>Ryu Sawada</AuthorName>
+    <AuthorInstitute>ICEPP, University of Tokyo</AuthorInstitute>
+    <AuthorCollaboration>Mu-E-Gamma (MEG)</AuthorCollaboration>
+    <AuthorEmail>http://www.icepp.s.u-tokyo.ac.jp/%7Esawada</AuthorEmail>
+  </Author>
+  &folderEntries;
+  <Tasks>
+    <Task>
+      <TaskName>FillHisto</TaskName>
+      <Histogram>
+        <HistName>MyHisto</HistName>
+        <HistFolderName>myhistos</HistFolderName>
+        <HistType>TH1F</HistType>
+        <HistArraySize>1</HistArraySize>
+        <HistXLabel>X</HistXLabel>
+        <HistXNbins>256</HistXNbins>
+        <HistXmin>0</HistXmin>
+        <HistXmax>1024</HistXmax>
+      </Histogram>
+    </Task>
+  </Tasks>
+  <MidasBanks>
+    <EventDefinition>
+      <EventName>Trigger</EventName>    
+      <EventID>1</EventID>
+      <EventTriggerMask>-1</EventTriggerMask>
+      <EventSamplingRate>1</EventSamplingRate>
+      <Banks>
+	<Bank>
+	  <BankName>ADC0</BankName>
+	  <BankType>UShort_t</BankType>
+	</Bank>
+	<Bank>
+	  <BankName>TDC0</BankName>
+	  <BankType>UShort_t</BankType>
+	</Bank>
+      </Banks>
+    </EventDefinition>
+    <EventDefinition>
+      <EventName>Scaler</EventName>
+      <EventID>2</EventID>
+      <EventTriggerMask>-1</EventTriggerMask>
+      <EventSamplingRate>1</EventSamplingRate>
+      <Banks>
+	<Bank>
+	  <BankName>SCLR</BankName>
+	  <BankType>UInt_t</BankType>
+	</Bank>
+      </Banks>
+    </EventDefinition>
+  </MidasBanks>
+</ROMEFrameworkDefinition>

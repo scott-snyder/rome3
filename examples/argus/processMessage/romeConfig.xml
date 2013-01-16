@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: romeConfig.xml 2460 2008-07-03 20:06:53Z sawada $ -->
+
+<!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
+
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+  <ProgramConfiguration>
+    <ProgramMode>1</ProgramMode>
+  </ProgramConfiguration>
+
+  <MainConfiguration>
+    <Modes>
+      <AnalyzingMode>offline</AnalyzingMode>
+      <DAQSystem>none</DAQSystem>
+    </Modes>
+
+    <Offline>
+      <RunNumbers></RunNumbers>
+      <EventNumbers></EventNumbers>
+      <InputFileNames></InputFileNames>
+    </Offline>
+
+    <Online>
+      <Host></Host>
+      <Experiment></Experiment>
+      <AnalyzerName>PMmonitor</AnalyzerName>
+      <MemoryBuffer>SYSTEM</MemoryBuffer>
+    </Online>
+
+    <Paths>
+      <InputFilePath>./</InputFilePath>
+      <OutputFilePath>./</OutputFilePath>
+      <OutputFileOption>RECREATE</OutputFileOption>
+      <MakeOutputDirectory>false</MakeOutputDirectory>
+    </Paths>
+
+    <Common>
+      <Settings>
+        <VerboseLevel>normal</VerboseLevel>
+        <ReportMaxCount>20</ReportMaxCount>
+        <ConfigCommentLevel>1</ConfigCommentLevel>
+        <QuitMode>false</QuitMode>
+        <ShowSplashScreen>true</ShowSplashScreen>
+        <GraphicalConfigEdit>false</GraphicalConfigEdit>
+        <PreserveConfig>false</PreserveConfig>
+      </Settings>
+
+      <FloatingPointExceptionTrap>
+        <Invalid>false</Invalid>
+        <DivByZero>false</DivByZero>
+        <Overflow>false</Overflow>
+        <Underflow>false</Underflow>
+        <Inexact>false</Inexact>
+      </FloatingPointExceptionTrap>
+
+      <SocketServer>
+        <Active>false</Active>
+        <PortNumber>9090</PortNumber>
+      </SocketServer>
+
+      <DataBases/>
+    </Common>
+
+    <Analyzer>
+      <HistogramRead>
+        <Read>false</Read>
+        <RunNumber>0</RunNumber>
+        <Path></Path>
+        <FileName></FileName>
+      </HistogramRead>
+
+      <HistogramWrite>
+        <Write>true</Write>
+        <Path></Path>
+        <FileName></FileName>
+        <AccumulateAll>false</AccumulateAll>
+        <DeactivateAll>false</DeactivateAll>
+        <AutoSavePeriod>0</AutoSavePeriod>
+        <SnapShotFileName></SnapShotFileName>
+        <SnapShotEvents>10000</SnapShotEvents>
+      </HistogramWrite>
+
+      <Macros>
+        <BeginOfRun></BeginOfRun>
+        <BeginOfEvent></BeginOfEvent>
+        <EndOfEvent></EndOfEvent>
+        <EndOfRun></EndOfRun>
+      </Macros>
+    </Analyzer>
+
+    <Monitor>
+      <Display>
+        <WindowScale>1.0</WindowScale>
+        <StatusBar>true</StatusBar>
+        <UpdateFrequency>1000</UpdateFrequency>
+        <ListTreeView>false</ListTreeView>
+        <AnalyzerController>
+          <Active>false</Active>
+          <NetFolderName></NetFolderName>
+        </AnalyzerController>
+      </Display>
+
+      <SocketClient>
+        <Host>localhost</Host>
+        <Port>9090</Port>
+      </SocketClient>
+
+      <Tabs>
+        <Tab>
+          <TabName>NoThread</TabName>
+          <Active>true</Active>
+        </Tab>
+
+        <Tab>
+          <TabName>Mixed</TabName>
+          <Active>true</Active>
+        </Tab>
+
+        <Tab>
+          <TabName>Thread</TabName>
+          <Active>true</Active>
+        </Tab>
+      </Tabs>
+    </Monitor>
+  </MainConfiguration>
+</Configuration>

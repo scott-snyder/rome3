@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited by Ryu Sawada -->
+<ROMEFrameworkDefinition>
+	<Experiment>
+		<ExperimentName>Histograms</ExperimentName>
+		<ExperimentShortCut>HG</ExperimentShortCut>
+		<ProgramName>monitor</ProgramName>
+		<FrameworkDescription>Example to show histograms.</FrameworkDescription>
+	</Experiment>
+	<Author>
+		<AuthorName>Ryu Sawada</AuthorName>
+		<AuthorInstitute>ICEPP, University of Tokyo</AuthorInstitute>
+		<AuthorCollaboration>Mu-E-Gamma (MEG)</AuthorCollaboration>
+		<AuthorEmail>http://www.icepp.s.u-tokyo.ac.jp/%7Esawada</AuthorEmail>
+	</Author>
+	<Tabs>
+		<Tab>
+			<TabName>Tab</TabName>
+			<TabTitle>Tab</TabTitle>
+			<TabVersion>1</TabVersion>
+		</Tab>
+	</Tabs>
+	<NetFolders>
+		<NetFolder>
+			<NetFolderName>mynetfolder</NetFolderName>
+		</NetFolder>
+	</NetFolders>
+</ROMEFrameworkDefinition>
