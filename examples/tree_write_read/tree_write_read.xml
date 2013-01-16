@@ -1,0 +1,49 @@
+<ROMEFrameworkDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="c:/rome/rome.xsd">
+	<Experiment>
+		<ExperimentShortCut>TWR</ExperimentShortCut>
+		<ProgramName>Sample</ProgramName>
+		<ProgramDefinitionVersion>$Rev: 1810 $</ProgramDefinitionVersion>
+	</Experiment>
+	<Folders>
+		<Folder>
+			<FolderName>Data1</FolderName>
+			<Field>
+				<FieldName>Value1</FieldName>
+				<FieldType>Int_t</FieldType>
+				<FieldComment>Value of Folder Data</FieldComment>
+			</Field>
+		</Folder>
+		<Folder>
+			<FolderName>Data2</FolderName>
+			<Field>
+				<FieldName>Value2</FieldName>
+				<FieldType>Int_t</FieldType>
+				<FieldComment>Value of Folder Data</FieldComment>
+			</Field>
+		</Folder>
+	</Folders>
+	<Tasks>
+		<Task>
+			<TaskName>FillTree</TaskName>
+		</Task>
+		<Task>
+			<TaskName>PrintValue</TaskName>
+		</Task>
+	</Tasks>
+	<Trees>
+		<Tree>
+			<TreeName>DataTree1</TreeName>
+			<Branch>
+				<BranchName>DataBranch</BranchName>
+				<RelatedFolder>Data1</RelatedFolder>
+			</Branch>
+		</Tree>
+		<Tree>
+			<TreeName>DataTree2</TreeName>
+			<Branch>
+				<BranchName>DataBranch</BranchName>
+				<RelatedFolder>Data2</RelatedFolder>
+			</Branch>
+		</Tree>
+	</Trees>
+</ROMEFrameworkDefinition>

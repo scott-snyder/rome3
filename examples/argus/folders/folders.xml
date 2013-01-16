@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ROMEFrameworkDefinition [
+	<!ENTITY folderEntries SYSTEM "folderEntries.xml">
+]>
+<!-- edited by Ryu Sawada -->
+<ROMEFrameworkDefinition>
+	<Experiment>
+		<ExperimentName>Folders</ExperimentName>
+		<ExperimentShortCut>FO</ExperimentShortCut>
+		<ProgramName>monitor</ProgramName>
+		<FrameworkDescription>Several kind of folders.</FrameworkDescription>
+	</Experiment>
+	<Author>
+		<AuthorName>Ryu Sawada</AuthorName>
+		<AuthorInstitute>ICEPP, University of Tokyo</AuthorInstitute>
+		<AuthorCollaboration>Mu-E-Gamma (MEG)</AuthorCollaboration>
+		<AuthorEmail>http://www.icepp.s.u-tokyo.ac.jp/%7Esawada</AuthorEmail>
+	</Author>
+	&folderEntries;
+	<Tabs>
+		<Tab>
+			<TabName>Tab</TabName>
+			<TabTitle>1</TabTitle>
+			<Author>Ryu Sawada</Author>
+			<TabVersion>1</TabVersion>
+		</Tab>
+	</Tabs>
+	<NetFolders>
+		<NetFolder>
+			<NetFolderName>mynetfolder</NetFolderName>
+			<NetFolderTitle>rome folder</NetFolderTitle>
+			<NetFolderRoot>FO</NetFolderRoot>
+			<NetFolderHost>localhost</NetFolderHost>
+			<NetFolderPort>9090</NetFolderPort>
+		</NetFolder>
+	</NetFolders>
+</ROMEFrameworkDefinition>
