@@ -64,7 +64,7 @@ endif
 
 INCLUDE := -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
 LIBRARY := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread
-TARGET :=  obj include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
+TARGET :=  obj bin include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
 
 # Required ROOT version
 ROOT_MAJOR_MIN = 4
@@ -327,6 +327,12 @@ obj:
 	@if [ ! -d  obj ] ; then \
 		echo "Making directory obj" ; \
 		mkdir obj; \
+	fi;
+
+bin:
+	@if [ ! -d  bin ] ; then \
+		echo "Making directory bin" ; \
+		mkdir bin; \
 	fi;
 
 dict: $(DICTIONARIES)
