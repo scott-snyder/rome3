@@ -55,12 +55,11 @@ int main()
    ROMEString desc;
 
    if (!gSystem->AccessPathName(".git", kFileExists)) {
-      desc.ReadCommandOutput("git describe --dirty", false, true);
+      desc.ReadCommandOutput("git describe --dirty --tags", false, true);
    }
    if (desc.Length()) {
    } else {
-      cerr<<"Error: Git description in include/ROMEVersion.h will not be correct."<<endl;
-      revisionNumber = 0;
+      desc = "";
    }
 
    ROMEString hfile = "$(ROMESYS)/include/";
