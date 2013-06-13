@@ -29,7 +29,7 @@ ROMEXML* configXSD = 0;
 //______________________________________________________________________________
 ROMEBuilder::ROMEBuilder()
 :romeVersion("")
-,romeRevisionCode(0)
+,romeDescription("")
 ,romeStable(kTRUE)
 ,makeFlag("")
 ,histoParameters(0)

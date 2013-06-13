@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
 
    romeb->romeVersion = "Version ";
    romeb->romeVersion += ROME_RELEASE;
-   romeb->romeRevisionCode = ROME_REVISION_CODE;
+   romeb->romeDescription = ROME_DESCRIPTION;
    romeb->romeStable = (ROME_STABLE == 1);
 
    ROMEString xmlFile = "";

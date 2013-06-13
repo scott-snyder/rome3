@@ -72,7 +72,7 @@ class ROMEBuilder
 {
 public:
    ROMEString    romeVersion;
-   int           romeRevisionCode;
+   ROMEString    romeDescription;
    bool          romeStable;
    ROMEString    makeFlag;
 
