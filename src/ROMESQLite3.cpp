@@ -54,8 +54,10 @@ Bool_t ROMESQLite3::Connect(const char *server, const char * /*user */ , const c
 //______________________________________________________________________________
 Bool_t ROMESQLite3::DisConnect()
 {
-   if (db)
+   if (db) {
       sqlite3_close(db);
+      db = 0;
+   }
    return true;
 }
 
