@@ -44,7 +44,8 @@ const char* const monthName[] = {
 };
 */
 
-Double_t GetROMEVersion(Int_t a, Int_t b, Int_t c=0) { return (a << 8) + b + 0.01 * c; }
+Int_t GetROMEVersion     (Int_t a, Int_t b)            { return (a <<  8) + b; }
+Int_t GetROMEVersionPatch(Int_t a, Int_t b, Int_t c=0) { return (a << 16) + (b << 8) +c; }
 
 int main()
 {
@@ -103,7 +104,7 @@ int main()
    buffer.AppendFormatted("/*\n");
    buffer.AppendFormatted(" * These macros can be used in the following way:\n");
    buffer.AppendFormatted(" *\n");
-   buffer.AppendFormatted(" *    #if ROME_VERSION_CODE >= ROME_VERSION(2,5,0)\n");
+   buffer.AppendFormatted(" *    #if ROME_VERSION_CODE >= ROME_VERSION(2,5)\n");
    buffer.AppendFormatted(" *    #   include <newheader.h>\n");
    buffer.AppendFormatted(" *    #else\n");
    buffer.AppendFormatted(" *    #   include <oldheader.h>\n");
@@ -119,8 +120,10 @@ int main()
    buffer.AppendFormatted("#define ROME_RELEASE_DATE \"%s %2d %d\"\n", monthName[month], day, year);
    buffer.AppendFormatted("#define ROME_RELEASE_TIME \"%02d:%02d:%02d\"\n", hour, min, sec);
 */
-   buffer.AppendFormatted("#define ROME_VERSION_CODE %5.2f\n", GetROMEVersion(romeMajor, romeMinor, romePatch));
-   buffer.AppendFormatted("#define ROME_VERSION(a,b,c) (((a) << 8) + (b) + 0.01*c)\n");
+   buffer.AppendFormatted("#define ROME_VERSION_CODE %d\n", GetROMEVersion(romeMajor, romeMinor));
+   buffer.AppendFormatted("#define ROME_VERSION(a,b) (((a) << 8) + (b))\n");
+   buffer.AppendFormatted("#define ROME_PATCH_VERSION_CODE %d\n", GetROMEVersionPatch(romeMajor, romeMinor, romePatch));
+   buffer.AppendFormatted("#define ROME_PATCH_VERSION(a,b,c) (((a) << 16) + (b << 8) + (c))\n");
    buffer.AppendFormatted("\n");
    buffer.AppendFormatted("#endif\n");
 
