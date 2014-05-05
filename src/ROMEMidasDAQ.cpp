@@ -1399,7 +1399,11 @@ Bool_t ROMEMidasDAQ::ReadOnlineEvent(ROMEMidasDAQ *localThis)
 
    size = localThis->GetRawDataEventSize();
    mEvent = localThis->GetRawDataEvent();
+#ifdef BM_NO_WAIT
+   status = bm_receive_event(localThis->fMidasOnlineBuffer, mEvent, &size, BM_NO_WAIT);
+#else
    status = bm_receive_event(localThis->fMidasOnlineBuffer, mEvent, &size, ASYNC);
+#endif
    if (status != BM_SUCCESS) {
       return kFALSE;
    }
@@ -1437,7 +1441,11 @@ void ROMEMidasDAQ::ReadOnlineEventDummy(ROMEMidasDAQ *localThis)
 {
 #if defined( HAVE_MIDAS )
    INT size = localThis->GetRawDataEventSize();
+#ifdef BM_NO_WAIT
+   bm_receive_event(localThis->fMidasOnlineBuffer, localThis->fRawDataDummy, &size, BM_NO_WAIT);
+#else
    bm_receive_event(localThis->fMidasOnlineBuffer, localThis->fRawDataDummy, &size, ASYNC);
+#endif
 #else
    WarningSuppression(localThis)
 #endif
@@ -1474,7 +1482,11 @@ void ROMEMidasDAQ::FlushOnlineBuffer(ROMEMidasDAQ *localThis)
    INT status;
    do {
       size = localThis->GetRawDataEventSize();
+#ifdef BM_NO_WAIT
+      status = bm_receive_event(localThis->fMidasOnlineBuffer, localThis->fRawDataDummy, &size, BM_NO_WAIT);
+#else
       status = bm_receive_event(localThis->fMidasOnlineBuffer, localThis->fRawDataDummy, &size, ASYNC);
+#endif
    } while(status == BM_SUCCESS);
 #else
    WarningSuppression(localThis)
@@ -1520,7 +1532,11 @@ Bool_t ROMEMidasDAQ::CheckTransition()
             while (numberOfBytes <= 0) {
                size = localThis->GetRawDataEventSize();
                mEvent = localThis->GetRawDataEvent();
+#ifdef BM_NO_WAIT
+               status = bm_receive_event(localThis->fMidasOnlineBuffer, mEvent, &size, BM_NO_WAIT);
+#else
                status = bm_receive_event(localThis->fMidasOnlineBuffer, mEvent, &size, ASYNC);
+#endif
                if (status != BM_SUCCESS) {
                   break;
                }
