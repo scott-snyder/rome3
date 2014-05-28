@@ -2428,7 +2428,7 @@ void* ROMEBuilder::AllocateArray(T* p0, Int_t x1, Int_t x2, Int_t x3, Int_t x4, 
    switch(n) {
    case 1:
       p1 = new T[x1];
-      if (reset) memset(p1, 0, sizeof(T) * x1);
+      if (reset) memset(static_cast<void*>(p1), 0, sizeof(T) * x1);
       return p1;
 
    case 2:
