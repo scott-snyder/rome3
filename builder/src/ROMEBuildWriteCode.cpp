@@ -169,6 +169,8 @@ Bool_t ROMEBuilder::WriteFolderCpp()
          } else {
             if (valueDimension[iFold][i] == 0) {
                buffer.AppendFormatted("   if (lhs.%s != rhs.%s) return kFALSE;\n",valueName[iFold][i].Data(),valueName[iFold][i].Data());
+            } else if (valueArray[iFold][i][0] == "vector") {
+               buffer.AppendFormatted("   if (lhs.%s != rhs.%s) return kFALSE;\n",valueName[iFold][i].Data(),valueName[iFold][i].Data());
             } else if (valueArray[iFold][i][0] != "variable") {
                for (iDm = 0; iDm < valueDimension[iFold][i]; iDm++) {
                   buffer.AppendFormatted("%*s   for (int %c%d = 0; %c%d < %s; %c%d++) {\n",
@@ -251,6 +253,8 @@ Bool_t ROMEBuilder::WriteFolderCpp()
          } else {
             if (valueDimension[iFold][i] == 0) {
                buffer.AppendFormatted("   %s = rhs.%s;\n",valueName[iFold][i].Data(),valueName[iFold][i].Data());
+            } else if (valueArray[iFold][i][0] == "vector") {
+               buffer.AppendFormatted("   %s = rhs.%s;\n",valueName[iFold][i].Data(),valueName[iFold][i].Data());
             } else if (valueArray[iFold][i][0] != "variable") {
                for (iDm = 0; iDm < valueDimension[iFold][i]; iDm++) {
                   buffer.AppendFormatted("%*s   for (int %c%d = 0; %c%d < %s; %c%d++) {\n",
@@ -294,7 +298,9 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       if (numOfValue[iFold] < maxNumberOfArguments) { // rootcint does not accept more than 40
          for (i = 0; i < numOfValue[iFold]; i++) {
             if (valueDimension[iFold][i] == 0) {
-               if (isFolder(valueType[iFold][i].Data()) ||
+               if (valueArray[iFold][i][0] == "vector") {
+                  continue;
+               } else if (isFolder(valueType[iFold][i].Data()) ||
                    (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
                   continue;
                } else if (valueIsTObject[iFold][i] && !isPointerType(valueType[iFold][i].Data()) &&
@@ -319,8 +325,10 @@ Bool_t ROMEBuilder::WriteFolderCpp()
          buffer.AppendFormatted(":TObject()\n");
       }
       for (i = 0; i < numOfValue[iFold]; i++) {
-         if (isFolder(valueType[iFold][i].Data()) ||
-             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
+         if (valueArray[iFold][i][0] == "vector") {
+            buffer.AppendFormatted(",%s(0)\n",valueName[iFold][i].Data());
+         } else if (isFolder(valueType[iFold][i].Data()) ||
+                    (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
             tmp = valueType[iFold][i];
             tmp.ReplaceAll("*","");
             if (valueDimension[iFold][i] == 0) {
@@ -385,8 +393,9 @@ Bool_t ROMEBuilder::WriteFolderCpp()
          buffer.AppendFormatted("   %s::Class()->IgnoreTObjectStreamer();\n",clsName.Data());
       }
       for (i = 0; i < numOfValue[iFold]; i++) {
-         if (isFolder(valueType[iFold][i].Data()) ||
-             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
+         if (valueArray[iFold][i][0] == "vector") {
+         } else if (isFolder(valueType[iFold][i].Data()) ||
+                    (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
             if (valueDimension[iFold][i] == 0) {
             } else {
                buffer.AppendFormatted("   %s->SetName(\"%s%s\");\n",valueName[iFold][i].Data(),
@@ -443,8 +452,10 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       buffer.AppendFormatted("%s::~%s()\n",clsName.Data(),clsName.Data());
       buffer.AppendFormatted("{\n");
       for (i = 0 ; i < numOfValue[iFold]; i++) {
-         if (isFolder(valueType[iFold][i].Data()) ||
-             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
+
+         if (valueArray[iFold][i][0] == "vector") {
+         } else if (isFolder(valueType[iFold][i].Data()) ||
+                    (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
             if (isPointerType(valueType[iFold][i].Data()) || valueDimension[iFold][i] > 0) {
                buffer.AppendFormatted("   SafeDelete(%s);\n",valueName[iFold][i].Data());
             }
@@ -460,7 +471,19 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       // Getters
       for (i = 0; i < numOfValue[iFold]; i++) {
          if (valueDimension[iFold][i] > 0) {
-            if (isFolder(valueType[iFold][i].Data()) ||
+             if (valueArray[iFold][i][0] == "vector") {
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("%s %s::Get%sAt(Int_t indx) const\n",valueType[iFold][i].Data(),clsName.Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("{\n");
+               if (!valueNoBoundChech[iFold][i])
+                  buffer.AppendFormatted("   if (!%sBoundsOk(\"Get%sAt\", indx)) return %s;\n",
+                                         valueName[iFold][i].Data(),valueName[iFold][i].Data(),
+                                         valueInit[iFold][i].Data());
+               buffer.AppendFormatted("   return %s[indx];\n",valueName[iFold][i].Data());
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+             } else if (isFolder(valueType[iFold][i].Data()) ||
                 (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
                tmp = valueType[iFold][i];
                tmp.ReplaceAll("*","");
@@ -592,7 +615,7 @@ Bool_t ROMEBuilder::WriteFolderCpp()
                buffer.AppendFormatted("void %s::Get%sCopy(Int_t n,%s* array) const\n",clsName.Data(),
                                       valueName[iFold][i].Data(),valueType[iFold][i].Data());
                buffer.AppendFormatted("{\n");
-               buffer.AppendFormatted("   if (!%s || !n || !array) return;\n",valueName[iFold][i].Data());
+               buffer.AppendFormatted("   if (!n || !array) return;\n");
                buffer.AppendFormatted("   memcpy(array,&%s",valueName[iFold][i].Data());
                for (iDm = 0; iDm < valueDimension[iFold][i]; iDm++)
                   buffer.AppendFormatted("[0]");
@@ -668,7 +691,39 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       // Setters
       for (i = 0; i < numOfValue[iFold]; i++) {
          if (valueDimension[iFold][i] != 0) {
-            if (isFolder(valueType[iFold][i].Data()) ||
+            if (valueArray[iFold][i][0] == "vector") {
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("void %s::Set%sAt(Int_t indx,%s %s_value)\n{\n",clsName.Data(),
+                                      valueName[iFold][i].Data(),valueType[iFold][i].Data(),
+                                      valueName[iFold][i].Data());
+               if (!valueNoBoundChech[iFold][i])
+                  buffer.AppendFormatted("   if (!%sBoundsOk(\"Set%sAt\", indx)) return;\n",
+                                         valueName[iFold][i].Data(),valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %s[indx] = %s_value;\n",valueName[iFold][i].Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("   SetModified(true);\n");
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("void %s::Set%s(const vector<%s> &%s_value)\n{\n",clsName.Data(),
+                                      valueName[iFold][i].Data(),valueType[iFold][i].Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %s = %s_value;\n",valueName[iFold][i].Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("   SetModified(true);\n");
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("void %s::Set%sSize(Int_t number, Bool_t /* copyOldData */, Bool_t fillZero)\n",clsName.Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("{\n");
+               buffer.AppendFormatted("   if (number < 0) return;\n");
+               buffer.AppendFormatted("   if (fillZero) %s.resize(number, static_cast<%s>(0));\n", valueName[iFold][i].Data(), valueType[iFold][i].Data());
+               buffer.AppendFormatted("   else          %s.resize(number);\n", valueName[iFold][i].Data());
+               buffer.AppendFormatted("   SetModified(true);\n");
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+            } else if (isFolder(valueType[iFold][i].Data()) ||
                 (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
                buffer.Append(kMethodLine);
                buffer.AppendFormatted("void %s::Set%sSize(Int_t number)\n",clsName.Data(),valueName[iFold][i].Data());
@@ -1000,7 +1055,10 @@ Bool_t ROMEBuilder::WriteFolderCpp()
          buffer.AppendFormatted("   fModified = false;\n");
       }
       for (i = 0; i < numOfValue[iFold]; i++) {
-         if (isFolder(valueType[iFold][i].Data()) ||
+
+          if (valueArray[iFold][i][0] == "vector") {
+            buffer.AppendFormatted("   %s.clear();\n",valueName[iFold][i].Data());
+          } else if (isFolder(valueType[iFold][i].Data()) ||
              (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
             tmp = valueType[iFold][i];
             tmp.ReplaceAll("*","");
@@ -1144,7 +1202,21 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       }
 
       for (i = 0; i < numOfValue[iFold]; i++) {
-         if (isFolder(valueType[iFold][i].Data()) ||
+         if (valueArray[iFold][i][0] == "vector") {
+            buffer.AppendFormatted("   i = 0;\n");
+#if 0
+            buffer.AppendFormatted("   for (const auto &val: %s) {\n", valueName[iFold][i].Data());
+#else
+            buffer.AppendFormatted("   for (i = 0; i < static_cast<Int_t>(%s.size()); i++) {\n", valueName[iFold][i].Data());
+#endif
+            buffer.AppendFormatted("      fieldName = \"%s\";\n", valueName[iFold][i].Data());
+            buffer.AppendFormatted("      fieldName += '[';\n");
+            buffer.AppendFormatted("      fieldName += i;\n");
+            buffer.AppendFormatted("      fieldName += ']';\n");
+            buffer.AppendFormatted("      cout<<\"   \"<<setw(tab)<<\"\"<<setw(%d)<<left<<fieldName<<' '<<%s[i]<<'\\n';\n",
+                                   nameLen, valueName[iFold][i].Data());
+            buffer.AppendFormatted("   }\n");
+         } else if (isFolder(valueType[iFold][i].Data()) ||
              (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
             tmp = valueType[iFold][i];
             tmp.ReplaceAll("*","");
@@ -1322,6 +1394,27 @@ Bool_t ROMEBuilder::WriteFolderCpp()
                buffer.AppendFormatted("   return kFALSE;\n");
                buffer.AppendFormatted("}\n");
                buffer.AppendFormatted("\n");
+            } else if (valueArray[iFold][i][0] == "vector") {
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("Bool_t %s::%sBoundsOk(const char* where, Int_t at) const\n",clsName.Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("{\n");
+               buffer.AppendFormatted("   return (at < 0 || static_cast<UInt_t>(at) >= %s.size())\n",valueName[iFold][i].Data());
+               buffer.AppendFormatted("      ? %sOutOfBoundsError(where, at)\n",valueName[iFold][i].Data());
+               buffer.AppendFormatted("      : kTRUE;\n");
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+               buffer.Append(kMethodLine);
+               buffer.AppendFormatted("Bool_t %s::%sOutOfBoundsError(const char* where, Int_t i) const\n",clsName.Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("{\n");
+               buffer.AppendFormatted("   Error(where, \"index %%d out of bounds (size: %%d, this: %%p)\", i, Get%sSize(), this);\n",
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("   return kFALSE;\n");
+               buffer.AppendFormatted("}\n");
+               buffer.AppendFormatted("\n");
+            } else if (isTArrayType(valueType[iFold][i]) || valueType[iFold][i] == "TRefArray") {
+
             } else if (valueArray[iFold][i][0] == "variable") {
 #if 0 /* disabled because no way to know array size when the folder is read from TFile. */
                buffer.Append(kMethodLine);
@@ -1645,7 +1738,8 @@ Bool_t ROMEBuilder::WriteFolderH()
       }
       for (i = 0; i < numOfValue[iFold]; i++) {
          if ((isFolder(valueType[iFold][i].Data()) && valueDimension[iFold][i] > 0) ||
-             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
+             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable") ||
+             (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "vector")) {
             if (valueDimension[iFold][i] > 1) {
                cout<<"You can not have multiple dimensional array of support folders or TObjects."<<endl;
                cout<<"Terminating program."<<endl;
@@ -1653,6 +1747,10 @@ Bool_t ROMEBuilder::WriteFolderH()
             }
             buffer.AppendFormatted("   TClonesArray*%*s %s;%*s %s\n", typeLen - 13, "",
                                    valueName[iFold][i].Data() , nameLen - valueName[iFold][i].Length(), "",
+                                   ProcessCommentCPP(valueComment[iFold][i],tmp).Data());
+         } else if (valueArray[iFold][i][0] == "vector") {
+            buffer.AppendFormatted("   vector<%-*s> %s;%*s %s\n", typeLen - 1, valueType[iFold][i].Data(),
+                                   valueName[iFold][i].Data(), nameLen - valueName[iFold][i].Length(), "",
                                    ProcessCommentCPP(valueComment[iFold][i],tmp).Data());
          } else if (valueArray[iFold][i][0] == "variable") {
             buffer.AppendFormatted("   %-*s* %s;%*s %s\n", typeLen - 1, valueType[iFold][i].Data(),
@@ -1761,7 +1859,16 @@ Bool_t ROMEBuilder::WriteFolderH()
       for (i = 0; i < numOfValue[iFold]; i++) {
          int lb = nameLen-valueName[iFold][i].Length();
          if (valueDimension[iFold][i] > 0) {
-            if (isFolder(valueType[iFold][i].Data()) ||
+            if (valueArray[iFold][i][0] == "vector") {
+               buffer.AppendFormatted("   %s%-*s  Get%sAt(Int_t indx) const;\n", virtualKwd, typeLen, valueType[iFold][i].Data(),
+                                      valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %svector<%-*s> &Get%s() %*s { return %s;%*s }\n", virtualKwd, typeLen, valueType[iFold][i].Data(),
+                                      valueName[iFold][i].Data(), lb, "",
+                                      valueName[iFold][i].Data(), lb, "");
+               buffer.AppendFormatted("   %s%-*s  Get%sSize() const%*s { return %s.size();%*s }\n", virtualKwd, typeLen,
+                                      "Int_t", valueName[iFold][i].Data(), lb, "",
+                                      valueName[iFold][i].Data(), lb, "");
+            } else if (isFolder(valueType[iFold][i].Data()) ||
                 (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
                tmp = valueType[iFold][i];
                tmp.ReplaceAll("*","");
@@ -1909,7 +2016,17 @@ Bool_t ROMEBuilder::WriteFolderH()
                                       valueName[iFold][i].Data(), lb, "");
             }
          } else {
-            if (isFolder(valueType[iFold][i].Data()) ||
+             if (valueArray[iFold][i][0] == "vector") {
+               buffer.AppendFormatted("   %svoid Set%sAt%*s(Int_t indx,%-*s %s_value);\n", virtualKwd,
+                                      valueName[iFold][i].Data(), lb, "",
+                                      typeLen, valueType[iFold][i].Data(), valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %svoid Set%s%*s(const vector<%-*s> &%s_value);\n", virtualKwd,
+                                      valueName[iFold][i].Data(), lb, "",
+                                      typeLen, valueType[iFold][i].Data(), valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %svoid Set%sSize(Int_t number, Bool_t copyOldData = kFALSE /* not used */, Bool_t fillZero = kFALSE);\n",
+                                      virtualKwd,
+                                      valueName[iFold][i].Data());
+             } else if (isFolder(valueType[iFold][i].Data()) ||
                        (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
                if (valueArray[iFold][i][0] != "variable") {
                   buffer.AppendFormatted("private:\n");
@@ -2080,7 +2197,12 @@ Bool_t ROMEBuilder::WriteFolderH()
       // BoundsOk
       for (i = 0; i < numOfValue[iFold]; i++) {
          if (valueDimension[iFold][i] > 0) {
-            if (valueType[iFold][i] == "TRefArray") {
+            if (valueArray[iFold][i][0] == "vector") {
+               buffer.AppendFormatted("   %sBool_t %sBoundsOk(const char* where, Int_t at) const;\n",
+                                      virtualKwd, valueName[iFold][i].Data());
+               buffer.AppendFormatted("   %sBool_t %sOutOfBoundsError(const char* where, Int_t i) const;\n",
+                                      virtualKwd, valueName[iFold][i].Data());
+            } else if (valueType[iFold][i] == "TRefArray") {
                // TRefArray itself checks bounds.
             } else if (isFolder(valueType[iFold][i].Data()) ||
                        (valueIsTObject[iFold][i] && valueArray[iFold][i][0] == "variable")) {
@@ -7376,6 +7498,7 @@ Bool_t ROMEBuilder::WriteDBAccessCpp()
       for (j = 0; j < numOfFolder; j++) {
          for (k = 0; k < numOfValue[j]; k++) {
             if (valueDimension[j][k] > 1 || valueArray[j][k][0] == "variable" ||
+                valueArray[j][k][0] == "vector" ||
                 isFolder(valueType[j][k].Data()) || valueIsTObject[j][k]) {
                continue;
             }

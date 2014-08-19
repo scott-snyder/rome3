@@ -1617,7 +1617,8 @@ Bool_t ROMEBuilder::ReadXMLFolder()
          }
          if (valueDimension[numOfFolder][numOfValue[numOfFolder]] > 1) {
             for (iDm = 1; iDm < 3; iDm++) {
-               if (valueArray[numOfFolder][numOfValue[numOfFolder]][iDm] == "variable") {
+               if (valueArray[numOfFolder][numOfValue[numOfFolder]][iDm] == "variable" ||
+                   valueArray[numOfFolder][numOfValue[numOfFolder]][iDm] == "vector") {
                   cout<<"Multiple dimension field '"<<valueName[numOfFolder][numOfValue[numOfFolder]]
                       <<"' can not have variable length."<<endl;
                   cout<<"Terminating program."<<endl;
@@ -1625,11 +1626,19 @@ Bool_t ROMEBuilder::ReadXMLFolder()
                }
             }
          }
-         if (valueArray[numOfFolder][numOfValue[numOfFolder]][0] == "variable"
+         if ((valueArray[numOfFolder][numOfValue[numOfFolder]][0] == "variable" ||
+              valueArray[numOfFolder][numOfValue[numOfFolder]][0] == "vector")
              && ( valueDBName[numOfFolder][numOfValue[numOfFolder]].Length()
                   || valueDBPath[numOfFolder][numOfValue[numOfFolder]].Length())) {
             cout<<"Variable length array field '"<<valueName[numOfFolder][numOfValue[numOfFolder]]
                 <<"' can not have database connection"<<endl;
+            cout<<"Terminating program."<<endl;
+            return false;
+         }
+         if (valueArray[numOfFolder][numOfValue[numOfFolder]][0] == "vector" &&
+             valueIsTObject[numOfFolder][numOfValue[numOfFolder]]) {
+            cout<<"For array field '"<<valueName[numOfFolder][numOfValue[numOfFolder]]
+                <<"' , please use \"variable\" ArraySize instead of \"vector\""<<endl;
             cout<<"Terminating program."<<endl;
             return false;
          }

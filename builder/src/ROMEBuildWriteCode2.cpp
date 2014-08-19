@@ -3944,6 +3944,7 @@ void ROMEBuilder::WriteReadDataBaseFields(ROMEString &buffer,Int_t numFolder,Int
    }
    for (j = 0; j < numOfValue[numFolder]; j++) {
       if (valueDimension[numFolder][j] > 1 || valueArray[numFolder][j][0] == "variable" ||
+          valueArray[numFolder][j][0] == "vector" ||
           isFolder(valueType[numFolder][j].Data())) {
          continue;
       }
