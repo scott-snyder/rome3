@@ -9004,7 +9004,9 @@ Bool_t ROMEBuilder::WriteMidasDAQCpp() {
       buffer.AppendFormatted("Bool_t %sMidasDAQ::InitODB()\n{\n",shortCut.Data());
       ROMEString steerPath;
       buffer.AppendFormatted("   HNDLE hKey;\n");
-      buffer.AppendFormatted("   Int_t status;\n");
+      if (numOfEvent >0 ) {
+         buffer.AppendFormatted("   Int_t status;\n");
+      }
       buffer.AppendFormatted("   ROMEString str;\n");
       buffer.AppendFormatted("   ROMEString hotLinkString;\n");
       buffer.AppendFormatted("   // Hot Links\n");
