@@ -2079,18 +2079,21 @@ Bool_t ROMEBuilder::isNumber(const char* str)
 {
    ROMEString typeStr = str;
    typeStr.StripSpaces();
-   if (typeStr != "float" && typeStr != "Float_t" &&
-       typeStr != "double" && typeStr != "Double_t" && typeStr != "Double32_t" &&
-       typeStr != "char" && typeStr != "Char_t" &&
-       typeStr != "unsigned char" && typeStr != "UChar_t" &&
-       typeStr != "short" && typeStr != "Short_t" &&
-       typeStr != "unsigned short" && typeStr != "UShort_t" &&
-       typeStr != "int" && typeStr != "Int_t" &&
-       typeStr != "unsigned int" && typeStr != "UInt_t" &&
-       typeStr != "long" && typeStr != "Long_t" &&
-       typeStr != "unsigned long" && typeStr != "ULong_t" &&
-       typeStr != "Long64_t" && typeStr != "ULong64_t" &&
-       typeStr != "long long" && typeStr != "unsigned long long")
+   if (typeStr != "float"          && typeStr != "Float_t"            &&
+       typeStr != "double"         && typeStr != "Double_t"           && typeStr != "Double32_t" &&
+       typeStr != "char"           && typeStr != "Char_t"             &&
+       typeStr != "unsigned char"  && typeStr != "UChar_t"            &&
+       typeStr != "short"          && typeStr != "Short_t"            &&
+       typeStr != "unsigned short" && typeStr != "UShort_t"           &&
+       typeStr != "int"            && typeStr != "Int_t"              &&
+       typeStr != "unsigned int"   && typeStr != "UInt_t"             &&
+       typeStr != "long"           && typeStr != "Long_t"             &&
+       typeStr != "unsigned long"  && typeStr != "ULong_t"            &&
+       typeStr != "Long64_t"       && typeStr != "ULong64_t"          &&
+       typeStr != "long long"      && typeStr != "unsigned long long" &&
+       typeStr != "WORD"  &&
+       typeStr != "INT"   &&
+       typeStr != "DWORD")
       return false;
    return true;
 }
