@@ -47,6 +47,17 @@ void TWRTFillTree::Event()
    gAnalyzer->GetData1()->SetValue1((int)gAnalyzer->GetCurrentEventNumber());
    if (gAnalyzer->GetCurrentEventNumber() % 2)
       gAnalyzer->GetData2()->SetValue2((int)gAnalyzer->GetCurrentEventNumber());
+
+   gAnalyzer->GetData1()->SetNArr1(10);
+   gAnalyzer->GetData1()->SetArr1Size(10);
+   for (int i=0;i<10;i++) {
+      gAnalyzer->GetData1()->SetArr1At(i, i*2);
+   }
+
+   gAnalyzer->GetData1()->SetVector1Size(10);
+   for (int i=0;i<10;i++) {
+      gAnalyzer->GetData1()->SetVector1At(i, i*2);
+   }
 }
 
 void TWRTFillTree::EndOfRun()

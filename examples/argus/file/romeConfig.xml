@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2495 2008-12-26 06:11:54Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -38,6 +38,9 @@
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ReportMaxCount>20</ReportMaxCount>
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
         <ShowSplashScreen>true</ShowSplashScreen>
@@ -62,13 +65,17 @@
 
       <Trees>
         <Accumulate>false</Accumulate>
+        <MaxMemory>100000000</MaxMemory>
         <Tree>
           <TreeName>data</TreeName>
           <Read>true</Read>
           <Write>false</Write>
           <Fill>false</Fill>
           <CompressionLevel>0</CompressionLevel>
+          <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
           <AutoSaveSize>100000000</AutoSaveSize>
+          <AutoFlushSize>-30000000</AutoFlushSize>
+          <CacheSize>-1</CacheSize>
           <MaxNumberOfEntries>0</MaxNumberOfEntries>
           <TreeInputFileName></TreeInputFileName>
           <TreeOutputFileName></TreeOutputFileName>
@@ -114,7 +121,9 @@
         <WindowScale>1.0</WindowScale>
         <StatusBar>true</StatusBar>
         <UpdateFrequency>1000</UpdateFrequency>
+        <ScreenShotPeriod>60</ScreenShotPeriod>
         <ListTreeView>false</ListTreeView>
+        <TimeZone>local</TimeZone>
         <AnalyzerController>
           <Active>false</Active>
           <NetFolderName></NetFolderName>
@@ -130,6 +139,8 @@
         <Tab>
           <TabName>Tab1</TabName>
           <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
         </Tab>
       </Tabs>
     </Monitor>

@@ -46,6 +46,22 @@ void TWRTPrintValue::Event()
 {
   cout << gAnalyzer->GetData1()->GetValue1() << "\t"
        << gAnalyzer->GetData2()->GetValue2() << endl;
+
+  Int_t i;
+  Int_t n;
+
+  n = gAnalyzer->GetData1()->GetNArr1();
+  for (i = 0; i < n; i++) {
+    cout << "array " << gAnalyzer->GetData1()->GetArr1At(i) << endl;
+  }
+
+  vector<Double_t> vec = gAnalyzer->GetData1()->GetVector1();
+  vector<Double_t>::iterator it;
+  for (it = vec.begin(); it != vec.end(); ++it) {
+    cout << "vector " << *it << endl;
+  }
+
+  cout << endl;
 }
 
 void TWRTPrintValue::EndOfRun()

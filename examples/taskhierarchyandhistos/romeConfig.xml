@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2533 2009-12-15 19:40:58Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -60,6 +60,12 @@
         <VerboseLevel>normal</VerboseLevel>
         <!-- Specify max number of prints of an identical error or warning by ROMEPrint::Report. No limit when this is 0. -->
         <ReportMaxCount>20</ReportMaxCount>
+        <!-- File name of text output of message summary. -->
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <!-- Verbose level of text output of message summary. mute, error, warning, normal, verbose or debug. default is warning. -->
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <!-- Line length of text output of message summary. -->
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <!-- Amount of comments in configuration xml file. 0 to 5. You have more comments when this is larger. degault is 1. -->
         <ConfigCommentLevel>5</ConfigCommentLevel>
         <!-- If true, the program doesn't start a root session at the end. Default is false. -->

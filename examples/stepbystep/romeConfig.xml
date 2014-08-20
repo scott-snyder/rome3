@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2454 2008-06-27 00:49:37Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -38,6 +38,9 @@
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ReportMaxCount>20</ReportMaxCount>
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
         <ShowSplashScreen>true</ShowSplashScreen>
@@ -62,13 +65,17 @@
 
       <Trees>
         <Accumulate>false</Accumulate>
+        <MaxMemory>100000000</MaxMemory>
         <Tree>
           <TreeName>DataTree</TreeName>
           <Read>false</Read>
           <Write>true</Write>
           <Fill>true</Fill>
           <CompressionLevel>0</CompressionLevel>
+          <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
           <AutoSaveSize>100000000</AutoSaveSize>
+          <AutoFlushSize>-30000000</AutoFlushSize>
+          <CacheSize>-1</CacheSize>
           <MaxNumberOfEntries>0</MaxNumberOfEntries>
           <TreeInputFileName></TreeInputFileName>
           <TreeOutputFileName></TreeOutputFileName>

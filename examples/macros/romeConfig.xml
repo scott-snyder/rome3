@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2495 2008-12-26 06:11:54Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -60,6 +60,12 @@
         <VerboseLevel>normal</VerboseLevel>
         <!-- Specify max number of prints of an identical error or warning by ROMEPrint::Report. No limit when this is 0. -->
         <ReportMaxCount>20</ReportMaxCount>
+        <!-- File name of text output of message summary. -->
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <!-- Verbose level of text output of message summary. mute, error, warning, normal, verbose or debug. default is warning. -->
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <!-- Line length of text output of message summary. -->
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <!-- Amount of comments in configuration xml file. 0 to 5. You have more comments when this is larger. degault is 1. -->
         <ConfigCommentLevel>5</ConfigCommentLevel>
         <!-- If true, the program doesn't start a root session at the end. Default is false. -->
@@ -97,7 +103,10 @@
       <DataBases/>
 
       <Trees>
+        <!-- Trees can be accumulated over certain runs. Default is false. -->
         <Accumulate>false</Accumulate>
+        <!-- A limit of memory size of each tree. When the size of a tree exceed the limit, basket size is adjusted to be smaller than the limit. When this is 0 or negative, the check is not done. Available from ROOT 5.26. -->
+        <MaxMemory>100000000</MaxMemory>
         <Tree>
           <TreeName>DataTree</TreeName>
           <!-- Trees can be read into the framework to start the analysis from a previously saved state. Default is false. -->
@@ -108,8 +117,14 @@
           <Fill>true</Fill>
           <!-- Compression level for all branches of the tree. Default is 1. -->
           <CompressionLevel>1</CompressionLevel>
-          <!-- Number of bytes for auto saving. Auto saving is disabled when this is 0. Saving one tree triggers saving all trees to keep consistency of output files. Default is 100000000 (about 100 MB). -->
+          <!-- Compression algorithm for the output file. ZLIB or LZMA is valid. Default is ZLIB. -->
+          <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
+          <!-- Number of bytes for auto saving. Auto saving is disabled when this is 0. Saving one tree triggers saving all trees to keep consistency of output files. Default is 100000000 for ROOT<v5.26 and 300000000 for ROOT>=v5.26. -->
           <AutoSaveSize>100000000</AutoSaveSize>
+          <!-- Number of bytes for auto flushing. This is used as the argument of TTree::SetAutoFlush(). Flushing is done independent of other trees. Default is -30000000 (about 30 MB). Available from ROOT 5.26 -->
+          <AutoFlushSize>-30000000</AutoFlushSize>
+          <!-- Set size of the file cache for reading. This is used as the argument of TTree::SetCacheSize(). Default for ROOT>=v5.26 is -1, and that for ROOT<v5.26 is 10000000. -->
+          <CacheSize>-1</CacheSize>
           <!-- If this value is greater than 0 the tree is a circular tree with the specified size. Default is 0. -->
           <MaxNumberOfEntries>0</MaxNumberOfEntries>
           <!-- The name of the trees input file. This value overwrites the value specified in the definition file. (optional) -->
