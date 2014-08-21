@@ -233,7 +233,7 @@ void ROMEEventLoop::ExecuteTask(Option_t *option)
 
             // Output
             if (gROME->IsShowRunStat()) {
-               ROMEPrint::Print("\n\nRun "R_LLD" started\n", gROME->GetCurrentRunNumber());
+               ROMEPrint::Print("\n\nRun " R_LLD " started\n", gROME->GetCurrentRunNumber());
             }
 
             fHaveBeginOfRunMacro   = (fBeginOfRunMacro.Length()   > 0);
@@ -305,7 +305,7 @@ void ROMEEventLoop::ExecuteTask(Option_t *option)
 
          // Show number of processed events
          if (gROME->IsShowRunStat()) {
-            ROMEPrint::Print(R_LLD" events processed                                             \n",
+            ROMEPrint::Print(R_LLD " events processed                                             \n",
                              static_cast<Long64_t>(gROME->GetProcessedEvents()+0.5));
          }
 
@@ -322,7 +322,7 @@ void ROMEEventLoop::ExecuteTask(Option_t *option)
 
          // Show stopped message
          if (gROME->IsShowRunStat()) {
-            ROMEPrint::Print("Run "R_LLD" stopped\n\n", gROME->GetCurrentRunNumber());
+            ROMEPrint::Print("Run " R_LLD " stopped\n\n", gROME->GetCurrentRunNumber());
          }
 
          // Disconnect
@@ -1018,7 +1018,7 @@ Bool_t ROMEEventLoop::Update()
         (fProgressDelta == 1) ||
         (!(static_cast<Long64_t>(gROME->GetTriggerStatistics()->processedEvents + 0.5) % fProgressDelta) && fProgressWrite))) {
       if (IsTerminal()) {
-         ROMEPrint::Print("processed event number "R_LLD"                                              \r",
+         ROMEPrint::Print("processed event number " R_LLD "                                              \r",
                           gROME->GetCurrentEventNumber());
          ROMEPrint::Debug("\n");
       }
@@ -1087,7 +1087,7 @@ Bool_t ROMEEventLoop::UserInput()
          fUpdateWindowLastEvent = gROME->GetCurrentEventNumber();
          gROME->GetWindow()->TriggerEventHandler();
       }
-      ROMEPrint::Print("Stopped after event "R_LLD"                   \r", gROME->GetCurrentEventNumber());
+      ROMEPrint::Print("Stopped after event " R_LLD "                   \r", gROME->GetCurrentEventNumber());
       wait = true;
    } else if (!gROME->HasUserEvent() && fContinuous &&
 #if (ROOT_VERSION_CODE < ROOT_VERSION(5,27,6))
@@ -1140,7 +1140,7 @@ Bool_t ROMEEventLoop::UserInput()
             wait = false;
          }
          if (ch == 's' || ch == 'S' || gROME->IsUserEventS()) {
-            ROMEPrint::Print("Stopped after event "R_LLD"                   \r", gROME->GetCurrentEventNumber());
+            ROMEPrint::Print("Stopped after event " R_LLD "                   \r", gROME->GetCurrentEventNumber());
 //            if (gROME->IsStandAloneARGUS() || gROME->IsROMEAndARGUS() || gROME->IsROMEMonitor()) {
 //               fUpdateWindowLastEvent = gROME->GetCurrentEventNumber();
 //               gROME->GetWindow()->TriggerEventHandler();
@@ -1151,7 +1151,7 @@ Bool_t ROMEEventLoop::UserInput()
             if (fContinuous) {
                ROMEPrint::Print("Step by step mode                 \n");
                if (!wait) {
-                  ROMEPrint::Print("Stopped after event "R_LLD"                   \r", gROME->GetCurrentEventNumber());
+                  ROMEPrint::Print("Stopped after event " R_LLD "                   \r", gROME->GetCurrentEventNumber());
                }
                fContinuous = false;
                wait = true;
@@ -1274,7 +1274,7 @@ Bool_t ROMEEventLoop::UserInput()
          gROME->DeleteUserEvent();
       }
       if (interpreter) {
-         ROMEPrint::Print("\nStart root session at the end of event number "R_LLD" of run number "R_LLD"\n",
+         ROMEPrint::Print("\nStart root session at the end of event number " R_LLD " of run number " R_LLD "\n",
                           gROME->GetCurrentEventNumber(), gROME->GetCurrentRunNumber());
          ROMEString prompt = gROME->GetProgramName();
          prompt.ToLower();
@@ -1565,7 +1565,7 @@ Bool_t ROMEEventLoop::DAQTerminate()
 void ROMEEventLoop::NextEvent()
 {
    RunEvent();
-   ROMEPrint::Print("Executed Event "R_LLD"                                                      \n", gROME->GetCurrentEventNumber());
+   ROMEPrint::Print("Executed Event " R_LLD "                                                      \n", gROME->GetCurrentEventNumber());
 }
 
 //______________________________________________________________________________
@@ -1578,7 +1578,7 @@ void ROMEEventLoop::GotoEvent(Long64_t eventNumber)
    fContinuous = false;
 
    if (fCurrentEvent != -1) {
-      ROMEPrint::Print("Stepped to Event "R_LLD"                                                    \n", fCurrentEvent);
+      ROMEPrint::Print("Stepped to Event " R_LLD "                                                    \n", fCurrentEvent);
    } else {
       fCurrentEvent = oldEventNumber;
       ROMEPrint::Print("Failed to step                                                           \n");
@@ -1611,7 +1611,7 @@ void ROMEEventLoop::ReadHistograms()
       gROME->ReplaceWithRunAndEventNumber(filename);
       file = new TFile(filename.Data(), "READ");
       if (file->IsZombie()) {
-          ROMEPrint::Warning("Histograms of run "R_LLD" not available.\n", runNumbers.At(ii));
+          ROMEPrint::Warning("Histograms of run " R_LLD " not available.\n", runNumbers.At(ii));
           ROMEPrint::Warning("Please check the run number and the input path.\n\n");
           ROMEPrint::Warning("No Histogram loaded!\n\n");
           return;
@@ -1641,7 +1641,7 @@ void ROMEEventLoop::ReadHistograms()
                      tempObj = static_cast<TObject*>(histDir->FindObjectAny(name.Data()));
                      if (tempObj == 0) {
                         if (firstWarning) {
-                           ROMEPrint::Warning("Histogram '%s' not available in run "R_LLD"!\n",
+                           ROMEPrint::Warning("Histogram '%s' not available in run " R_LLD "!\n",
                                               task->GetHistoNameAt(j)->Data(), runNumbers.At(ii));
                            firstWarning = kFALSE;
                         }
@@ -1676,7 +1676,7 @@ void ROMEEventLoop::ReadHistograms()
                      tempObj = static_cast<TObject*>(histDir->FindObjectAny(name.Data()));
                      if (tempObj == 0) {
                         if (firstWarning) {
-                           ROMEPrint::Warning("Graphgram '%s' not available in run "R_LLD"!\n",
+                           ROMEPrint::Warning("Graphgram '%s' not available in run " R_LLD "!\n",
                                               task->GetGraphNameAt(j)->Data(), runNumbers.At(ii));
                            firstWarning = kFALSE;
                         }
