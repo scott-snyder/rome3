@@ -24,6 +24,8 @@
 #include <Riostream.h>
 #include "ROMEBuilder.h"
 
+using namespace std;
+
 ROMEXML* configXSD = 0;
 
 //______________________________________________________________________________
@@ -2192,7 +2194,7 @@ ROMEString& ROMEBuilder::convertType(const char *value,const char *oldType,const
       } else if (isFloatingType(oldType)) {
          return stringBuffer.SetFormatted("%s.SetFormatted(\"%%.16g\",%s)",tmp.Data(),value);
       } else {
-         return stringBuffer.SetFormatted("%s.SetFormatted(\"%"R_LLD"\",static_cast<Long64_t>(%s))",tmp.Data(),value);
+         return stringBuffer.SetFormatted("%s.SetFormatted(\"%" R_LLD "\",static_cast<Long64_t>(%s))",tmp.Data(),value);
       }
    }
    return stringBuffer;

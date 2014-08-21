@@ -10,6 +10,8 @@
 #include <Riostream.h>
 #include "ROMEVersion.h"
 
+using namespace std;
+
 //______________________________________________________________________________
 void help()
 {

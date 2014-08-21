@@ -27,6 +27,8 @@
 #include "ROMEConfig.h"
 #include "ROMEConfigParameter.h"
 
+using namespace std;
+
 //______________________________________________________________________________
 Bool_t ROMEBuilder::WriteFillObjectStorageObject(ROMEString &buffer,const char *objectPointer,
                                                  const char *objectStoragePointer,const char *objectActivePointer,
@@ -1239,7 +1241,7 @@ Bool_t ROMEBuilder::AddConfigParameters()
             subSubSubGroup->GetLastParameter()->AddSetLine("   gAnalyzer->GetTreeObjectAt(%d)->SetMaxEntries(static_cast<Long_t>(##.ToInteger()));",
                                                            i);
             subSubSubGroup->GetLastParameter()->AddWriteLine("if (!gAnalyzer->IsROMEMonitor())");
-            subSubSubGroup->GetLastParameter()->AddWriteLine("   writeString.SetFormatted(\"%"R_LLD"\",gAnalyzer->GetTreeObjectAt(%d)->GetMaxEntries());",
+            subSubSubGroup->GetLastParameter()->AddWriteLine("   writeString.SetFormatted(\"%" R_LLD "\",gAnalyzer->GetTreeObjectAt(%d)->GetMaxEntries());",
                                                              i);
             // TreeInputFileName
             subSubSubGroup->AddParameter(new ROMEConfigParameter("TreeInputFileName"));

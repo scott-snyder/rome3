@@ -20,6 +20,8 @@
 
 ClassImp(ROMEString)
 
+using namespace std;
+
 static TVirtualMutex *fgROMEStringMutex = 0;
 
 //______________________________________________________________________________

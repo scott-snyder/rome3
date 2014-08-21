@@ -31,6 +31,8 @@
 #include "ROMEString.h"
 #include "TNetFolder.h"
 
+using namespace std;
+
 //----- Interrupt signal handler -----------------------------------------------
 class ROMEInterruptHandler : public TSignalHandler {
 public:

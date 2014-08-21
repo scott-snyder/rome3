@@ -250,8 +250,12 @@ Bool_t ROMERomeDAQ::BeginOfRun()
                         }
                         romeTree->SetFile(static_cast<TFile*>(fRootFiles->At(i)));
                         romeTree->SetFileName(static_cast<TFile*>(fRootFiles->At(i))->GetName());
-                        static_cast<TBranchElement*>(tree->FindBranch("Info"))->SetAddress(&fTreeInfo);
-//                        tree->GetBranch("Info")->GetEntry(0);
+                        TBranchElement *infoBra = static_cast<TBranchElement*>(tree->FindBranch("Info."));
+                        if (!infoBra) { infoBra = static_cast<TBranchElement*>(tree->FindBranch("Info")); }
+                        infoBra->SetAddress(&fTreeInfo);
+//                      TBranch *infoBra = tree->GetBranch("Info.");
+//                      if (!infoBra) { infoBra = tree->GetBranch("Info"); }
+//                      infoBra->GetEntry(0);
 //                        if (fTreeInfo->GetRunNumber() == gROME->GetCurrentRunNumber()) {
                         gROME->SetCurrentInputFileName(gROME->GetInputFileNameAt(i));
                         tree->SetName(fCurrentTreeName.Data());
@@ -292,7 +296,9 @@ Bool_t ROMERomeDAQ::BeginOfRun()
             tree = romeTree->GetTree();
             if (romeTree->isRead()) {
                if (tree->GetEntriesFast() > 0) {
-                  tree->GetBranch("Info")->GetEntry(fCurrentTreePosition[j]);
+                  TBranch *infoBra = tree->GetBranch("Info.");
+                  if (!infoBra) { infoBra = tree->GetBranch("Info"); }
+                  infoBra->GetEntry(fCurrentTreePosition[j]);
                   gROME->SetCurrentRunNumber(fTreeInfo->GetRunNumber());
                   run = static_cast<Int_t>(gROME->GetCurrentRunNumber());
                }
@@ -317,7 +323,9 @@ Bool_t ROMERomeDAQ::BeginOfRun()
                tree->SetAutoFlush(0); 
 #endif
                for (iEvent = 0; iEvent < fTreeNEntries[j]; iEvent++) {
-                  tree->GetBranch("Info")->GetEntry(iEvent);
+                  TBranch *infoBra = tree->GetBranch("Info.");
+                  if (!infoBra) { infoBra = tree->GetBranch("Info"); }
+                  infoBra->GetEntry(iEvent);
                   fTreePositionMap[j][pair<Long64_t, Long64_t>(fTreeInfo->GetRunNumber(), fTreeInfo->GetEventNumber())] =
                      iEvent;
                   if (fTreeInfo->GetRunNumber() == run) {

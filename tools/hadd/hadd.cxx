@@ -59,8 +59,9 @@
            Toby Burnett implemented the possibility to use indirect files.
  */
 
-#include "RConfig.h"
 #include <string>
+#include <cstdlib>
+#include "RConfig.h"
 #include "TChain.h"
 #include "TFile.h"
 #include "THashList.h"
@@ -70,7 +71,8 @@
 #include "Riostream.h"
 #include "TClass.h"
 #include "TSystem.h"
-#include <stdlib.h>
+
+using namespace std;
 
 TList *FileList;
 TFile *Target, *Source;

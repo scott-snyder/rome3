@@ -11,6 +11,8 @@
 #include "ROMEBuilder.h"
 #include "ROMEXML.h"
 
+using namespace std;
+
 //______________________________________________________________________________
 Bool_t ROMEBuilder::AllocateMemorySpace()
 {
@@ -1164,7 +1166,13 @@ Bool_t ROMEBuilder::ReadXMLFolder()
    folderTitle[numOfFolder] = "";
    folderArray[numOfFolder] = "1";
    folderDataBase[numOfFolder] = false;
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
    folderIgnoreTObjectStreamer[numOfFolder] = true;
+#else
+   // it seems there is a problem to ignore TObject streamer
+   // in ROOT 6 at this point
+   folderIgnoreTObjectStreamer[numOfFolder] = false;
+#endif
    folderUserCode[numOfFolder] = false;
    folderVersion[numOfFolder] = "1";
    folderDescription[numOfFolder] = "";
