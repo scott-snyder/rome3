@@ -28,6 +28,8 @@
 #include "ROMEConfig.h"
 #include "ROMEConfigParameter.h"
 
+using namespace std;
+
 namespace {
    const char* Relation(ROMEString &str) {
       if (str.ContainsFast("*")) {
@@ -129,6 +131,8 @@ Bool_t ROMEBuilder::WriteFolderCpp()
       buffer.AppendFormatted("#include \"ROME.h\"\n");
       buffer.AppendFormatted("#include \"generated/%s.h\"\n",clsName.Data());
       buffer.AppendFormatted("\nClassImp(%s)\n",clsName.Data());
+      buffer.AppendFormatted("\n");
+      buffer.AppendFormatted("using namespace std;\n");
       buffer.AppendFormatted("\n");
 
       // Equality operator
@@ -709,7 +713,7 @@ Bool_t ROMEBuilder::WriteFolderCpp()
                buffer.AppendFormatted("}\n");
                buffer.AppendFormatted("\n");
                buffer.Append(kMethodLine);
-               buffer.AppendFormatted("void %s::Set%s(const vector<%s> &%s_value)\n{\n",clsName.Data(),
+               buffer.AppendFormatted("void %s::Set%s(const std::vector<%s> &%s_value)\n{\n",clsName.Data(),
                                       valueName[iFold][i].Data(),valueType[iFold][i].Data(),
                                       valueName[iFold][i].Data());
                buffer.AppendFormatted("   %s = %s_value;\n",valueName[iFold][i].Data(),
@@ -1643,6 +1647,7 @@ Bool_t ROMEBuilder::WriteFolderH()
       buffer.AppendFormatted("#pragma warning( disable : 4800 )\n");
       buffer.AppendFormatted("#pragma warning( disable : 4244 )\n");
 #endif // R__VISUAL_CPLUSPLUS
+      buffer.AppendFormatted("#include <vector>\n");
       buffer.AppendFormatted("#include <TObject.h>\n");
       buffer.AppendFormatted("#include <TClass.h>\n");
       buffer.AppendFormatted("#include <TClonesArray.h>\n");
@@ -1765,7 +1770,7 @@ Bool_t ROMEBuilder::WriteFolderH()
                                    valueName[iFold][i].Data() , nameLen - valueName[iFold][i].Length(), "",
                                    ProcessCommentCPP(valueComment[iFold][i],tmp).Data());
          } else if (valueArray[iFold][i][0] == "vector") {
-            buffer.AppendFormatted("   vector<%-*s> %s;%*s %s\n", typeLen - 1, valueType[iFold][i].Data(),
+            buffer.AppendFormatted("   std::vector<%-*s> %s;%*s %s\n", typeLen - 1, valueType[iFold][i].Data(),
                                    valueName[iFold][i].Data(), nameLen - valueName[iFold][i].Length(), "",
                                    ProcessCommentCPP(valueComment[iFold][i],tmp).Data());
          } else if (valueArray[iFold][i][0] == "variable") {
@@ -1878,7 +1883,7 @@ Bool_t ROMEBuilder::WriteFolderH()
             if (valueArray[iFold][i][0] == "vector") {
                buffer.AppendFormatted("   %s%-*s  Get%sAt(Int_t indx) const;\n", virtualKwd, typeLen, valueType[iFold][i].Data(),
                                       valueName[iFold][i].Data());
-               buffer.AppendFormatted("   %svector<%-*s> &Get%s() %*s { return %s;%*s }\n", virtualKwd, typeLen, valueType[iFold][i].Data(),
+               buffer.AppendFormatted("   %sstd::vector<%-*s> &Get%s() %*s { return %s;%*s }\n", virtualKwd, typeLen, valueType[iFold][i].Data(),
                                       valueName[iFold][i].Data(), lb, "",
                                       valueName[iFold][i].Data(), lb, "");
                buffer.AppendFormatted("   %s%-*s  Get%sSize() const%*s { return %s.size();%*s }\n", virtualKwd, typeLen,
@@ -2040,7 +2045,7 @@ Bool_t ROMEBuilder::WriteFolderH()
                buffer.AppendFormatted("   %svoid Set%sAt%*s(Int_t indx,%-*s %s_value);\n", virtualKwd,
                                       valueName[iFold][i].Data(), lb, "",
                                       typeLen, valueType[iFold][i].Data(), valueName[iFold][i].Data());
-               buffer.AppendFormatted("   %svoid Set%s%*s(const vector<%-*s> &%s_value);\n", virtualKwd,
+               buffer.AppendFormatted("   %svoid Set%s%*s(const std::vector<%-*s> &%s_value);\n", virtualKwd,
                                       valueName[iFold][i].Data(), lb, "",
                                       typeLen, valueType[iFold][i].Data(), valueName[iFold][i].Data());
                buffer.AppendFormatted("   %svoid Set%sSize(Int_t number, Bool_t copyOldData = kFALSE /* not used */, Bool_t fillZero = kFALSE);\n",
@@ -5273,6 +5278,8 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
                              daqNameArray->At(i).Data());
    }
    buffer.AppendFormatted("\n");
+   buffer.AppendFormatted("using namespace std;\n");
+   buffer.AppendFormatted("\n");
 
    // If there is any dependencies, add all "#include" for base tab classes, even if the tab has no dependencies
    for (i = 0; i < numOfTab; i++) {
@@ -8192,6 +8199,8 @@ Bool_t ROMEBuilder::WriteConfigCpp() {
       buffer.AppendFormatted("#include \"ROMESQLDataBase.h\"\n");
    buffer.AppendFormatted("#include \"ROMENoDAQSystem.h\"\n");
    buffer.AppendFormatted("#include \"ROMEiostream.h\"\n");
+   buffer.AppendFormatted("using namespace std;\n");
+   buffer.AppendFormatted("\n");
 
    buffer.AppendFormatted("\nClassImp(%sConfig)\n",shortCut.Data());
 
@@ -9503,8 +9512,12 @@ Bool_t ROMEBuilder::WriteMidasDAQH() {
    buffer.AppendFormatted("\n");
 
    // bank structures
-   if (numOfBank>0)
-      buffer.AppendFormatted("// Bank Structures\n");
+   for (i = 0; i < numOfEvent; i++) {
+      if (numOfBank[i] > 0) {
+         buffer.AppendFormatted("// Bank Structures\n");
+         break;
+      }
+   }
    for (i = 0; i < numOfEvent; i++) {
       for (j = 0; j < numOfBank[i]; j++) {
          if (bankType[i][j] == "structure"||bankType[i][j] == "struct") {
@@ -11358,7 +11371,7 @@ Bool_t ROMEBuilder::WriteNetFolderServerCpp() {
    buffer.AppendFormatted("      } else if (status == 0) { // time out\n");
    buffer.AppendFormatted("         continue;\n");
    buffer.AppendFormatted("      } else {\n");
-   buffer.AppendFormatted("         if ((sock = lsock->Accept()) > 0) {\n");
+   buffer.AppendFormatted("         if ((sock = lsock->Accept())) {\n");
    buffer.AppendFormatted("            thread = new TThread(\"Server\", %sNetFolderServer::Server, sock);\n",
                           shortCut.Data());
    buffer.AppendFormatted("            fServerThreadList->Add(thread);\n");
@@ -12288,6 +12301,8 @@ Bool_t ROMEBuilder::WriteMain()
    buffer.AppendFormatted("#include <Windows.h>\n");
 #endif // R__VISUAL_CPLUSPLUS
    buffer.AppendFormatted("#include \"ROMEiostream.h\"\n");
+   buffer.AppendFormatted("\n");
+   buffer.AppendFormatted("using namespace std;\n");
    buffer.AppendFormatted("\n");
 
    // Additional include path for ACLiC mode.

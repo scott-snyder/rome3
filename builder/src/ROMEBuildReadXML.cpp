@@ -11,6 +11,8 @@
 #include "ROMEBuilder.h"
 #include "ROMEXML.h"
 
+using namespace std;
+
 //______________________________________________________________________________
 Bool_t ROMEBuilder::AllocateMemorySpace()
 {

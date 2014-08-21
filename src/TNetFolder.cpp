@@ -24,6 +24,8 @@
 
 ClassImp(TNetFolder)
 
+using namespace std;
+
 //______________________________________________________________________________
 TNetFolder::TNetFolder()
 :TNamed()

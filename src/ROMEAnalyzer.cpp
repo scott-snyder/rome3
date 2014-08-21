@@ -94,6 +94,8 @@
 
 ClassImp(ROMEAnalyzer)
 
+using namespace std;
+
 ROMEAnalyzer *gROME = 0;  // global ROMEAnalyzer Handle
 static TVirtualMutex *fgRunEventNumberMutex = 0;
 static TVirtualMutex *fgUpdateObjectStorageMutex = 0;

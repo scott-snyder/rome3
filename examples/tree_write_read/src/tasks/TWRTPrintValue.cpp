@@ -34,6 +34,8 @@
 
 ClassImp(TWRTPrintValue)
 
+using namespace std;
+
 void TWRTPrintValue::Init()
 {
 }

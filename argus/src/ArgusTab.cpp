@@ -21,6 +21,7 @@
 
 #if defined( R__UNIX )
 #   include <TGX11.h>
+#   include <X11/Xlib.h>
 #endif
 
 #include "ArgusTab.h"

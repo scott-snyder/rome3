@@ -34,6 +34,8 @@
 
 ClassImp(TWRTFillTree)
 
+using namespace std;
+
 void TWRTFillTree::Init()
 {
 }

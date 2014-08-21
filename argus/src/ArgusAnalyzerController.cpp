@@ -324,7 +324,7 @@ Bool_t ArgusAnalyzerController::ProcessMessage(Long_t msg, Long_t parm1, Long_t 
             if (gROME->IsStandAloneARGUS() || gROME->IsROMEMonitor()) {
                if (fNetFolder) {
                   ROMEString command;
-                  command.SetFormatted("gAnalyzer->SetUserEventJ("R_LLD");", gROME->GetCurrentEventNumber() - fEventStep);
+                  command.SetFormatted("gAnalyzer->SetUserEventJ(" R_LLD ");", gROME->GetCurrentEventNumber() - fEventStep);
                   fNetFolder->ExecuteCommand(command.Data());
                }
             } else {
@@ -335,7 +335,7 @@ Bool_t ArgusAnalyzerController::ProcessMessage(Long_t msg, Long_t parm1, Long_t 
             if (gROME->IsStandAloneARGUS() || gROME->IsROMEMonitor()) {
                if (fNetFolder) {
                   ROMEString command;
-                  command.SetFormatted("gAnalyzer->SetUserEventJ("R_LLD");", gROME->GetCurrentEventNumber() + fEventStep);
+                  command.SetFormatted("gAnalyzer->SetUserEventJ(" R_LLD ");", gROME->GetCurrentEventNumber() + fEventStep);
                   fNetFolder->ExecuteCommand(command.Data());
                }
             } else {
@@ -375,7 +375,7 @@ Bool_t ArgusAnalyzerController::ProcessMessage(Long_t msg, Long_t parm1, Long_t 
             if (gROME->IsStandAloneARGUS() || gROME->IsROMEMonitor()) {
                if (fNetFolder) {
                   ROMEString str;
-                  str.SetFormatted("gAnalyzer->SetUserEventJ("R_LLD");",fEventNumber);
+                  str.SetFormatted("gAnalyzer->SetUserEventJ(" R_LLD ");",fEventNumber);
                   fNetFolder->ExecuteCommand(str.Data());
                }
             } else {
@@ -431,7 +431,7 @@ Bool_t ArgusAnalyzerController::ProcessMessage(Long_t msg, Long_t parm1, Long_t 
             if (gROME->IsStandAloneARGUS() || gROME->IsROMEMonitor()) {
                if (fNetFolder) {
                   ROMEString str;
-                  str.SetFormatted("gAnalyzer->SetUserEventJ("R_LLD");",fEventNumber);
+                  str.SetFormatted("gAnalyzer->SetUserEventJ(" R_LLD ");",fEventNumber);
                   fNetFolder->ExecuteCommand(str.Data());
                }
             } else {

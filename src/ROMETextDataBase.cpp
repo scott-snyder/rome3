@@ -51,6 +51,8 @@
 #include "ROMEStrArray.h"
 #include "ROMETextDataBase.h"
 
+using namespace std;
+
 const char* EndOfHeader = "/////////////////////////////////////----///////////////////////////////////////";
 const Int_t numbering = 10;
 
