@@ -10007,9 +10007,9 @@ Bool_t ROMEBuilder::WriteRomeDAQCpp()
          buffer.AppendFormatted("         }\n");
          buffer.AppendFormatted("      }\n");
       }
-      buffer.AppendFormatted("      bb = static_cast<TBranchElement*>(romeTree->GetTree()->FindBranch(\"Info\"));\n");
+      buffer.AppendFormatted("      bb = static_cast<TBranchElement*>(romeTree->GetTree()->FindBranch(\"Info.\"));\n");
       buffer.AppendFormatted("      if (!bb)\n");
-      buffer.AppendFormatted("         bb = static_cast<TBranchElement*>(romeTree->GetTree()->FindBranch(\"Info.\"));\n");
+      buffer.AppendFormatted("         bb = static_cast<TBranchElement*>(romeTree->GetTree()->FindBranch(\"Info\"));\n");
       buffer.AppendFormatted("      if (bb) {\n");
       buffer.AppendFormatted("         bb->SetAddress(&fTreeInfo);\n");
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5,26,0))
@@ -11795,8 +11795,10 @@ Bool_t ROMEBuilder::WriteEventLoopCpp()
       buffer.AppendFormatted("      tree     = romeTree->GetTree();\n");
 #if (ROOT_VERSION_CODE < ROOT_VERSION(5,30,0))
       buffer.AppendFormatted("      tree->Branch(\"Info\",\"ROMETreeInfo\",&fTreeInfo,32000, 99)->SetCompressionLevel(romeTree->GetCompressionLevel());\n");
-#else
+#elif (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       buffer.AppendFormatted("      tree->Branch(\"Info\",\"ROMETreeInfo\",&fTreeInfo,32000, 99)->SetCompressionSettings(ROOT::CompressionSettings(ROOT::ECompressionAlgorithm(romeTree->GetCompressionAlgorithm()), romeTree->GetCompressionLevel()));\n");
+#else
+      buffer.AppendFormatted("      tree->Branch(\"Info.\",\"ROMETreeInfo\",&fTreeInfo,32000, 99)->SetCompressionSettings(ROOT::CompressionSettings(ROOT::ECompressionAlgorithm(romeTree->GetCompressionAlgorithm()), romeTree->GetCompressionLevel()));\n");
 #endif
       for (j = 0; j < numOfBranch[i]; j++) {
          for (k = 0; k < numOfFolder; k++) {
@@ -14090,7 +14092,11 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
 
       // Set address
       buffer.AppendFormatted("   // Map input branchs and objects\n");
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       buffer.AppendFormatted("   TBranch *branchInfo = inTree->GetBranch(\"Info\");\n");
+#else
+      buffer.AppendFormatted("   TBranch *branchInfo = inTree->GetBranch(\"Info.\");\n");
+#endif
       buffer.AppendFormatted("   if (kRead_Info && branchInfo) branchInfo->SetAddress(&info);\n");
       for (iBranch = 0; iBranch < numOfBranch[iTree]; iBranch++) {
          if (branchFolderNum[iTree][iBranch] == -1) {
@@ -14136,7 +14142,11 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
 
       // Create branch
       buffer.AppendFormatted("   // Add branches to output tree\n");
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       buffer.AppendFormatted("   if (kWrite_Info) outTree->Branch(\"Info\",\"ROMETreeInfo\", &info)->SetCompressionLevel(kCompression);\n");
+#else
+      buffer.AppendFormatted("   if (kWrite_Info) outTree->Branch(\"Info.\",\"ROMETreeInfo\", &info)->SetCompressionLevel(kCompression);\n");
+#endif
       for (iBranch = 0; iBranch < numOfBranch[iTree]; iBranch++) {
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
