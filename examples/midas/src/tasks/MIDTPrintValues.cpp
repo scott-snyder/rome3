@@ -53,15 +53,17 @@ void MIDTPrintValues::BeginOfRun()
 
    // copy ODB to ROOT files.
    // this can be read in "rome" DAQ mode.
-   Int_t nTree = gAnalyzer->GetTreeObjectEntries();
-   Int_t iTree;
-   ROMETree *tree;
-   ROMEODBOfflineDataBase *db = static_cast<ROMEODBOfflineDataBase*>(gAnalyzer->GetDataBase("odb"));
-   if (db && gAnalyzer->IsActiveDAQ("midas")) {
-      for (iTree = 0; iTree < nTree; iTree++) {
-         tree = gAnalyzer->GetTreeObjectAt(iTree);
-         if (tree->isWrite()) {
-            db->WriteToTFile(tree->GetFile());
+   if (gAnalyzer->isOffline()) {
+      Int_t nTree = gAnalyzer->GetTreeObjectEntries();
+      Int_t iTree;
+      ROMETree *tree;
+      ROMEODBOfflineDataBase *db = static_cast<ROMEODBOfflineDataBase*>(gAnalyzer->GetDataBase("odb"));
+      if (db && gAnalyzer->IsActiveDAQ("midas")) {
+         for (iTree = 0; iTree < nTree; iTree++) {
+            tree = gAnalyzer->GetTreeObjectAt(iTree);
+            if (tree->isWrite()) {
+               db->WriteToTFile(tree->GetFile());
+            }
          }
       }
    }

@@ -43,8 +43,11 @@ void SBSTPrintADCValues::BeginOfRun()
 
 void SBSTPrintADCValues::Event()
 {
-   for (int i=0;i<10;i++)
+   for (int i=0;i<10;i++) {
       gAnalyzer->GetPMTDataAt(i)->SetADC(i);
+      gAnalyzer->GetPMTDataAt(i)->SetPulseHeightSize(1);
+      gAnalyzer->GetPMTDataAt(i)->SetPulseHeightAt(0, i);
+   }
 
    if (gAnalyzer->GetGSP()->GetOutputOnOff()) {
       for (int i=0;i<10;i++)
