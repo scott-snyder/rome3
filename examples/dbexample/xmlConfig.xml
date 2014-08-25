@@ -35,7 +35,7 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ConfigCommentLevel>1</ConfigCommentLevel>
-        <QuitMode>true</QuitMode>
+        <QuitMode>false</QuitMode>
         <ShowSplashScreen>false</ShowSplashScreen>
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>

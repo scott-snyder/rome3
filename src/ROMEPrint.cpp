@@ -21,6 +21,8 @@
 #include "ROMEString.h"
 #include "ROMEStrArray.h"
 
+using namespace std;
+
 Int_t ROMEPrint::gVerboseLevel = kNormal;
 Int_t ROMEPrint::gReportMaxCount = 20;
 
@@ -283,15 +285,15 @@ void ROMEPrint::Report(const Int_t verboseLevel, const char* fileName, const cha
 
       if (verboseLevel > kMidasMessageSendingLevel) {
          if (event == kEventNumberInit) {
-            lineHeader.SetFormatted("[%c,"R_LLD"-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'I', fileLine.Data());
+            lineHeader.SetFormatted("[%c," R_LLD "-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'I', fileLine.Data());
          } else if (event == kEventNumberBeginOfRun) {
-            lineHeader.SetFormatted("[%c,"R_LLD"-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'B', fileLine.Data());
+            lineHeader.SetFormatted("[%c," R_LLD "-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'B', fileLine.Data());
          } else if (event == kEventNumberEndOfRun) {
-            lineHeader.SetFormatted("[%c,"R_LLD"-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'E', fileLine.Data());
+            lineHeader.SetFormatted("[%c," R_LLD "-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'E', fileLine.Data());
          } else if (event == kEventNumberTerminate) {
-            lineHeader.SetFormatted("[%c,"R_LLD"-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'T', fileLine.Data());
+            lineHeader.SetFormatted("[%c," R_LLD "-%c,%s] ", kReportLevelLetter[verboseLevel], run, 'T', fileLine.Data());
          } else {
-            lineHeader.SetFormatted("[%c,"R_LLD"-"R_LLD",%s] ", kReportLevelLetter[verboseLevel], run, event, fileLine.Data());
+            lineHeader.SetFormatted("[%c," R_LLD "-" R_LLD ",%s] ", kReportLevelLetter[verboseLevel], run, event, fileLine.Data());
          }
       } else {
          lineHeader = "";

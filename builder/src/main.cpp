@@ -32,6 +32,8 @@
 #include "ROMEBuilder.h"
 #include "ROMEVersion.h"
 
+using namespace std;
+
 //______________________________________________________________________________
 int main(int argc, const char *argv[])
 {

@@ -42,6 +42,8 @@
 #   endif
 #endif
 
+using namespace std;
+
 //______________________________________________________________________________
 void ROMEUtilities::GetMidasTID(ROMEString *buf, Char_t *type)
 {

@@ -13,7 +13,7 @@ else
 endif
 
 ifeq ($(RESTRICT_TEST), yes)
-OPT = -Wall -W -Werror
+OPT = -Wall -W -Werror -Wno-format-security
 endif
 export DOOPT    =$(OPT)
 export FLOPT    =$(OPT)

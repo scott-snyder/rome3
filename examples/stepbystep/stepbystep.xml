@@ -12,6 +12,12 @@
 				<FieldType>Int_t</FieldType>
 				<FieldComment>ADC Value of a PMT</FieldComment>
 			</Field>
+			<Field>
+				<FieldName>PulseHeight</FieldName>
+				<FieldType>Float_t</FieldType>
+				<ArraySize>vector</ArraySize>
+				<FieldComment>Pulse heigh of a pulse</FieldComment>
+			</Field>
 		</Folder>
 	</Folders>
 	<Tasks>

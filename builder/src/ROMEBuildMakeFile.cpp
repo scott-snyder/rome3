@@ -1539,11 +1539,19 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       dictionaryNameMod.SetFormatted("%s%d", dictionaryName, iFile);
       // depend file
 #if defined( R__UNIX )
+#   if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       buffer.AppendFormatted("obj/%sionary%d.d:dict/%s%d.h\n", dictionaryName, iFile, dictionaryName, iFile);
       buffer.AppendFormatted("\t$(call %sechoing, \"creating  obj/%sionary%d.d\")\n",shortCut.ToLower(tmp),dictionaryName, iFile);
       buffer.AppendFormatted("\t$(Q)$(CXX) $(Flags) $(Includes) -MM -MT dict/%s%d.cpp src/generated/%s%dDummy.cpp | \\\n\tsed \"s/.\\/dict\\/%s%d.h//g\" | sed \"s/dict\\/%s%d.h//g\" > $@ ",
                              dictionaryName, iFile, dictionaryName, iFile, dictionaryName, iFile, dictionaryName, iFile);
       buffer.AppendFormatted(" || ($(RM) $@; exit 1;)\n");
+#   else
+      buffer.AppendFormatted("obj/%sionary%d.d:dict/%s%d_rdict.pcm\n", dictionaryName, iFile, dictionaryName, iFile);
+      buffer.AppendFormatted("\t$(call %sechoing, \"creating  obj/%sionary%d.d\")\n",shortCut.ToLower(tmp),dictionaryName, iFile);
+      buffer.AppendFormatted("\t$(Q)$(CXX) $(Flags) $(Includes) -MM -MT dict/%s%d.cpp src/generated/%s%dDummy.cpp | \\\n\tsed \"s/.\\/dict\\/%s%d.cpp//g\" | sed \"s/dict\\/%s%d.cpp//g\" > $@ ",
+                             dictionaryName, iFile, dictionaryName, iFile, dictionaryName, iFile, dictionaryName, iFile);
+      buffer.AppendFormatted(" || ($(RM) $@; exit 1;)\n");
+#   endif
       buffer.AppendFormatted("\n");
 #endif
       //dummy source file
@@ -1551,7 +1559,11 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       dictionaryNames->Add(dictionaryNameMod.Data());
 
       // Output files
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       bufferT.SetFormatted("dict/%s%d.h dict/%s%d.cpp:",dictionaryName, iFile, dictionaryName, iFile);
+#else
+      bufferT.SetFormatted("dict/%s%d_rdict.pcm dict/%s%d.cpp:",dictionaryName, iFile, dictionaryName, iFile);
+#endif
       buffer.Append(bufferT.Data());
       bufferT.ReplaceAll(" ",";");
       bufferT.ReplaceAll(":","");
@@ -1567,9 +1579,15 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       buffer.AppendFormatted("\t@echo \"creating  dict/%s%d.cpp dict/%s%d.h\"\n",
                              dictionaryName, iFile, dictionaryName, iFile);
 #else
+#   if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
       buffer.AppendFormatted("\t$(call %sechoing, \"creating  dict/%s%d.cpp dict/%s%d.h\")\n",shortCut.ToLower(tmp),
                              dictionaryName, iFile, dictionaryName, iFile);
       buffer.AppendFormatted("\t-@$(RM) dict/%s%d.cpp dict/%s%d.h\n",dictionaryName, iFile, dictionaryName, iFile);
+#   else
+      buffer.AppendFormatted("\t$(call %sechoing, \"creating  dict/%s%d.cpp dict/%s%d_rdict.pcm\")\n",shortCut.ToLower(tmp),
+                             dictionaryName, iFile, dictionaryName, iFile);
+      buffer.AppendFormatted("\t-@$(RM) dict/%s%d.cpp\n",dictionaryName, iFile);
+#   endif
 #endif // R__UNIX
 
       // Command
@@ -1627,7 +1645,11 @@ void ROMEBuilder::WriteMakefileDictDummyCpp(const char* dictionaryName)
    ROMEString cppFile;
    cppFile.SetFormatted("src/generated/%sDummy.cpp", dictionaryName);
    ROMEString buffer;
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
    buffer.SetFormatted("#include \"dict/%s.h\"\n", dictionaryName);
+#else
+   buffer.SetFormatted("#include \"dict/%s.cpp\"\n", dictionaryName);
+#endif
    WriteFile(cppFile.Data(),buffer.Data(),6);
 }
 
@@ -1720,7 +1742,11 @@ void ROMEBuilder::WriteMakefileUserDictionary(ROMEString& buffer)
    WriteMakefileDictDummyCpp(dictionaryName);
 
    // Output files
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
    bufferT.SetFormatted("dict/%sUserDict.h dict/%sUserDict.cpp:",shortCut.Data(), shortCut.Data());
+#else
+   bufferT.SetFormatted("dict/%sUserDict_rdict.pcm dict/%sUserDict.cpp:",shortCut.Data(), shortCut.Data());
+#endif
    buffer.Append(bufferT.Data());
    bufferT.ReplaceAll(" ",";");
    bufferT.ReplaceAll(":","");
@@ -1732,12 +1758,21 @@ void ROMEBuilder::WriteMakefileUserDictionary(ROMEString& buffer)
    // Command
 #if defined( R__UNIX )
    buffer.AppendFormatted("ifdef DictionaryHeaders\n");
+#   if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
    buffer.AppendFormatted("\t@if [ -e dict/%sUserDict.cpp ]; then $(RM) dict/%sUserDict.cpp; fi;\n",shortCut.Data(),
                              shortCut.Data());
    buffer.AppendFormatted("\t@if [ -e dict/%sUserDict.h ]; then $(RM) dict/%sUserDict.h; fi;\n",shortCut.Data(),
                           shortCut.Data());
    buffer.AppendFormatted("\t$(call %sechoing, \"creating  dict/%sUserDict.h dict/%sUserDict.cpp\")\n",
                           shortCut.ToLower(tmp),shortCut.Data(), shortCut.Data());
+#   else
+   buffer.AppendFormatted("\t@if [ -e dict/%sUserDict.cpp ]; then $(RM) dict/%sUserDict.cpp; fi;\n",shortCut.Data(),
+                             shortCut.Data());
+   buffer.AppendFormatted("\t@if [ -e dict/%sUserDict_rdict.pcm ]; then $(RM) dict/%sUserDict_rdict.pcm; fi;\n",shortCut.Data(),
+                          shortCut.Data());
+   buffer.AppendFormatted("\t$(call %sechoing, \"creating  dict/%sUserDict_rdict.pcm dict/%sUserDict.cpp\")\n",
+                          shortCut.ToLower(tmp),shortCut.Data(), shortCut.Data());
+#   endif
 #endif
    WriteRootCintCall(buffer);
    arguments.SetFormatted(" -f dict/%sUserDict.cpp -c -p",shortCut.Data());
@@ -2534,7 +2569,11 @@ void ROMEBuilder::WriteMakefile() {
    for (i = 0; i < objDirList.GetEntriesFast(); i++) {
       buffer.AppendFormatted(" %s/*%s",objDirList.At(i).Data(),kObjectSuffix);
    }
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
    buffer.AppendFormatted(" G__auto*LinkDef.h dict/*.h dict/*.cpp");
+#else
+   buffer.AppendFormatted(" G__auto*LinkDef.h dict/*_rdict.pcm dict/*.cpp");
+#endif
    buffer.AppendFormatted(" $(NTARGETS_FILE)");
    if (pch)
       buffer.AppendFormatted(" include/generated/*.gch");

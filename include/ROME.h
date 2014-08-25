@@ -50,7 +50,7 @@
 #   define G_GNUC_FORMAT( arg_idx )
 #endif
 
-#define WarningSuppression(x) { if (x) { int warning_suppression; warning_suppression = 0; } }
+#define WarningSuppression(x) { if (x) { int warning_suppression = 0; if (warning_suppression) {} } }
 
 // This macro can be used for debugging like,
 //  void test(int i)

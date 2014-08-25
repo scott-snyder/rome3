@@ -24,6 +24,8 @@
 #include <Riostream.h>
 #include "ROMEBuilder.h"
 
+using namespace std;
+
 ROMEXML* configXSD = 0;
 
 //______________________________________________________________________________
@@ -2079,18 +2081,21 @@ Bool_t ROMEBuilder::isNumber(const char* str)
 {
    ROMEString typeStr = str;
    typeStr.StripSpaces();
-   if (typeStr != "float" && typeStr != "Float_t" &&
-       typeStr != "double" && typeStr != "Double_t" && typeStr != "Double32_t" &&
-       typeStr != "char" && typeStr != "Char_t" &&
-       typeStr != "unsigned char" && typeStr != "UChar_t" &&
-       typeStr != "short" && typeStr != "Short_t" &&
-       typeStr != "unsigned short" && typeStr != "UShort_t" &&
-       typeStr != "int" && typeStr != "Int_t" &&
-       typeStr != "unsigned int" && typeStr != "UInt_t" &&
-       typeStr != "long" && typeStr != "Long_t" &&
-       typeStr != "unsigned long" && typeStr != "ULong_t" &&
-       typeStr != "Long64_t" && typeStr != "ULong64_t" &&
-       typeStr != "long long" && typeStr != "unsigned long long")
+   if (typeStr != "float"          && typeStr != "Float_t"            &&
+       typeStr != "double"         && typeStr != "Double_t"           && typeStr != "Double32_t" &&
+       typeStr != "char"           && typeStr != "Char_t"             &&
+       typeStr != "unsigned char"  && typeStr != "UChar_t"            &&
+       typeStr != "short"          && typeStr != "Short_t"            &&
+       typeStr != "unsigned short" && typeStr != "UShort_t"           &&
+       typeStr != "int"            && typeStr != "Int_t"              &&
+       typeStr != "unsigned int"   && typeStr != "UInt_t"             &&
+       typeStr != "long"           && typeStr != "Long_t"             &&
+       typeStr != "unsigned long"  && typeStr != "ULong_t"            &&
+       typeStr != "Long64_t"       && typeStr != "ULong64_t"          &&
+       typeStr != "long long"      && typeStr != "unsigned long long" &&
+       typeStr != "WORD"  &&
+       typeStr != "INT"   &&
+       typeStr != "DWORD")
       return false;
    return true;
 }
@@ -2189,7 +2194,7 @@ ROMEString& ROMEBuilder::convertType(const char *value,const char *oldType,const
       } else if (isFloatingType(oldType)) {
          return stringBuffer.SetFormatted("%s.SetFormatted(\"%%.16g\",%s)",tmp.Data(),value);
       } else {
-         return stringBuffer.SetFormatted("%s.SetFormatted(\"%"R_LLD"\",static_cast<Long64_t>(%s))",tmp.Data(),value);
+         return stringBuffer.SetFormatted("%s.SetFormatted(\"%" R_LLD "\",static_cast<Long64_t>(%s))",tmp.Data(),value);
       }
    }
    return stringBuffer;
@@ -2428,7 +2433,7 @@ void* ROMEBuilder::AllocateArray(T* p0, Int_t x1, Int_t x2, Int_t x3, Int_t x4, 
    switch(n) {
    case 1:
       p1 = new T[x1];
-      if (reset) memset(p1, 0, sizeof(T) * x1);
+      if (reset) memset(static_cast<void*>(p1), 0, sizeof(T) * x1);
       return p1;
 
    case 2:

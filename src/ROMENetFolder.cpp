@@ -80,7 +80,7 @@ Bool_t ROMENetFolder::UnRegisterObject(const char* name)
 Bool_t ROMENetFolder::RequestNewEvent(Long64_t oldRunNumber,Long64_t oldEventNumber)
 {
    ROMEString str = "RequestNewEvent ";
-   str.SetFormatted("RequestNewEvent "R_LLD" "R_LLD"",oldRunNumber,oldEventNumber);
+   str.SetFormatted("RequestNewEvent " R_LLD " " R_LLD "",oldRunNumber,oldEventNumber);
    if (!Send(str.Data()))
       return false;
 

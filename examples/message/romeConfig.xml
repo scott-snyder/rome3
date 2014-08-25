@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2454 2008-06-27 00:49:37Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -38,10 +38,13 @@
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ReportMaxCount>20</ReportMaxCount>
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
-        <ShowSplashScreen>true</ShowSplashScreen>
-        <GraphicalConfigEdit>true</GraphicalConfigEdit>
+        <ShowSplashScreen>false</ShowSplashScreen>
+        <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>
       </Settings>
 

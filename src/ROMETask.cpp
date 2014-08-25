@@ -385,7 +385,7 @@ void ROMETask::Exec(Option_t *option)
 //______________________________________________________________________________
 void ROMETask::StartRootInterpreter(const char *message)
 {
-   ROMEPrint::Print("\nIn method %s of task %s of event number "R_LLD" of run number "R_LLD"\n",
+   ROMEPrint::Print("\nIn method %s of task %s of event number " R_LLD " of run number " R_LLD "\n",
                     fCurrentEventMethod.Data(), fName.Data(), gROME->GetCurrentEventNumber(),
                     gROME->GetCurrentRunNumber());
 

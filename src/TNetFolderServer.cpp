@@ -33,6 +33,8 @@
 #include "Riostream.h"
 #include "TNetFolderServer.h"
 
+using namespace std;
+
 TApplication* TNetFolderServer::fApplication      = 0;
 Int_t         TNetFolderServer::fPort             = 9090;
 TString       TNetFolderServer::fServerName       = "localhost";
@@ -356,7 +358,7 @@ THREADTYPE TNetFolderServer::ServerLoop(void *arg)
       } else if (status == 0) { // time out
          continue;
       } else {
-         if ((sock = lsock->Accept()) > 0) {
+         if ((sock = lsock->Accept())) {
             thread = new TThread("Server", TNetFolderServer::Server, sock);
             fServerThreadList->Add(thread);
             thread->Run();

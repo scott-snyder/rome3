@@ -12,6 +12,23 @@
 				<FieldType>Int_t</FieldType>
 				<FieldComment>Value of Folder Data</FieldComment>
 			</Field>
+			<Field>
+				<FieldName>NArr1</FieldName>
+				<FieldType>Int_t</FieldType>
+				<FieldComment>Value of Folder Data</FieldComment>
+			</Field>
+			<Field>
+				<FieldName>Arr1</FieldName>
+				<FieldType>Double_t</FieldType>
+				<ArraySize>variable</ArraySize>
+				<FieldComment>[NArr1] Value of Folder Data</FieldComment>
+			</Field>
+			<Field>
+				<FieldName>Vector1</FieldName>
+				<FieldType>Double_t</FieldType>
+				<ArraySize>vector</ArraySize>
+				<FieldComment>Value of Folder Data</FieldComment>
+			</Field>
 		</Folder>
 		<Folder>
 			<FolderName>Data2</FolderName>

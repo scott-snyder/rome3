@@ -21,7 +21,7 @@
     <Common>
       <Settings>
         <BatchMode>false</BatchMode>
-        <ShowSplashScreen>true</ShowSplashScreen>
+        <ShowSplashScreen>false</ShowSplashScreen>
       </Settings>
       <SocketServer>
         <Active>false</Active>

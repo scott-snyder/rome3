@@ -24,7 +24,7 @@
 
 ClassImp(TNetFolder)
 
-const Int_t kNetFolderTimeOut = 5000;
+using namespace std;
 
 //______________________________________________________________________________
 TNetFolder::TNetFolder()

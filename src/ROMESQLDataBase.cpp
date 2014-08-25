@@ -785,9 +785,9 @@ Bool_t ROMESQLDataBase::Write(ROMEStr2DArray * values, const char *dataBasePath,
          sqlQuery += " ( ";
          sqlQuery += fInsertFieldList;
          if (path->IsOrderArray()) {
-            sqlQuery += "," +
-                  strlen(path->GetTableIDXNameAt(path->GetNumberOfTables() - 1)) ?
-                  path->GetTableIDXNameAt(path->GetNumberOfTables() - 1) : "idx";
+            sqlQuery += ",";
+            sqlQuery += strlen(path->GetTableIDXNameAt(path->GetNumberOfTables() - 1)) ?
+                        path->GetTableIDXNameAt(path->GetNumberOfTables() - 1) : "idx";
          }
          if (fAdInsertFields.Length()) {
             sqlQuery += "," + fAdInsertFields;

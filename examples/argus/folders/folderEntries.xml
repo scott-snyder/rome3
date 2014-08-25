@@ -303,6 +303,27 @@
 				<FieldType>Double_t</FieldType>
 				<ArraySize>10:4:2</ArraySize>
 			</Field>
+			<!-- vector fields -->
+			<Field>
+				<FieldName>VectorVariablePremitive</FieldName>
+				<FieldType>Double_t</FieldType>
+				<ArraySize>vector</ArraySize>
+			</Field>
+			<Field>
+				<FieldName>VectorVariableTString</FieldName>
+				<FieldType>TString</FieldType>
+				<ArraySize>vector</ArraySize>
+			</Field>
+			<Field>
+				<FieldName>VectorVariableString</FieldName>
+				<FieldType>std::string</FieldType>
+				<ArraySize>vector</ArraySize>
+			</Field>
+			<Field>
+				<FieldName>VectorVariablePointer</FieldName>
+				<FieldType>TVector3*</FieldType>
+				<ArraySize>vector</ArraySize>
+			</Field>
 		</Folder>
 	</Folder>
 </Folders>

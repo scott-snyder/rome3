@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: romeConfig.xml 2460 2008-07-03 20:06:53Z sawada $ -->
+<!-- $Id: $ -->
 
 <!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
@@ -38,9 +38,12 @@
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ReportMaxCount>20</ReportMaxCount>
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
-        <ShowSplashScreen>true</ShowSplashScreen>
+        <ShowSplashScreen>false</ShowSplashScreen>
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>
       </Settings>
@@ -101,7 +104,9 @@
         <WindowScale>1.0</WindowScale>
         <StatusBar>true</StatusBar>
         <UpdateFrequency>1000</UpdateFrequency>
+        <ScreenShotPeriod>60</ScreenShotPeriod>
         <ListTreeView>false</ListTreeView>
+        <TimeZone>local</TimeZone>
         <AnalyzerController>
           <Active>false</Active>
           <NetFolderName></NetFolderName>
@@ -117,6 +122,8 @@
         <Tab>
           <TabName>Tab1</TabName>
           <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
           <SteeringParameterField>
             <!-- Color of text. -->
             <SPName>Color</SPName>
@@ -126,6 +133,8 @@
           <Tab>
             <TabName>Tab1_1</TabName>
             <Active>true</Active>
+            <ScreenShotFileName></ScreenShotFileName>
+            <NewWindow>false</NewWindow>
             <SteeringParameterField>
               <!-- Color of text. -->
               <SPName>Color</SPName>
@@ -136,6 +145,8 @@
           <Tab>
             <TabName>Tab1_2</TabName>
             <Active>true</Active>
+            <ScreenShotFileName></ScreenShotFileName>
+            <NewWindow>false</NewWindow>
             <SteeringParameterField>
               <!-- Color of text. -->
               <SPName>Color</SPName>
@@ -147,6 +158,8 @@
         <Tab>
           <TabName>Tab2</TabName>
           <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
           <SteeringParameterField>
             <!-- Color of text. -->
             <SPName>Color</SPName>
@@ -156,6 +169,8 @@
           <Tab>
             <TabName>Tab2_1</TabName>
             <Active>true</Active>
+            <ScreenShotFileName></ScreenShotFileName>
+            <NewWindow>false</NewWindow>
             <SteeringParameterField>
               <!-- Color of text. -->
               <SPName>Color</SPName>
@@ -166,6 +181,8 @@
           <Tab>
             <TabName>Tab2_2</TabName>
             <Active>true</Active>
+            <ScreenShotFileName></ScreenShotFileName>
+            <NewWindow>false</NewWindow>
             <SteeringParameterField>
               <!-- Color of text. -->
               <SPName>Color</SPName>
