@@ -69,9 +69,9 @@
         <!-- Amount of comments in configuration xml file. 0 to 5. You have more comments when this is larger. degault is 1. -->
         <ConfigCommentLevel>5</ConfigCommentLevel>
         <!-- If true, the program doesn't start a root session at the end. Default is false. -->
-        <QuitMode>true</QuitMode>
+        <QuitMode>false</QuitMode>
         <!-- Program shows a splash screen, when starting up. Default is true. -->
-        <ShowSplashScreen>true</ShowSplashScreen>
+        <ShowSplashScreen>false</ShowSplashScreen>
         <!-- Configuration file can be modified in a GUI at start up. -->
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <!-- Flag if configuration XML file is overwritten by program. When this is true, program does not overwrite configuration file. -->

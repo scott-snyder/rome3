@@ -641,6 +641,10 @@ Bool_t ROMEAnalyzer::ReadParameters(int argc, char *argv[])
       ROMEPrint::Print("\nTerminate program.\n");
       return false;
    }
+#if 0
+   // It seems variables are not read correctly, and config-XML files can be
+   // broken by GUI config.
+   // This function is disabled until the bug is fixed.
    if (!isNoGraphics() /* GUI available */ &&
        graphicalConfigEditCommandOption != 0 /* user didn't disabled explicitly */ &&
        ((graphicalConfigEditCommandOption < 0 /* user didn't specify by command option */ && isGraphicalConfigEdit()) ||
@@ -650,6 +654,7 @@ Bool_t ROMEAnalyzer::ReadParameters(int argc, char *argv[])
          return false;
       }
    }
+#endif
 
    if (fAnalysisMode == kAnalyzeNotSpecified) {
       fAnalysisMode = kAnalyzeOffline;

@@ -43,8 +43,8 @@
         <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
-        <ShowSplashScreen>true</ShowSplashScreen>
-        <GraphicalConfigEdit>true</GraphicalConfigEdit>
+        <ShowSplashScreen>false</ShowSplashScreen>
+        <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>
       </Settings>
 

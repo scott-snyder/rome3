@@ -42,7 +42,7 @@
         <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
         <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>0</ConfigCommentLevel>
-        <QuitMode>true</QuitMode>
+        <QuitMode>false</QuitMode>
         <ShowSplashScreen>false</ShowSplashScreen>
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>

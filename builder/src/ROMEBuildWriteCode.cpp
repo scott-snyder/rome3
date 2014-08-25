@@ -5964,6 +5964,7 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
 #if defined( R__UNIX )
    buffer.Append(kMethodLine);
    buffer.AppendFormatted("void %sAnalyzer::startSplashScreen()\n{\n",shortCut.Data());
+   buffer.AppendFormatted("      Warning(\"startSplashScreen\", \"Splash screen is not implemented\");\n");
    buffer.AppendFormatted("   \n");
    buffer.AppendFormatted("}\n");
 #endif

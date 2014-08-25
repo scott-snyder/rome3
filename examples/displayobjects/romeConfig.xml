@@ -67,7 +67,7 @@
         <!-- Program shows a splash screen, when starting up. Default is true. -->
         <ShowSplashScreen>false</ShowSplashScreen>
         <!-- Configuration file can be modified in a GUI at start up. -->
-        <GraphicalConfigEdit>true</GraphicalConfigEdit>
+        <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <!-- Flag if configuration XML file is overwritten by program. When this is true, program does not overwrite configuration file. -->
         <PreserveConfig>false</PreserveConfig>
       </Settings>

@@ -26,8 +26,8 @@
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
         <ConfigCommentLevel>1</ConfigCommentLevel>
-        <QuitMode>true</QuitMode>
-        <ShowSplashScreen>true</ShowSplashScreen>
+        <QuitMode>false</QuitMode>
+        <ShowSplashScreen>false</ShowSplashScreen>
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>
       </Settings>
