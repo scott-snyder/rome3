@@ -1,11 +1,11 @@
-This example shows how to use ROME to analyzer midas data.
+This example shows how to use ROME to analyze midas data.
 
 First of all, please download 'midas' (https://midas.triumf.ca) and set an environment variable MIDASSYS pointing to the directory where you have the midas package.
 Go to examples/experiment in midas and compile it.
-Then start 'frontend there. You can start/stop a run from 'odbedit' program with start/stop command.
-Midas banks are created by midas are written in frontend.c in the example.
+Then start 'frontend' there. You can start/stop a run from 'odbedit' program with start/stop command.
+Midas banks created by midas (ADC, TDC etc.) are defined in frontend.c in the example.
 
-Now, you build the ROME based analysis framework in this directory (where this README.txt is located).
+Now you build the ROME based analysis framework in this directory (where this README.txt is located).
    $ROMESYS/bin/romebuilder.exe -i midas.xml -o . -midas
 Midas banks are defined in midas.xml
 
