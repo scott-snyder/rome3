@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: $ -->
 
-<!-- Please check ROME homepage for details of tags
-http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
+<!-- Please check $ROMESYS/romeConfig_xsd.html for details of tags -->
 
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="c:/rome/romeConfig.xsd">
   <ProgramConfiguration>
-    <ProgramMode>3</ProgramMode>
+    <ProgramMode>0</ProgramMode>
   </ProgramConfiguration>
 
   <MainConfiguration>
@@ -24,22 +24,37 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
       <Host></Host>
       <Experiment></Experiment>
       <AnalyzerName>NFExample</AnalyzerName>
+      <MemoryBuffer>SYSTEM</MemoryBuffer>
     </Online>
 
     <Paths>
       <InputFilePath>./</InputFilePath>
       <OutputFilePath>./</OutputFilePath>
+      <OutputFileOption>RECREATE</OutputFileOption>
+      <MakeOutputDirectory>false</MakeOutputDirectory>
     </Paths>
 
     <Common>
       <Settings>
         <VerboseLevel>normal</VerboseLevel>
+        <ReportMaxCount>20</ReportMaxCount>
+        <ReportSummaryFileName></ReportSummaryFileName>
+        <ReportSummaryFileLevel>warning</ReportSummaryFileLevel>
+        <ReportSummaryLineLength>2048</ReportSummaryLineLength>
         <ConfigCommentLevel>1</ConfigCommentLevel>
         <QuitMode>false</QuitMode>
         <ShowSplashScreen>false</ShowSplashScreen>
         <GraphicalConfigEdit>false</GraphicalConfigEdit>
         <PreserveConfig>false</PreserveConfig>
       </Settings>
+
+      <FloatingPointExceptionTrap>
+        <Invalid>false</Invalid>
+        <DivByZero>false</DivByZero>
+        <Overflow>false</Overflow>
+        <Underflow>false</Underflow>
+        <Inexact>false</Inexact>
+      </FloatingPointExceptionTrap>
 
       <SocketServer>
         <Active>true</Active>
@@ -53,7 +68,20 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
       <HistogramRead>
         <Read>false</Read>
         <RunNumber>0</RunNumber>
+        <Path></Path>
+        <FileName></FileName>
       </HistogramRead>
+
+      <HistogramWrite>
+        <Write>true</Write>
+        <Path></Path>
+        <FileName></FileName>
+        <AccumulateAll>false</AccumulateAll>
+        <DeactivateAll>false</DeactivateAll>
+        <AutoSavePeriod>0</AutoSavePeriod>
+        <SnapShotFileName></SnapShotFileName>
+        <SnapShotEvents>10000</SnapShotEvents>
+      </HistogramWrite>
 
       <Macros>
         <BeginOfRun></BeginOfRun>
@@ -66,9 +94,6 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
         <Task>
           <TaskName>FillHistoAndFolder</TaskName>
           <Active>true</Active>
-          <Histogram>
-            <HistName>Histo1</HistName>
-          </Histogram>
         </Task>
       </Tasks>
     </Analyzer>
@@ -78,6 +103,9 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
         <WindowScale>1.0</WindowScale>
         <StatusBar>true</StatusBar>
         <UpdateFrequency>100</UpdateFrequency>
+        <ScreenShotPeriod>60</ScreenShotPeriod>
+        <ListTreeView>false</ListTreeView>
+        <TimeZone>local</TimeZone>
         <AnalyzerController>
           <Active>false</Active>
           <NetFolderName></NetFolderName>
@@ -92,7 +120,9 @@ http://midas.psi.ch/rome/romeConfigSchemaDocumentation.htm -->
       <Tabs>
         <Tab>
           <TabName>Histos</TabName>
-          <Active>true</Active>
+          <Active>false</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
         </Tab>
       </Tabs>
     </Monitor>
