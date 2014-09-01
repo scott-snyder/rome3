@@ -5,7 +5,7 @@
 
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="c:/rome/romeConfig.xsd">
   <ProgramConfiguration>
-    <ProgramMode>2</ProgramMode>
+    <ProgramMode>3</ProgramMode>
   </ProgramConfiguration>
 
   <MainConfiguration>
@@ -93,11 +93,7 @@
       <Tasks>
         <Task>
           <TaskName>FillHistoAndFolder</TaskName>
-          <Active>true</Active>
-          <Histogram>
-            <HistName>Histo1</HistName>
-            <HistAccumulate>true</HistAccumulate>
-          </Histogram>
+          <Active>false</Active>
         </Task>
       </Tasks>
     </Analyzer>

@@ -21,6 +21,7 @@
 #include "include/tabs/NFTHistos.h"
 #include "include/generated/NFWindow.h"
 #include "include/generated/NFAnalyzer.h"
+#include "include/tasks/NFTFillHistoAndFolder.h"
 #include <TCanvas.h>
 
 ClassImp(NFTHistos)
@@ -29,7 +30,8 @@ void NFTHistos::Init()
 {
    fCanvas = new TRootEmbeddedCanvas("Canvas", this, 400, 400);
    AddFrame(fCanvas,new TGLayoutHints(kLHintsRight | kLHintsExpandX | kLHintsExpandY, 0, 0, 1, 1));
-   fCanvas->GetCanvas()->cd();
+   fCanvas->GetCanvas()->Divide(1, 2);
+   fCanvas->GetCanvas()->cd(2);
    histo2 = new TH1F("histo2","Histo 2",200,-100,100);
    histo2->Draw();
 }
@@ -40,9 +42,39 @@ void NFTHistos::EndInit()
 
 void NFTHistos::EventHandler()
 {
+   if (gAnalyzer->IsROMEAndARGUS()) {
+      // Get histogram from task
+      if (gAnalyzer->GetFillHistoAndFolderTask()->IsActive() || IsForeground()) {
+         if (gAnalyzer->GetFillHistoAndFolderTask()->IsHisto1Active()) {
+            TH1 *hist = gAnalyzer->GetFillHistoAndFolderTask()->GetHisto1();
+            if (hist) {
+               fCanvas->GetCanvas()->cd(1);
+               hist->Draw();
+            }
+         }
+      }
+   }
+
+   if (gAnalyzer->IsROMEMonitor()) {
+      // Get histogram over network
+      if (gAnalyzer->GetSocketClientNetFolder()) {
+         TH1 *hist1 = static_cast<TH1F*>(gAnalyzer->GetSocketClientNetFolder()->FindObjectAny("Histo1"));
+         if (hist1) {
+            fCanvas->GetCanvas()->cd(1);
+            hist1->Draw();
+         }
+      }
+   }
+
+   // Get numbers from folder and fill own histogram
+   // When program-mode is 3, the folder is read over network
    histo2->Reset();
-   for (int i=0;i<200;i++)
+   for (int i=0;i<200;i++) {
       histo2->Fill(i-100,gAnalyzer->GetGaussData()->GetBinAt(i));
+   }
+   fCanvas->GetCanvas()->cd(2);
+   histo2->Draw();
+
    fCanvas->GetCanvas()->cd();
    gPad->Modified();
    gPad->Update();
