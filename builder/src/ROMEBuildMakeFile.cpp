@@ -2365,11 +2365,13 @@ void ROMEBuilder::WriteMakefile() {
    buffer.AppendFormatted("\n");
 #endif // R__UNIX
 #endif
+#if (ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0))
    if (dynamicLink) {
       buffer.AppendFormatted("pcmfiles += obj/ROMELibDict_rdict.pcm\n");
    } else {
       buffer.AppendFormatted("pcmfiles += ROMELibDict_rdict.pcm\n");
    }
+#endif
 
 
 // Depend files
