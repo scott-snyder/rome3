@@ -52,7 +52,7 @@ CXXLD ?= $(CXX)
 # ROMELDFLAGS = -W -Wall -pipe
 
 #####################################################################
-# Nothing needs to be modified after this line 
+# Nothing needs to be modified after this line
 #####################################################################
 ifdef ROOTSYS
 ROOTCONFIG := $(ROOTSYS)/bin/root-config
@@ -62,7 +62,8 @@ ROOTCONFIG := root-config
 ROOTCINT   := rootcint
 endif
 
-INCLUDE := -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+INCLUDEC := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(patsubst -std=%,,$(shell $(ROOTCONFIG) --cflags))
 LIBRARY := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread
 TARGET :=  obj bin include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
 
@@ -147,7 +148,7 @@ ROMEPICDEF = -DUSE_PIC_UPPER
 endif
 endif
 
-DICTIONARIES = ROMEBuilderDict$(DICT_HEADER_SUF) UpdateVersionHDict$(DICT_HEADER_SUF) HAddDict$(DICT_HEADER_SUF)
+DICTIONARIES = bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/HAddDict$(DICT_HEADER_SUF)
 
 NEED_TARRAYL64 = no
 ifeq ($(ROOT_MAJOR), 5)
@@ -160,7 +161,8 @@ NEED_TARRAYL64 = yes
 endif
 
 ifeq ($(NEED_TARRAYL64), yes)
-INCLUDE += -DNEED_TARRAYL64 -Iinclude/array64
+INCLUDE  += -DNEED_TARRAYL64 -Iinclude/array64
+INCLUDEC += -DNEED_TARRAYL64 -Iinclude/array64
 endif
 
 ROMEVERBOSEMAKE ?= 1
@@ -175,9 +177,10 @@ endif
 -include Makefile.arch
 
 ifeq ($(LIBROME), yes)
-  INCLUDE += -DHAVE_LIBROME
+  INCLUDE  += -DHAVE_LIBROME
+  INCLUDEC += -DHAVE_LIBROME
   LIBROMEFILE := librome.a
-  DICTIONARIES += ROMELibDict$(DICT_HEADER_SUF)
+  DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
   TARGET += $(LIBROMEFILE)
 else
   LIBROMEFILE =
@@ -378,35 +381,35 @@ else
 	$(Q)$(CXXLD) $(ROMELIB_FLAGS) $(SOFLAGS) -o $(ROMESYS)/librome.so $(LibObjects)
 endif
 
-ROMELibDict$(DICT_HEADER_SUF) ROMELibDict.cpp: $(LibDictHeaders) Makefile
+bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp: $(LibDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f ROMELibDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
 
-ROMEBuilderDict$(DICT_HEADER_SUF) ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
+bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f ROMEBuilderDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
 
-UpdateVersionHDict$(DICT_HEADER_SUF) UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
+bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f UpdateVersionHDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
 
-HAddDict$(DICT_HEADER_SUF) HAddDict.cpp: $(HAddDictHeaders) Makefile
+bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f HAddDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.c include/mxml.h
 	$(call romeechoing, "compiling $@")
-	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDE) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
+	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
 obj/strlcpy.o: src/strlcpy.c include/strlcpy.h
 	$(call romeechoing, "compiling $@")
-	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDE) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
+	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
 obj/TArrayL64.o: src/TArrayL64.cpp include/array64/TArrayL64.h
 	$(call romeechoing, "compiling $@")
 	$(Q)$(CXX) $(CXXFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDE) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
-obj/%Dict.o: %Dict.cpp %Dict$(DICT_HEADER_SUF)
+obj/%Dict.o: bin/%Dict.cpp bin/%Dict$(DICT_HEADER_SUF)
 	$(call romeechoing, "compiling $@")
 	$(Q)$(CXX) $(CXXFLAGS) $(ROMEPICOPT) -O0 -MMD -MP -MF $(@:.o=.d) -MT $@  -c $(INCLUDE) -o $@ $<
 
@@ -434,10 +437,10 @@ obj/%.o: src/%.cpp include/%.h
 
 clean:
 	-$(RM) $(BldObjects) $(UpHObjects) $(HAddObjects) $(LibObjects) \
-	ROMELibDict$(DICT_HEADER_SUF) ROMELibDict.cpp \
-	ROMEBuilderDict$(DICT_HEADER_SUF) ROMEBuilderDict.cpp \
-	UpdateVersionHDict$(DICT_HEADER_SUF) UpdateVersionHDict.cpp \
-	HAddDict$(DICT_HEADER_SUF) HAddDict.cpp
+	bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp \
+	bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp \
+	bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp \
+	bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp
 	-find . -maxdepth 1 -name "G__auto*LinkDef.h" | xargs $(RM)
 	-find obj -name "*.d" | xargs $(RM)
 	-find obj -name "*.o" | xargs $(RM)
