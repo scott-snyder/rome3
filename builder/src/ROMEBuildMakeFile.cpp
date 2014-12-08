@@ -1599,20 +1599,6 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       buffer.AppendFormatted("\n");
 #endif
 
-      // Copy
-#if (ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0))
-#   if defined( R__VISUAL_CPLUSPLUS )
-#   else
-      if (dynamicLink) {
-         buffer.AppendFormatted("obj/%s%d_rdict.pcm: dict/%s%d_rdict.pcm\n",dictionaryName, iFile, dictionaryName, iFile);
-         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
-      } else {
-         buffer.AppendFormatted("%s%d_rdict.pcm: dict/%s%d_rdict.pcm\n",dictionaryName, iFile, dictionaryName, iFile);
-         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
-      }
-#   endif // R__UNIX
-#endif
-
       // Command
       WriteRootCintCall(buffer);
       arguments.SetFormatted(" -f dict/%s%d.cpp -c -p",dictionaryName, iFile);
@@ -1658,6 +1644,21 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
          command.Append("LinkDef.h");
       }
       dictionaryCommands->Add(command);
+
+      // Copy
+#if (ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0))
+#   if defined( R__VISUAL_CPLUSPLUS )
+#   else
+      if (dynamicLink) {
+         buffer.AppendFormatted("obj/%s%d_rdict.pcm: dict/%s%d_rdict.pcm\n",dictionaryName, iFile, dictionaryName, iFile);
+         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
+      } else {
+         buffer.AppendFormatted("%s%d_rdict.pcm: dict/%s%d_rdict.pcm\n",dictionaryName, iFile, dictionaryName, iFile);
+         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
+      }
+#   endif // R__UNIX
+#endif
+
    }
 }
 
