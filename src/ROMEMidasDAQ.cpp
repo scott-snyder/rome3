@@ -588,7 +588,7 @@ Long64_t ROMEMidasDAQ::Seek(Long64_t event)
    // instead of jump to specified event number
 
    if (event < 0) {
-      Warning("Seek", "Event number "R_LLD" was not found.", event);
+      Warning("Seek", "Event number " R_LLD " was not found.", event);
       event = gROME->GetCurrentEventNumber();
       gROME->SetDontReadNextEvent();
       SetContinue();
@@ -637,7 +637,7 @@ Long64_t ROMEMidasDAQ::Seek(Long64_t event)
             return -1;
          }
          if (gROME->GetCurrentEventNumber() % 100 == 0) {
-            ROMEPrint::Print("Stepping to "R_LLD" ("R_LLD
+            ROMEPrint::Print("Stepping to " R_LLD " (" R_LLD
                              ")                                                  \r",
                              event, gROME->GetCurrentEventNumber());
          }

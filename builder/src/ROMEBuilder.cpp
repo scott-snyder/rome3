@@ -55,7 +55,7 @@ ROMEBuilder::ROMEBuilder()
 ,sqlite3(kFALSE)
 ,noVP(kFALSE)
 ,librome(kFALSE)
-,dynamicLink(kFALSE)
+,dynamicLink(kTRUE)
 ,pch(kFALSE)
 ,minRebuild(kFALSE)
 ,quietMake(kFALSE)
@@ -1389,7 +1389,7 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
 #else
    librome = false;
 #endif
-   dynamicLink = false;
+   dynamicLink = true;
 
    char workDir[kMAXPATHLEN];
    strcpy(workDir,gSystem->WorkingDirectory());
@@ -1611,6 +1611,7 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
       } else if (!strcmp(argv[i],"-nl")) {
          noLink = true;
       } else if (!strcmp(argv[i],"-dl")) {
+#if 0 /* this option is obsolete */
 #if defined(USE_PIC_UPPER) || defined(USE_PIC_LOWER)
 #   if defined( R__UNIX )
          dynamicLink = true;
@@ -1620,6 +1621,15 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
 #else
          cout<<"PIC option is necessary to use dynamic link library."<<endl;
 #endif
+#else
+         cout<<"====================================="<<endl;
+         cout<<"-dl option is obsolete."<<endl;
+         cout<<"Dynamic-link is on by default."<<endl;
+         cout<<"It can be disabled by -st option."<<endl;
+         cout<<"====================================="<<endl;
+#endif
+      } else if (!strcmp(argv[i],"-st")) {
+         dynamicLink = false;
       } else if (!strcmp(argv[i],"-nosql")) {
          cout<<"-nosql is obsolete. SQL support is off by default."<<endl;
       } else if (!strcmp(argv[i],"-mysql")) {
@@ -1871,7 +1881,7 @@ void ROMEBuilder::Usage()
    cout<<"  -o        Outputfile path"<<endl;
    cout<<"  -v        Verbose Mode (no Argument)"<<endl;
    cout<<"  -nl       No Linking (no Argument)"<<endl;
-   cout<<"  -dl       Making dynamic library and ling it to program, only on Un*x (no Argument)"<<endl;
+   cout<<"  -st       Link all to the executable binary (no Argument)"<<endl;
    cout<<"  -pch      Use precompiled header (no Argument)"<<endl;
    cout<<"  -nopch    Not use precompiled header (no Argument)"<<endl;
 #if defined( R__VISUAL_CPLUSPLUS )
