@@ -1184,11 +1184,7 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
 
    buffer.AppendFormatted("## Compile and link flags\n");
    buffer.AppendFormatted("rootlibs  := $(shell $(ROOTCONFIG) --libs) -lHtml -lThread\n");
-#if (ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
-   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread -lGX11\n");
-#else
-   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread -lGX11 -lX11\n");
-#endif
+   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread -lX11 -lGX11\n");
    buffer.AppendFormatted("rootcxxflags:=                  $(shell $(ROOTCONFIG) --cflags)\n");
    buffer.AppendFormatted("rootcflags:= $(patsubst -std=%%,,$(shell $(ROOTCONFIG) --cflags))\n");
    buffer.AppendFormatted("defflags  :=");
@@ -2312,9 +2308,11 @@ void ROMEBuilder::WriteMakefile() {
 // Objects
 // -------
    buffer.AppendFormatted("## Objects\n");
+#if defined( R__VISUAL_CPLUSPLUS )
    if (dynamicLink) {
       buffer.AppendFormatted("objects   += obj/main.o\n\n");
    }
+#endif // R__VISUAL_CPLUSPLUS
    WriteMakefileObjects(buffer,generatedSources);
    WriteMakefileObjects(buffer,tabSources);
    WriteMakefileObjects(buffer,taskSources);
@@ -2490,15 +2488,14 @@ void ROMEBuilder::WriteMakefile() {
    linker = "$(Q)$(CXXLD)";
    linkCommand = "$(Q)ln -sf";
    if (dynamicLink) {
-      buffer.AppendFormatted("%s%s%s: $(dependfiles) $(objects) obj/lib%s%s%s\n",shortCut.ToLower(tmp),
+      buffer.AppendFormatted("%s%s%s: $(dependfiles) obj/main.o $(objects) obj/lib%s%s%s\n",shortCut.ToLower(tmp),
                              mainProgName.ToLower(tmp2),mainProgNameExtension.Data(),
-                             shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
+                             shortCut.Data(),mainProgName.Data(), kSharedObjectSuffix);
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(objects) -L$(PWDST)/obj/ -l%s%s $(Libraries) && \\\n",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
-                             shortCut.Data(),mainProgName.Data(),
-                             kSharedObjectSuffix);
+                             shortCut.Data(),mainProgName.Data());
       buffer.AppendFormatted("\tmv .$@ $@\n");
    } else {
       buffer.AppendFormatted("%s%s%s: $(dependfiles) $(objects) $(%s%sDep)\n",shortCut.ToLower(tmp),
