@@ -25,7 +25,7 @@ private:
 public:
    TWR2TFillTree(const char *name = 0,const char *title = 0,int level = 0,const char *histoSuffix = 0,TFolder *histoFolder = 0)
    :TWR2TFillTree_Base(name,title,level,histoSuffix,histoFolder)
-   ,fRawData(fRawData = new RawData*[kNRawData])
+   ,fRawData(new RawData*[kNRawData])
    {
       Int_t i;
       for(i = 0; i < kNRawData; i++) {
