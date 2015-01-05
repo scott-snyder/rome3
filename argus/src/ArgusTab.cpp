@@ -20,7 +20,9 @@
 #endif // R__VISUAL_CPLUSPLUS
 
 #if defined( R__UNIX )
-#   include <TGX11.h>
+// It seems TGX11.h (and many other headers) is missing in Ubuntu
+// https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=682059
+//#   include <TGX11.h>
 #   include <X11/Xlib.h>
 #endif
 
