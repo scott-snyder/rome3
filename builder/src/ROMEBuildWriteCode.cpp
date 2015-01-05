@@ -5321,6 +5321,212 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
    buffer.AppendFormatted("\n");
    buffer.AppendFormatted("%sAnalyzer *gAnalyzer;  // global Analyzer Handle\n",shortCut.Data());
 
+   // Additional include path for ACLiC mode.
+   buffer.AppendFormatted("const char* kAdditionalInclude =\n");
+   TString currentDirectory = gSystem->WorkingDirectory();
+   gSystem->ChangeDirectory(outDir.Data());
+   TString outDirAbsolute = gSystem->WorkingDirectory();
+   gSystem->ChangeDirectory(currentDirectory.Data());
+   ROMEString cmd;
+   ROMEString cmdRes;
+   ROMEString tmpName;
+   if (this->pgsql) {
+      cmd.SetFormatted("pg_config --includedir");
+      cmdRes.ReadCommandOutput(cmd.Data());
+      if (cmdRes.Length() > 0) {
+         cmdRes.ReplaceAll("\\\\","/");
+         cmdRes.ReplaceAll("\\","/");
+         if (cmdRes.EndsWith("\n"))
+            cmdRes.Resize(cmdRes.Length() - 1);
+         buffer.AppendFormatted("      \" -I%s\"\n", cmdRes.Data());
+      }
+   }
+#if defined( R__UNIX )
+   if (this->mysql) {
+      cmd.SetFormatted("mysql_config --include");
+      cmdRes.ReadCommandOutput(cmd.Data());
+      if (cmdRes.Length() > 0) {
+         if (cmdRes.EndsWith("\n"))
+            cmdRes.Resize(cmdRes.Length() - 1);
+         buffer.AppendFormatted("      \" %s\"\n", cmdRes.Data());
+      }
+   }
+#endif // R__UNIX
+#if defined( R__MACOSX )
+   TString finkDir;
+   cmd.SetFormatted("which fink 2>&1 | sed -ne \"s/\\/bin\\/fink//p\"");
+   cmdRes.ReadCommandOutput(cmd.Data());
+   if (cmdRes.Length() > 0) {
+      if (cmdRes.EndsWith("\n"))
+         cmdRes.Resize(cmdRes.Length() - 1);
+      finkDir = cmdRes;
+   }
+   if (finkDir.Length())
+      buffer.AppendFormatted("      \" -I%s/include\"\n", finkDir.Data());
+#endif
+   if (this->midas) {
+      tmpName = "$(MIDASSYS)/include";
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+      buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
+   }
+   tmpName = "$(ROMESYS)/include";
+   gSystem->ExpandPathName(tmpName);
+   tmpName.ReplaceAll("\\\\","/");
+   tmpName.ReplaceAll("\\","/");
+   buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
+#if (ROOT_VERSION_CODE < ROOT_VERSION(5,14,0))
+   buffer.AppendFormatted("      \" -I%s/array64\"\n", tmpName.Data());
+#endif
+   tmpName = "$(ROMESYS)/argus/include";
+   gSystem->ExpandPathName(tmpName);
+   tmpName.ReplaceAll("\\\\","/");
+   tmpName.ReplaceAll("\\","/");
+   buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
+   outDirAbsolute.ReplaceAll("\\\\","/");
+   outDirAbsolute.ReplaceAll("\\","/");
+   buffer.AppendFormatted("      \" -I%s/include\"\n", outDirAbsolute.Data());
+   buffer.AppendFormatted("      \" -I%s\"\n", outDirAbsolute.Data());
+   buffer.AppendFormatted("      \" -I%s/include/generated\"\n", outDirAbsolute.Data());
+   if (numOfDAQ > 0) buffer.AppendFormatted("      \" -I%s/include/daqs\"\n", outDirAbsolute.Data());
+   if (numOfDB > 0) buffer.AppendFormatted("      \" -I%s/include/databases\"\n", outDirAbsolute.Data());
+   if (numOfTab > 0) buffer.AppendFormatted("      \" -I%s/include/tabs\"\n", outDirAbsolute.Data());
+   if (numOfTask > 0) buffer.AppendFormatted("      \" -I%s/include/tasks\"\n", outDirAbsolute.Data());
+   for (i = 0; i < numOfMFIncDirs; i++) {
+      tmpName = mfIncDir[i].Data();
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+      buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
+   }
+   if (buffer.EndsWith("\n"))
+      buffer.Resize(buffer.Length() - 1);
+   buffer.AppendFormatted(";\n");
+   buffer.AppendFormatted("\n");
+
+#if (ROOT_VERSION_CODE >= ROOT_VERSION(5,19,4))
+   const char* const kDelim = THtml::GetDirDelimiter();
+#else
+   const char* const kDelim = ":";
+#endif
+
+   // Source directory for THTML document generation
+   buffer.AppendFormatted("const char* kHTMLSourceDir =\n");
+   if (this->pgsql) {
+      cmd.SetFormatted("pg_config --includedir");
+      cmdRes.ReadCommandOutput(cmd.Data());
+      if (cmdRes.Length() > 0) {
+         cmdRes.ReplaceAll("\\\\","/");
+         cmdRes.ReplaceAll("\\","/");
+         if (cmdRes.EndsWith("\n"))
+            cmdRes.Resize(cmdRes.Length() - 1);
+         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, cmdRes.Data());
+      }
+   }
+#if defined( R__UNIX )
+   if (this->mysql) {
+      cmd.SetFormatted("mysql_config --include");
+      cmdRes.ReadCommandOutput(cmd.Data());
+      if (cmdRes.Length() > 0) {
+         if (cmdRes.EndsWith("\n"))
+            cmdRes.Resize(cmdRes.Length() - 1);
+         cmdRes.ReplaceAll("-I", "");
+         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, cmdRes.Data());
+      }
+   }
+#endif // R__UNIX
+#if defined( R__MACOSX )
+   cmd.SetFormatted("which fink 2>&1 | sed -ne \"s/\\/bin\\/fink//p\"");
+   cmdRes.ReadCommandOutput(cmd.Data());
+   if (cmdRes.Length() > 0) {
+      if (cmdRes.EndsWith("\n"))
+         cmdRes.Resize(cmdRes.Length() - 1);
+      finkDir = cmdRes;
+   }
+   if (finkDir.Length())
+      buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, finkDir.Data());
+#endif
+   if (this->midas) {
+      tmpName = "$(MIDASSYS)";
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+//      buffer.AppendFormatted("      \"%s%s/src\"\n", kDelim, tmpName.Data());
+      buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
+   }
+#if 0
+   tmpName = "$(ROOTSYS)";
+   gSystem->ExpandPathName(tmpName);
+   tmpName.ReplaceAll("\\\\","/");
+   tmpName.ReplaceAll("\\","/");
+   buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
+#endif
+   tmpName = "$(ROMESYS)";
+   gSystem->ExpandPathName(tmpName);
+   tmpName.ReplaceAll("\\\\","/");
+   tmpName.ReplaceAll("\\","/");
+   buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
+   buffer.AppendFormatted("      \"%s%s/src\"\n", kDelim, tmpName.Data());
+   buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
+#if (ROOT_VERSION_CODE < ROOT_VERSION(5,14,0))
+   buffer.AppendFormatted("      \"%s%s/include/array64\"\n", kDelim, tmpName.Data());
+#endif
+   buffer.AppendFormatted("      \"%s%s/argus/src\"\n", kDelim, tmpName.Data());
+   buffer.AppendFormatted("      \"%s%s/argus/include\"\n", kDelim, tmpName.Data());
+
+   buffer.AppendFormatted("      \"%s.\"\n", kDelim);
+   buffer.AppendFormatted("      \"%s%s/src/generated\"\n", kDelim, outDirAbsolute.Data());
+   buffer.AppendFormatted("      \"%s%s/include/generated\"\n", kDelim, outDirAbsolute.Data());
+   if (numOfDAQ > 0) {
+      buffer.AppendFormatted("      \"%s%s/src/daqs\"\n", kDelim, outDirAbsolute.Data());
+      buffer.AppendFormatted("      \"%s%s/include/daqs\"\n", kDelim, outDirAbsolute.Data());
+   }
+   if (numOfDB > 0) {
+      buffer.AppendFormatted("      \"%s%s/src/databases\"\n", kDelim, outDirAbsolute.Data());
+      buffer.AppendFormatted("      \"%s%s/include/databases\"\n", kDelim, outDirAbsolute.Data());
+   }
+   if (numOfTab > 0) {
+      buffer.AppendFormatted("      \"%s%s/src/tabs\"\n", kDelim, outDirAbsolute.Data());
+      buffer.AppendFormatted("      \"%s%s/include/tabs\"\n", kDelim, outDirAbsolute.Data());
+   }
+   if (numOfTask > 0) {
+      buffer.AppendFormatted("      \"%s%s/src/tasks\"\n", kDelim, outDirAbsolute.Data());
+      buffer.AppendFormatted("      \"%s%s/include/tasks\"\n", kDelim, outDirAbsolute.Data());
+   }
+   for (i = 0; i < numOfMFIncDirs; i++) {
+      tmpName = mfIncDir[i].Data();
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+      buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
+   }
+   for (i = 0;i < numOfMFDictHeaders; i++) {
+      if (!mfDictHeaderUsed[i])
+         continue;
+      tmpName = gSystem->DirName(mfDictHeaderName[i].Data());
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+      if (!buffer.ContainsFast(tmpName.Data()))
+         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
+   }
+   for (i = 0; i < numOfMFSources; i++) {
+      if (!mfSourceFileUsed[i])
+         continue;
+      tmpName = mfSourceFilePath[i].Data();
+      gSystem->ExpandPathName(tmpName);
+      tmpName.ReplaceAll("\\\\","/");
+      tmpName.ReplaceAll("\\","/");
+      if (!buffer.ContainsFast(tmpName.Data()))
+         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
+   }
+
+   if (buffer.EndsWith("\n")) {
+      buffer.Resize(buffer.Length() - 1);
+   }
+   buffer.AppendFormatted(";\n");
+
    buffer.AppendFormatted("\n");
 #if defined( R__VISUAL_CPLUSPLUS )
    buffer.AppendFormatted("void CreateSplash(unsigned long time,char*,char*,ROMEString*,int);\n");
@@ -12310,212 +12516,7 @@ Bool_t ROMEBuilder::WriteMain()
    buffer.AppendFormatted("using namespace std;\n");
    buffer.AppendFormatted("\n");
 
-   // Additional include path for ACLiC mode.
-   buffer.AppendFormatted("const char* const kAdditionalInclude =\n");
-   TString currentDirectory = gSystem->WorkingDirectory();
-   gSystem->ChangeDirectory(outDir.Data());
-   TString outDirAbsolute = gSystem->WorkingDirectory();
-   gSystem->ChangeDirectory(currentDirectory.Data());
-   ROMEString cmd;
-   ROMEString cmdRes;
-   ROMEString tmpName;
-   if (this->pgsql) {
-      cmd.SetFormatted("pg_config --includedir");
-      cmdRes.ReadCommandOutput(cmd.Data());
-      if (cmdRes.Length() > 0) {
-         cmdRes.ReplaceAll("\\\\","/");
-         cmdRes.ReplaceAll("\\","/");
-         if (cmdRes.EndsWith("\n"))
-            cmdRes.Resize(cmdRes.Length() - 1);
-         buffer.AppendFormatted("      \" -I%s\"\n", cmdRes.Data());
-      }
-   }
-#if defined( R__UNIX )
-   if (this->mysql) {
-      cmd.SetFormatted("mysql_config --include");
-      cmdRes.ReadCommandOutput(cmd.Data());
-      if (cmdRes.Length() > 0) {
-         if (cmdRes.EndsWith("\n"))
-            cmdRes.Resize(cmdRes.Length() - 1);
-         buffer.AppendFormatted("      \" %s\"\n", cmdRes.Data());
-      }
-   }
-#endif // R__UNIX
-#if defined( R__MACOSX )
-   TString finkDir;
-   cmd.SetFormatted("which fink 2>&1 | sed -ne \"s/\\/bin\\/fink//p\"");
-   cmdRes.ReadCommandOutput(cmd.Data());
-   if (cmdRes.Length() > 0) {
-      if (cmdRes.EndsWith("\n"))
-         cmdRes.Resize(cmdRes.Length() - 1);
-      finkDir = cmdRes;
-   }
-   if (finkDir.Length())
-      buffer.AppendFormatted("      \" -I%s/include\"\n", finkDir.Data());
-#endif
-   if (this->midas) {
-      tmpName = "$(MIDASSYS)/include";
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-      buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
-   }
-   tmpName = "$(ROMESYS)/include";
-   gSystem->ExpandPathName(tmpName);
-   tmpName.ReplaceAll("\\\\","/");
-   tmpName.ReplaceAll("\\","/");
-   buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
-#if (ROOT_VERSION_CODE < ROOT_VERSION(5,14,0))
-   buffer.AppendFormatted("      \" -I%s/array64\"\n", tmpName.Data());
-#endif
-   tmpName = "$(ROMESYS)/argus/include";
-   gSystem->ExpandPathName(tmpName);
-   tmpName.ReplaceAll("\\\\","/");
-   tmpName.ReplaceAll("\\","/");
-   buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
-   outDirAbsolute.ReplaceAll("\\\\","/");
-   outDirAbsolute.ReplaceAll("\\","/");
-   buffer.AppendFormatted("      \" -I%s/include\"\n", outDirAbsolute.Data());
-   buffer.AppendFormatted("      \" -I%s\"\n", outDirAbsolute.Data());
-   buffer.AppendFormatted("      \" -I%s/include/generated\"\n", outDirAbsolute.Data());
-   if (numOfDAQ > 0) buffer.AppendFormatted("      \" -I%s/include/daqs\"\n", outDirAbsolute.Data());
-   if (numOfDB > 0) buffer.AppendFormatted("      \" -I%s/include/databases\"\n", outDirAbsolute.Data());
-   if (numOfTab > 0) buffer.AppendFormatted("      \" -I%s/include/tabs\"\n", outDirAbsolute.Data());
-   if (numOfTask > 0) buffer.AppendFormatted("      \" -I%s/include/tasks\"\n", outDirAbsolute.Data());
-   Int_t i;
-   for (i = 0; i < numOfMFIncDirs; i++) {
-      tmpName = mfIncDir[i].Data();
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-      buffer.AppendFormatted("      \" -I%s\"\n", tmpName.Data());
-   }
-   if (buffer.EndsWith("\n"))
-      buffer.Resize(buffer.Length() - 1);
-   buffer.AppendFormatted(";\n");
-   buffer.AppendFormatted("\n");
-
-#if (ROOT_VERSION_CODE >= ROOT_VERSION(5,19,4))
-   const char* const kDelim = THtml::GetDirDelimiter();
-#else
-   const char* const kDelim = ":";
-#endif
-
-   // Source directory for THTML document generation
-   buffer.AppendFormatted("const char* kHTMLSourceDir =\n");
-   if (this->pgsql) {
-      cmd.SetFormatted("pg_config --includedir");
-      cmdRes.ReadCommandOutput(cmd.Data());
-      if (cmdRes.Length() > 0) {
-         cmdRes.ReplaceAll("\\\\","/");
-         cmdRes.ReplaceAll("\\","/");
-         if (cmdRes.EndsWith("\n"))
-            cmdRes.Resize(cmdRes.Length() - 1);
-         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, cmdRes.Data());
-      }
-   }
-#if defined( R__UNIX )
-   if (this->mysql) {
-      cmd.SetFormatted("mysql_config --include");
-      cmdRes.ReadCommandOutput(cmd.Data());
-      if (cmdRes.Length() > 0) {
-         if (cmdRes.EndsWith("\n"))
-            cmdRes.Resize(cmdRes.Length() - 1);
-         cmdRes.ReplaceAll("-I", "");
-         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, cmdRes.Data());
-      }
-   }
-#endif // R__UNIX
-#if defined( R__MACOSX )
-   cmd.SetFormatted("which fink 2>&1 | sed -ne \"s/\\/bin\\/fink//p\"");
-   cmdRes.ReadCommandOutput(cmd.Data());
-   if (cmdRes.Length() > 0) {
-      if (cmdRes.EndsWith("\n"))
-         cmdRes.Resize(cmdRes.Length() - 1);
-      finkDir = cmdRes;
-   }
-   if (finkDir.Length())
-      buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, finkDir.Data());
-#endif
-   if (this->midas) {
-      tmpName = "$(MIDASSYS)";
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-//      buffer.AppendFormatted("      \"%s%s/src\"\n", kDelim, tmpName.Data());
-      buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
-   }
-#if 0
-   tmpName = "$(ROOTSYS)";
-   gSystem->ExpandPathName(tmpName);
-   tmpName.ReplaceAll("\\\\","/");
-   tmpName.ReplaceAll("\\","/");
-   buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
-#endif
-   tmpName = "$(ROMESYS)";
-   gSystem->ExpandPathName(tmpName);
-   tmpName.ReplaceAll("\\\\","/");
-   tmpName.ReplaceAll("\\","/");
-   buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
-   buffer.AppendFormatted("      \"%s%s/src\"\n", kDelim, tmpName.Data());
-   buffer.AppendFormatted("      \"%s%s/include\"\n", kDelim, tmpName.Data());
-#if (ROOT_VERSION_CODE < ROOT_VERSION(5,14,0))
-   buffer.AppendFormatted("      \"%s%s/include/array64\"\n", kDelim, tmpName.Data());
-#endif
-   buffer.AppendFormatted("      \"%s%s/argus/src\"\n", kDelim, tmpName.Data());
-   buffer.AppendFormatted("      \"%s%s/argus/include\"\n", kDelim, tmpName.Data());
-
-   buffer.AppendFormatted("      \"%s.\"\n", kDelim);
-   buffer.AppendFormatted("      \"%s%s/src/generated\"\n", kDelim, outDirAbsolute.Data());
-   buffer.AppendFormatted("      \"%s%s/include/generated\"\n", kDelim, outDirAbsolute.Data());
-   if (numOfDAQ > 0) {
-      buffer.AppendFormatted("      \"%s%s/src/daqs\"\n", kDelim, outDirAbsolute.Data());
-      buffer.AppendFormatted("      \"%s%s/include/daqs\"\n", kDelim, outDirAbsolute.Data());
-   }
-   if (numOfDB > 0) {
-      buffer.AppendFormatted("      \"%s%s/src/databases\"\n", kDelim, outDirAbsolute.Data());
-      buffer.AppendFormatted("      \"%s%s/include/databases\"\n", kDelim, outDirAbsolute.Data());
-   }
-   if (numOfTab > 0) {
-      buffer.AppendFormatted("      \"%s%s/src/tabs\"\n", kDelim, outDirAbsolute.Data());
-      buffer.AppendFormatted("      \"%s%s/include/tabs\"\n", kDelim, outDirAbsolute.Data());
-   }
-   if (numOfTask > 0) {
-      buffer.AppendFormatted("      \"%s%s/src/tasks\"\n", kDelim, outDirAbsolute.Data());
-      buffer.AppendFormatted("      \"%s%s/include/tasks\"\n", kDelim, outDirAbsolute.Data());
-   }
-   for (i = 0; i < numOfMFIncDirs; i++) {
-      tmpName = mfIncDir[i].Data();
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-      buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
-   }
-   for (i = 0;i < numOfMFDictHeaders; i++) {
-      if (!mfDictHeaderUsed[i])
-         continue;
-      tmpName = gSystem->DirName(mfDictHeaderName[i].Data());
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-      if (!buffer.ContainsFast(tmpName.Data()))
-         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
-   }
-   for (i = 0; i < numOfMFSources; i++) {
-      if (!mfSourceFileUsed[i])
-         continue;
-      tmpName = mfSourceFilePath[i].Data();
-      gSystem->ExpandPathName(tmpName);
-      tmpName.ReplaceAll("\\\\","/");
-      tmpName.ReplaceAll("\\","/");
-      if (!buffer.ContainsFast(tmpName.Data()))
-         buffer.AppendFormatted("      \"%s%s\"\n", kDelim, tmpName.Data());
-   }
-
-   if (buffer.EndsWith("\n")) {
-      buffer.Resize(buffer.Length() - 1);
-   }
-   buffer.AppendFormatted(";\n");
+   buffer.AppendFormatted("extern const char* kAdditionalInclude;\n");
 
    buffer.AppendFormatted("\n");
    buffer.AppendFormatted("int main(int argc, char *argv[])\n");
