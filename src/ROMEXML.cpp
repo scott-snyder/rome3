@@ -63,7 +63,7 @@ ROMEXML::~ROMEXML()
 Bool_t ROMEXML::OpenFileForRead(const char* file)
 {
    char error[240];
-   fRootNode = mxml_parse_file(const_cast<char*>(file), error, sizeof(error));
+   fRootNode = mxml_parse_file(const_cast<char*>(file), error, sizeof(error), 0);
    if (fRootNode == 0) {
       ROMEPrint::Error("%s\n", error);
       return false;
@@ -163,7 +163,7 @@ Bool_t ROMEXML::WriteElement(const char* name, const char* value) const
 Bool_t ROMEXML::OpenFileForPath(const char* file)
 {
    char error[240];
-   fRootNode = mxml_parse_file(const_cast<char*>(file), error, sizeof(error));
+   fRootNode = mxml_parse_file(const_cast<char*>(file), error, sizeof(error), 0);
    if (fRootNode == 0) {
       ROMEPrint::Error("%s\n", error);
       return false;
@@ -188,7 +188,7 @@ Bool_t ROMEXML::OpenBufferForPath(const char* buffer)
       fRootNode = 0;
    }
    char error[240];
-   fRootNode = mxml_parse_buffer(buffer, error, sizeof(error));
+   fRootNode = mxml_parse_buffer(buffer, error, sizeof(error), 0);
    if (fRootNode == 0) {
       ROMEPrint::Error("%s\n", error);
       return false;
