@@ -63,7 +63,7 @@ ROOTCINT   := rootcint
 endif
 
 INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
-INCLUDEC := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(patsubst -std=%,,$(shell $(ROOTCONFIG) --cflags))
+
 LIBRARY := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread
 TARGET :=  obj bin include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
 
@@ -162,7 +162,6 @@ endif
 
 ifeq ($(NEED_TARRAYL64), yes)
 INCLUDE  += -DNEED_TARRAYL64 -Iinclude/array64
-INCLUDEC += -DNEED_TARRAYL64 -Iinclude/array64
 endif
 
 ROMEVERBOSEMAKE ?= 1
@@ -178,7 +177,6 @@ endif
 
 ifeq ($(LIBROME), yes)
   INCLUDE  += -DHAVE_LIBROME
-  INCLUDEC += -DHAVE_LIBROME
   LIBROMEFILE := librome.a
   DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
   TARGET += $(LIBROMEFILE)
@@ -319,6 +317,9 @@ ifeq ($(NEED_TARRAYL64), yes)
 LibDictHeaders += include/array64/TArrayL64.h
 endif
 
+INCLUDEC := $(patsubst -std=%,,$(INCLUDE))
+INCLUDER := $(patsubst -stdlib=%,,$(patsubst -std=%,,$(INCLUDE)))
+
 ifeq ($(OSTYPE),darwin)
   export DYLD_LIBRARY_PATH += :$(shell $(ROOTCONFIG) --libdir)
 else
@@ -383,19 +384,19 @@ endif
 
 bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp: $(LibDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
 
 bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
 
 bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
 
 bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp -c -p $(INCLUDE) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.c include/mxml.h
 	$(call romeechoing, "compiling $@")

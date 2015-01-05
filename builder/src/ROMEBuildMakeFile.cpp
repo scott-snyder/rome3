@@ -2494,11 +2494,19 @@ void ROMEBuilder::WriteMakefile() {
                              mainProgName.ToLower(tmp2),mainProgNameExtension.Data(),
                              shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
+#if defined( R__MACOSX )
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+                             linker.Data(),
+                             shortCut.ToUpper(tmp),
+                             shortCut.Data(),mainProgName.Data(),
+                             kSharedObjectSuffix);
+#else
       buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
                              shortCut.Data(),mainProgName.Data(),
                              kSharedObjectSuffix);
+#endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    } else {
       buffer.AppendFormatted("%s%s%s: $(dependfiles) $(objects) $(%s%sDep)\n",shortCut.ToLower(tmp),
@@ -2519,19 +2527,27 @@ void ROMEBuilder::WriteMakefile() {
    buffer.AppendFormatted("endif\n");
    buffer.AppendFormatted("\t@$(RM) $(NTARGETS_FILE)\n");
    buffer.AppendFormatted("\n");
-   buffer.AppendFormatted("so: obj/lib%s%s%s\n",shortCut.ToLower(tmp),mainProgName.ToLower(tmp2),kSharedObjectSuffix);
    // this library is for loading from ROOT session
-   buffer.AppendFormatted("obj/lib%s%s%s: $(dlobjects) $(objects) $(dependfiles) $(lib%s%sDep)\n",shortCut.ToLower(tmp),
-                          mainProgName.ToLower(tmp2),kSharedObjectSuffix,shortCut.ToLower(tmp3),
-                          mainProgName.ToLower(tmp4));
-   buffer.AppendFormatted("\t$(call %sechoing, \"linking   obj/lib%s%s%s\")\n",shortCut.ToLower(tmp),
-                          shortCut.ToLower(tmp2),mainProgName.ToLower(tmp3),kSharedObjectSuffix);
-   buffer.AppendFormatted("\t%s $(%sSOFLAGS) $(SOFLAGS) -o obj/lib%s%s%s $(dlobjects) $(objects) $(Libraries)\n",
-                          linker.Data(),shortCut.ToUpper(tmp),shortCut.ToLower(tmp2),mainProgName.ToLower(tmp3),
-                          kSharedObjectSuffix);
 #if defined( R__MACOSX )
-   buffer.AppendFormatted("\t%s obj/lib%s%s.dylib obj/lib%s%s.so\n",linkCommand.Data(),shortCut.ToLower(tmp),
-                          mainProgName.ToLower(tmp2),shortCut.ToLower(tmp3),mainProgName.ToLower(tmp4));
+   // Because the filesystem on Mac may not be case-sensitive.
+   const char* const libaddition = "_lib";
+#else
+   const char* const libaddition = "";
+#endif
+   buffer.AppendFormatted("so: obj/lib%s%s%s%s\n",shortCut.ToLower(tmp),mainProgName.ToLower(tmp2),libaddition,kSharedObjectSuffix);
+   buffer.AppendFormatted("obj/lib%s%s%s%s: $(dlobjects) $(objects) $(dependfiles) $(lib%s%sDep)\n",
+                          shortCut.ToLower(tmp), mainProgName.ToLower(tmp2),libaddition,kSharedObjectSuffix,
+                          shortCut.ToLower(tmp3),mainProgName.ToLower(tmp4));
+   buffer.AppendFormatted("\t$(call %sechoing, \"linking   obj/lib%s%s%s%s\")\n",
+                          shortCut.ToLower(tmp), shortCut.ToLower(tmp2),mainProgName.ToLower(tmp3),libaddition,kSharedObjectSuffix);
+   buffer.AppendFormatted("\t%s $(%sSOFLAGS) $(SOFLAGS) -o obj/lib%s%s%s%s $(dlobjects) $(objects) $(Libraries)\n",
+                          linker.Data(),shortCut.ToUpper(tmp),
+                          shortCut.ToLower(tmp2),mainProgName.ToLower(tmp3),libaddition,kSharedObjectSuffix);
+#if defined( R__MACOSX )
+   buffer.AppendFormatted("\t%s obj/lib%s%s%s.dylib obj/lib%s%s%s.so\n",
+                          linkCommand.Data(),
+                          shortCut.ToLower(tmp),mainProgName.ToLower(tmp2),libaddition,
+                          shortCut.ToLower(tmp3),mainProgName.ToLower(tmp4),libaddition);
 #endif // R__MACOSX
    buffer.AppendFormatted("\t@$(RM) $(NTARGETS_FILE)\n");
    buffer.AppendFormatted("\n");
