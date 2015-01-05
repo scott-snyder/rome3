@@ -2,10 +2,24 @@
 
    Name:         mxml.h
    Created by:   Stefan Ritt
+   Copyright 2000 + Stefan Ritt
 
    Contents:     Header file for mxml.c
+   
+   This file is part of MIDAS XML Library.
 
-   $Id: mxml.h 2188 2007-10-23 17:53:32Z sawada $
+   MIDAS XML Library is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   MIDAS XML Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with MIDAS XML Library.  If not, see <http://www.gnu.org/licenses/>.
 
 \********************************************************************/
 
@@ -55,7 +69,8 @@ typedef struct mxml_struct {
    int        n_attributes;            // list of attributes
    char       *attribute_name;
    char       **attribute_value;
-   int        line_number;             // line number for source file
+   int        line_number_start;       // first line number in XML file, starting from 1
+   int        line_number_end;         // last line number in XML file, starting from 1
    PMXML_NODE parent;                  // pointer to parent element
    int        n_children;              // list of children
    PMXML_NODE child;
@@ -92,11 +107,15 @@ char *mxml_close_buffer(MXML_WRITER *writer);
 int mxml_close_file(MXML_WRITER *writer);
 
 int mxml_get_number_of_children(PMXML_NODE pnode);
+PMXML_NODE mxml_get_parent(PMXML_NODE pnode);
 PMXML_NODE mxml_subnode(PMXML_NODE pnode, int idx);
 PMXML_NODE mxml_find_node(PMXML_NODE tree, const char *xml_path);
 int mxml_find_nodes(PMXML_NODE tree, const char *xml_path, PMXML_NODE **nodelist);
 char *mxml_get_name(PMXML_NODE pnode);
 char *mxml_get_value(PMXML_NODE pnode);
+int mxml_get_line_number_start(PMXML_NODE pnode);
+int mxml_get_line_number_end(PMXML_NODE pnode);
+PMXML_NODE mxml_get_node_at_line(PMXML_NODE tree, int linenumber);
 char *mxml_get_attribute(PMXML_NODE pnode, const char *name);
 
 int mxml_add_attribute(PMXML_NODE pnode, const char *attrib_name, const char *attrib_value);
@@ -119,9 +138,9 @@ int mxml_delete_node(PMXML_NODE pnode);
 int mxml_delete_attribute(PMXML_NODE, const char *attrib_name);
 
 PMXML_NODE mxml_create_root_node(void);
-PMXML_NODE mxml_parse_file(const char *file_name, char *error, int error_size);
-PMXML_NODE mxml_parse_buffer(const char *buffer, char *error, int error_size);
-int mxml_parse_entity(char **buf, const char* file_name, char *error, int error_size);
+PMXML_NODE mxml_parse_file(const char *file_name, char *error, int error_size, int *error_line);
+PMXML_NODE mxml_parse_buffer(const char *buffer, char *error, int error_size, int *error_line);
+int mxml_parse_entity(char **buf, const char* file_name, char *error, int error_size, int *error_line);
 int mxml_write_tree(const char *file_name, PMXML_NODE tree);
 void mxml_debug_tree(PMXML_NODE tree, int level);
 void mxml_free_tree(PMXML_NODE tree);
