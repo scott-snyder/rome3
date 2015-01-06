@@ -2493,15 +2493,15 @@ void ROMEBuilder::WriteMakefile() {
                              shortCut.Data(),mainProgName.Data(), kSharedObjectSuffix);
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
 #if defined( R__MACOSX )
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(objects) -L$(PWDST)/obj/ -l%s%s $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
-                             shortCut.Data(),mainProgName.Data());
+                             shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
 #else
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(objects) -L$(PWDST)/obj/ -l%s%s $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
-                             shortCut.Data(),mainProgName.Data());
+                             shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
 #endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    } else {
