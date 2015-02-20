@@ -15,6 +15,6 @@ The analyzer watches the status of the frontend. When you start a run (e.g. from
 
 If you run mlogger (e.g. $MIDASSYS/linux/bin/mlogger), a midas file is created after each run, by default in $MIDASSYS.
 You can analyze the midas files with using the same configuration file,
-   ./midanalyzer.exe -i romeConfig.xml -pi $MIDASSYS -r 1 -m offline
+   ./midanalyzer.exe -i romeConfig.xml -pi ./ -r 1 -m offline
 
 Output ROOT files can be analyzed with using "./midanalyzer.exe -I" or plain root program.

@@ -86,6 +86,13 @@
 			<SPFieldHotLink>true</SPFieldHotLink>
 		</SteeringParameterField>
 	</GlobalSteeringParameters>
+	<Tree>
+		<TreeName>run</TreeName>
+		<Branch>
+			<BranchName>data</BranchName>
+			<RelatedFolder>Data</RelatedFolder>
+		</Branch>
+	</Tree>
 	<MidasBanks>
 		<EventDefinition>
 			<EventName>Trigger</EventName>
