@@ -58,7 +58,27 @@
 				</SteeringParameterField>
 			</SteeringParameters>
 		</Task>
+		<Task>
+			<TaskName>FillHistogram</TaskName>
+			<Histogram>
+				<HistName>ADC</HistName>
+				<HistFolderName>adc</HistFolderName>
+				<HistArraySize>8</HistArraySize>
+				<HistType>TH1F</HistType>
+				<HistXLabel>ADC</HistXLabel>
+				<HistYLabel>Entries</HistYLabel>
+				<HistXNbins>100</HistXNbins>
+				<HistXmin>0</HistXmin>
+				<HistXmax>1024</HistXmax>
+			</Histogram>
+		</Task>
 	</Tasks>
+	<Tabs>
+		<Tab>
+			<TabName>ADCTab</TabName>
+			<TabTitle>ADC</TabTitle>
+		</Tab>
+	</Tabs>
 	<GlobalSteeringParameters>
 		<SteeringParameterField>
 			<SPFieldName>TestValue</SPFieldName>
