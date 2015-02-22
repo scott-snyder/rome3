@@ -74,9 +74,28 @@
 		</Task>
 	</Tasks>
 	<Tabs>
+		<!-- This shows an example of manual program of a histogram window
+				You	need to program GUI parts using ROOT GUI classes.
+				You can design flexibly -->
 		<Tab>
 			<TabName>ADCTab</TabName>
 			<TabTitle>ADC</TabTitle>
+		</Tab>
+
+		<!-- This shows an example of automatic program of a histogram window by ROME
+				You	don't need any programing.
+				ROME automatically find histogrms assciated to a task. -->
+		<Tab>
+			<TabName>ADCTab2</TabName>
+			<TabTitle>ADC2</TabTitle>
+			<TabObjectDisplay>true</TabObjectDisplay>
+			<ObjectDisplays>
+				<ObjectDisplay>
+					<ObjectDisplayName>ADC</ObjectDisplayName>
+					<ObjectDisplayTitle>ADC</ObjectDisplayTitle>
+					<ObjectDisplayObject>ADC</ObjectDisplayObject>
+				</ObjectDisplay>
+			</ObjectDisplays>
 		</Tab>
 	</Tabs>
 	<GlobalSteeringParameters>
