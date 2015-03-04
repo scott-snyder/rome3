@@ -2,6 +2,7 @@
 	<Experiment>
 		<ExperimentShortCut>MID</ExperimentShortCut>
 		<ProgramName>Analyzer</ProgramName>
+		<ConfigClassSuffix>Conf</ConfigClassSuffix>
 	</Experiment>
 	<Folders>
 		<Folder>
@@ -125,6 +126,10 @@
 				</Bank>
 				<Bank>
 					<BankName>TDC0</BankName>
+					<BankType>WORD</BankType>
+				</Bank>
+				<Bank>
+					<BankName>STDC</BankName>
 					<BankType>WORD</BankType>
 				</Bank>
 				<StructuredBank>

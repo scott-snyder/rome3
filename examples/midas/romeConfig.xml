@@ -326,6 +326,12 @@
         </Bank>
         <Bank>
           <!-- Description of a midas bank. -->
+          <BankName>STDC</BankName>
+          <!-- If true, this bank will be analyzed. Default is false. -->
+          <Active>true</Active>
+        </Bank>
+        <Bank>
+          <!-- Description of a midas bank. -->
           <BankName>STRT</BankName>
           <!-- If true, this bank will be analyzed. Default is false. -->
           <Active>true</Active>
