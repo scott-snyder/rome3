@@ -8418,12 +8418,12 @@ Bool_t ROMEBuilder::WriteConfigCpp() {
    buffer.Append(kMethodLine);
    buffer.AppendFormatted("%sConfig::%sConfig()\n",shortCut.Data(),shortCut.Data());
 
-   buffer.AppendFormatted(":fConfigData(new ConfigData*[1])\n");
+   buffer.AppendFormatted(":fConfigData(new ConfigData%s*[1])\n",configClassSuffix.Data());
    buffer.AppendFormatted(",fXSDFile(\"\")\n");
    buffer.AppendFormatted(",fNumberOfRunConfigs(0)\n");
    buffer.AppendFormatted(",fActiveConfiguration(0)\n");
    buffer.AppendFormatted("{\n");
-   buffer.AppendFormatted("   fConfigData[0] = new ConfigData();\n");
+   buffer.AppendFormatted("   fConfigData[0] = new ConfigData%s();\n",configClassSuffix.Data());
    buffer.AppendFormatted("}\n\n");
 
    // Destructor
@@ -8462,15 +8462,15 @@ Bool_t ROMEBuilder::WriteConfigCpp() {
    buffer.AppendFormatted("      SafeDelete(fConfigData[i]);\n");
    buffer.AppendFormatted("   SafeDeleteArray(fConfigData);\n");
    buffer.AppendFormatted("   fNumberOfRunConfigs = xml->NumberOfOccurrenceOfPath(\"/Configuration/RunConfiguration\");\n");
-   buffer.AppendFormatted("   fConfigData = new ConfigData*[fNumberOfRunConfigs + 1];\n");
-   buffer.AppendFormatted("   fConfigData[0] = new ConfigData();\n");
+   buffer.AppendFormatted("   fConfigData = new ConfigData%s*[fNumberOfRunConfigs + 1];\n",configClassSuffix.Data());
+   buffer.AppendFormatted("   fConfigData[0] = new ConfigData%s();\n",configClassSuffix.Data());
    buffer.AppendFormatted("   ROMEString path = \"/Configuration/MainConfiguration\";\n");
    buffer.AppendFormatted("   ReadConfiguration(xml,path, 0);\n");
    buffer.AppendFormatted("   CheckConfigurationModified(0);\n");
    buffer.AppendFormatted("   if (!SetConfiguration(0, 0))\n");
    buffer.AppendFormatted("      return false;\n");
    buffer.AppendFormatted("   for (i = 0; i < fNumberOfRunConfigs; i++) {\n");
-   buffer.AppendFormatted("      fConfigData[i + 1] = new ConfigData();\n");
+   buffer.AppendFormatted("      fConfigData[i + 1] = new ConfigData%s();\n",configClassSuffix.Data());
    buffer.AppendFormatted("      path.SetFormatted(\"/Configuration/RunConfiguration[%%d]\",i + 1);\n");
    buffer.AppendFormatted("      ReadConfiguration(xml,path,i + 1);\n");
    buffer.AppendFormatted("      CheckConfigurationModified(i + 1);\n");
@@ -8517,7 +8517,7 @@ Bool_t ROMEBuilder::WriteConfigCpp() {
    buffer.AppendFormatted("Bool_t %sConfig::ReadConfiguration(ROMEXML *xml,ROMEString& path,Int_t indx)\n{\n",
                           shortCut.Data());
    buffer.AppendFormatted("   int i;\n");
-   buffer.AppendFormatted("   %sConfig::ConfigData *configData = fConfigData[indx];\n",shortCut.Data());
+   buffer.AppendFormatted("   %sConfig::ConfigData%s *configData = fConfigData[indx];\n",shortCut.Data(),configClassSuffix.Data());
    buffer.AppendFormatted("   int ii[100];\n");
    buffer.AppendFormatted("   ii[0] = 0;\n"); // to suppress unused warning
    buffer.AppendFormatted("   ROMEString tempPath;\n");
@@ -8746,7 +8746,7 @@ Bool_t ROMEBuilder::WriteConfig2Cpp() {
    buffer.AppendFormatted("Bool_t %sConfig::CheckConfigurationModified(Int_t indx) const\n{\n",shortCut.Data());
    buffer.AppendFormatted("   int i;\n");
    buffer.AppendFormatted("   ROMEString tempPath;\n");
-   buffer.AppendFormatted("   %sConfig::ConfigData *configData = fConfigData[indx];\n",shortCut.Data());
+   buffer.AppendFormatted("   %sConfig::ConfigData%s *configData = fConfigData[indx];\n",shortCut.Data(),configClassSuffix.Data());
    buffer.AppendFormatted("   int ii[100];\n");
    buffer.AppendFormatted("   ii[0] = 0;\n"); // to suppress unused warning
    iSub = 0;
@@ -8854,8 +8854,8 @@ Bool_t ROMEBuilder::WriteConfig3Cpp() {
    buffer.Append(kMethodLine);
    buffer.AppendFormatted("Bool_t %sConfig::SetConfiguration(Int_t modIndex,Int_t indx)\n{\n",shortCut.Data());
    buffer.AppendFormatted("   int i;\n");
-   buffer.AppendFormatted("   %sConfig::ConfigData *configData = fConfigData[indx];\n",shortCut.Data());
-   buffer.AppendFormatted("   %sConfig::ConfigData *modConfigData = fConfigData[modIndex];\n",shortCut.Data());
+   buffer.AppendFormatted("   %sConfig::ConfigData%s *configData = fConfigData[indx];\n",shortCut.Data(),configClassSuffix.Data());
+   buffer.AppendFormatted("   %sConfig::ConfigData%s *modConfigData = fConfigData[modIndex];\n",shortCut.Data(),configClassSuffix.Data());
    buffer.AppendFormatted("   int ii[100];\n");
    buffer.AppendFormatted("   ii[0] = 0;\n"); // to suppress unused warning
    buffer.AppendFormatted("   char* cstop;\n");
@@ -8975,7 +8975,7 @@ Bool_t ROMEBuilder::WriteConfig4Cpp() {
    buffer.AppendFormatted("Bool_t %sConfig::WriteConfiguration(ROMEXML *xml,Int_t indx) const\n{\n",shortCut.Data());
    buffer.AppendFormatted("   ROMEString str = \"\";\n");
    buffer.AppendFormatted("   ROMEString writeString;\n");
-   buffer.AppendFormatted("   %sConfig::ConfigData *configData = fConfigData[indx];\n",shortCut.Data());
+   buffer.AppendFormatted("   %sConfig::ConfigData%s *configData = fConfigData[indx];\n",shortCut.Data(),configClassSuffix.Data());
    buffer.AppendFormatted("   int i;\n");
    buffer.AppendFormatted("   int ii[100];\n");
    buffer.AppendFormatted("   ii[0] = 0;\n"); // to suppress unused warning
