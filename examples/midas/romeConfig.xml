@@ -162,6 +162,11 @@
           <SPName>TestValue</SPName>
           <SPValue>0</SPValue>
         </SteeringParameterField>
+        <SteeringParameterField>
+          <!-- Array size of ADC and TDC -->
+          <SPName>NChannels</SPName>
+          <SPValue>8</SPValue>
+        </SteeringParameterField>
       </GlobalSteeringParameters>
     </Common>
 

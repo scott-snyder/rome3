@@ -62,7 +62,7 @@ void MIDTFillHistogram::Event()
 {
    if (IsADCActive()) {
       for (Int_t i = 0; i < gAnalyzer->GetMidasDAQ()->GetADC0BankEntries(); i++) {
-         if (i < 8) {
+         if (i < gAnalyzer->GetGSP()->GetNChannels()) {
             GetADCAt(i)->Fill(gAnalyzer->GetMidasDAQ()->GetADC0BankAt(i));
          }
       }
