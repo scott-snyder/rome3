@@ -910,7 +910,7 @@ void ROMEBuilder::AddDAQLibraries()
       daqLibraries->AddFormatted("-L$(MIDASSYS)/freeBSD/lib -lmidas -lrt");
 #elif defined( R__MACOSX )
    if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/darwin/lib -lmidas -lrt");
+      daqLibraries->AddFormatted("-L$(MIDASSYS)/darwin/lib -lmidas");
 #elif defined( R__LINUX )
    if (this->midas)
       daqLibraries->AddFormatted("-L$(MIDASSYS)/linux/lib -lmidas -lrt");
