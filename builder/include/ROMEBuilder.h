@@ -522,6 +522,7 @@ protected:
    ROMEString   *mainEmail;
    ROMEString    mainProgName;
    ROMEString    mainProgNameExtension;
+   ROMEString    configClassSuffix;
    ROMEString    mainDefinitionVersion;
    ROMEString    mainDescription;
    ROMEString    styleSheet;

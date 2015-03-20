@@ -6,7 +6,7 @@
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="c:\rome\romeConfig.xsd">
   <ProgramConfiguration>
     <!-- The program mode. Must be one of the following : 0 : analyzer; 1 : monitor; 2 : analyzer and monitor; 3 : monitor connected to an analyzer. (required) -->
-    <ProgramMode>0</ProgramMode>
+    <ProgramMode>2</ProgramMode>
   </ProgramConfiguration>
 
   <MainConfiguration>
@@ -162,6 +162,11 @@
           <SPName>TestValue</SPName>
           <SPValue>0</SPValue>
         </SteeringParameterField>
+        <SteeringParameterField>
+          <!-- Array size of ADC and TDC -->
+          <SPName>NChannels</SPName>
+          <SPValue>8</SPValue>
+        </SteeringParameterField>
       </GlobalSteeringParameters>
     </Common>
 
@@ -219,11 +224,40 @@
             <SPValue>0</SPValue>
           </SteeringParameterField>
         </Task>
+
+        <Task>
+          <TaskName>FillHistogram</TaskName>
+          <!-- Inactive tasks are not executed by the framework. Default is true. -->
+          <Active>true</Active>
+        </Task>
       </Tasks>
     </Analyzer>
 
     <Monitor>
       <!-- Describes the framework specifications, which are used for a monitor. -->
+      <Display>
+        <!-- Describes the display specific properties. -->
+        <!-- Basic size of main window. -->
+        <WindowScale>1.0</WindowScale>
+        <!-- Display a status bar in the window. -->
+        <StatusBar>true</StatusBar>
+        <!-- Time intervall after which the EventHandler method is called in milli seconds. 0 means no update. Default is 0. -->
+        <UpdateFrequency>1000</UpdateFrequency>
+        <!-- Time intervall to take screen shots of tabs whose ScreenShotName is set (in seconds). When it is 0, screen shots are taken every time when grahics is updated. Default is 60. -->
+        <ScreenShotPeriod>60</ScreenShotPeriod>
+        <!-- Use ListTree to select displays rather than tabs. -->
+        <ListTreeView>false</ListTreeView>
+        <!-- Time offset used for time display. "local" or "utc" are valid. -->
+        <TimeZone>local</TimeZone>
+        <AnalyzerController>
+          <!-- Description of the Analyzer Contoller Settings. -->
+          <!-- Activate flag. -->
+          <Active>false</Active>
+          <!-- Name of the NetFolder to steer the analysis. -->
+          <NetFolderName></NetFolderName>
+        </AnalyzerController>
+      </Display>
+
       <SocketClient>
         <!-- Description of the socket client connection to the ROME analyzer. This section is needed if the program mode is 3. -->
         <!-- Host which runs the ROME analyzer. -->
@@ -231,6 +265,43 @@
         <!-- Port number for the socket connection. -->
         <Port>9090</Port>
       </SocketClient>
+
+      <Tabs>
+        <Tab>
+          <TabName>ADCTab</TabName>
+          <!-- Inactive tasks are not executed by the framework. -->
+          <Active>true</Active>
+          <!-- When this is set, screen show of the tab is written periodically. -->
+          <ScreenShotFileName></ScreenShotFileName>
+          <!-- When this is set, a new window is created for the tab. -->
+          <NewWindow>false</NewWindow>
+        </Tab>
+
+        <Tab>
+          <TabName>ADCTab2</TabName>
+          <!-- Inactive tasks are not executed by the framework. -->
+          <Active>true</Active>
+          <!-- When this is set, screen show of the tab is written periodically. -->
+          <ScreenShotFileName></ScreenShotFileName>
+          <!-- When this is set, a new window is created for the tab. -->
+          <NewWindow>false</NewWindow>
+          <!-- The initial number of pads in horizontal direction. This tag is only used for tabs with display objects. -->
+          <NumberOfPadsX>2</NumberOfPadsX>
+          <!-- The initial number of pads in vertical direction. This tag is only used for tabs with display objects. -->
+          <NumberOfPadsY>2</NumberOfPadsY>
+          <!-- Tells the tab to activate the pad configuration. This tag is only used for tabs with display objects. -->
+          <PadConfiguration>false</PadConfiguration>
+          <ObjectDisplay>
+            <!-- Description of an object display. -->
+            <ObjectDisplayName>ADC</ObjectDisplayName>
+            <!-- The root draw option. (optional) -->
+            <DrawOption></DrawOption>
+            <LogScaleX>false</LogScaleX>
+            <LogScaleY>false</LogScaleY>
+            <LogScaleZ>false</LogScaleZ>
+          </ObjectDisplay>
+        </Tab>
+      </Tabs>
     </Monitor>
 
     <Midas>
@@ -255,6 +326,12 @@
         <Bank>
           <!-- Description of a midas bank. -->
           <BankName>TDC0</BankName>
+          <!-- If true, this bank will be analyzed. Default is false. -->
+          <Active>true</Active>
+        </Bank>
+        <Bank>
+          <!-- Description of a midas bank. -->
+          <BankName>STDC</BankName>
           <!-- If true, this bank will be analyzed. Default is false. -->
           <Active>true</Active>
         </Bank>

@@ -615,6 +615,7 @@ Bool_t ROMEBuilder::ReadXMLDefinitionFile()
    shortCut = "";
    mainProgName = "";
    mainProgNameExtension = ".exe";
+   configClassSuffix = "";
    mainDescription = "";
 
    numOfMainAuthors = 0;
@@ -712,6 +713,10 @@ Bool_t ROMEBuilder::ReadXMLDefinitionFile()
                            mainProgNameExtension = ".exe";
 #endif
                         }
+                     }
+                     if (type == 1 && !strcmp(name,"ConfigClassSuffix")) {
+                        xml->GetValue(configClassSuffix,configClassSuffix);
+                        FormatText(configClassSuffix, kTRUE, " ");
                      }
                      if (type == 1 && !strcmp(name,"DictionaryType")) {
                         xml->GetValue(tmp,tmp);

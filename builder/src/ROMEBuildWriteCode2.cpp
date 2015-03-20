@@ -2461,7 +2461,7 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
       buffer.AppendFormatted("%sBool_t f%sModified;\n",sTab.Data(),parGroup->GetGroupName().Data());
       return true;
    }
-   buffer.AppendFormatted("%sclass %s {\n",sTab.Data(),parGroup->GetGroupName().Data());
+   buffer.AppendFormatted("%sclass %s%s {\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data());
    buffer.AppendFormatted("%spublic:\n",sTab.Data());
    for (i = 0; i < parGroup->GetNumberOfParameters(); i++) {
       parameter = parGroup->GetParameterAt(i);
@@ -2490,12 +2490,12 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
 
    // Constructor
    buffer.AppendFormatted("%sprivate:\n",sTab.Data());
-   buffer.AppendFormatted("%s   %s(const %s &c); // not implemented\n",sTab.Data(),
-                          parGroup->GetGroupName().Data(),parGroup->GetGroupName().Data());
-   buffer.AppendFormatted("%s   %s &operator=(const %s &c); // not implemented\n",sTab.Data(),
-                          parGroup->GetGroupName().Data(),parGroup->GetGroupName().Data());
+   buffer.AppendFormatted("%s   %s%s(const %s%s &c); // not implemented\n",sTab.Data(),
+                          parGroup->GetGroupName().Data(),configClassSuffix.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data());
+   buffer.AppendFormatted("%s   %s%s &operator=(const %s%s &c); // not implemented\n",sTab.Data(),
+                          parGroup->GetGroupName().Data(),configClassSuffix.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data());
    buffer.AppendFormatted("%spublic:\n",sTab.Data());
-   buffer.AppendFormatted("%s   %s()\n",sTab.Data(),parGroup->GetGroupName().Data());
+   buffer.AppendFormatted("%s   %s%s()\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data());
    ROMEString separator = ":";
    if (parGroup->GetGroupName() == "ConfigData") {
       buffer.AppendFormatted("%s   %sfLastRunNumberIndex(-1)\n",sTab.Data(),separator.Data());
@@ -2528,7 +2528,7 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
          buffer.AppendFormatted("%s   ,f%sModified(kFALSE)\n", sTab.Data(), subGroup->GetGroupName().Data());
          separator = ",";
       } else if (subGroup->GetArraySize() == "1") {
-         buffer.AppendFormatted("%s   %sf%s(new %s())\n", sTab.Data(), separator.Data(), subGroup->GetGroupName().Data(), subGroup->GetGroupName().Data());
+         buffer.AppendFormatted("%s   %sf%s(new %s%s())\n", sTab.Data(), separator.Data(), subGroup->GetGroupName().Data(), subGroup->GetGroupName().Data(),configClassSuffix.Data());
          buffer.AppendFormatted("%s   ,f%sModified(kFALSE)\n", sTab.Data(), subGroup->GetGroupName().Data());
          separator = ",";
       } else if (subGroup->GetArraySize() == "unknown") {
@@ -2541,9 +2541,10 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
                                 subGroup->GetGroupName().Data());
          separator = ",";
       } else {
-         buffer.AppendFormatted("%s   %sf%s(new %s*[%s])\n",sTab.Data(),separator.Data(),
+         buffer.AppendFormatted("%s   %sf%s(new %s%s*[%s])\n",sTab.Data(),separator.Data(),
                                 subGroup->GetGroupName().Data(),
                                 subGroup->GetGroupName().Data(),
+                                configClassSuffix.Data(),
                                 subGroup->GetArraySize().Data());
          buffer.AppendFormatted("%s   ,f%sModified(new Bool_t[%s])\n",sTab.Data(),
                                 subGroup->GetGroupName().Data(),
@@ -2594,9 +2595,10 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
       } else {
          buffer.AppendFormatted("%s      for (i = 0; i < %s; i++) {\n",sTab.Data(),
                                 subGroup->GetArraySize().Data());
-         buffer.AppendFormatted("%s         f%s[i] = new %s();\n",sTab.Data(),
+         buffer.AppendFormatted("%s         f%s[i] = new %s%s();\n",sTab.Data(),
                                 subGroup->GetGroupName().Data(),
-                                subGroup->GetGroupName().Data());
+                                subGroup->GetGroupName().Data(),
+                                configClassSuffix.Data());
          buffer.AppendFormatted("%s         f%sModified[i] = false;\n",sTab.Data(),
                                 subGroup->GetGroupName().Data());
          buffer.AppendFormatted("%s      }\n",sTab.Data());
@@ -2604,7 +2606,7 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
    }
    buffer.AppendFormatted("%s   }\n",sTab.Data());
    // Destructor
-   buffer.AppendFormatted("%s   ~%s() {\n",sTab.Data(),parGroup->GetGroupName().Data());
+   buffer.AppendFormatted("%s   ~%s%s() {\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data());
    found = false;
    for (i = 0; i < parGroup->GetNumberOfParameters(); i++) {
       parameter = parGroup->GetParameterAt(i);
@@ -2652,15 +2654,15 @@ Bool_t ROMEBuilder::WriteConfigClass(ROMEString &buffer,ROMEConfigParameterGroup
    buffer.AppendFormatted("%s   }\n",sTab.Data());
    buffer.AppendFormatted("%s};\n",sTab.Data());
    if (parGroup->GetGroupName() == "ConfigData") {
-      buffer.AppendFormatted("%s%s** f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),
+      buffer.AppendFormatted("%s%s%s** f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data(),
                              parGroup->GetGroupName().Data());
    } else {
       if (parGroup->GetArraySize() == "1") {
-         buffer.AppendFormatted("%s%s* f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),
+         buffer.AppendFormatted("%s%s%s* f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data(),
                                 parGroup->GetGroupName().Data());
          buffer.AppendFormatted("%sBool_t f%sModified;\n",sTab.Data(),parGroup->GetGroupName().Data());
       } else {
-         buffer.AppendFormatted("%s%s** f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),
+         buffer.AppendFormatted("%s%s%s** f%s;\n",sTab.Data(),parGroup->GetGroupName().Data(),configClassSuffix.Data(),
                                 parGroup->GetGroupName().Data());
          buffer.AppendFormatted("%sBool_t *f%sModified;\n",sTab.Data(),parGroup->GetGroupName().Data());
          buffer.AppendFormatted("%sBool_t f%sArrayModified;\n",sTab.Data(),parGroup->GetGroupName().Data());
@@ -2742,18 +2744,18 @@ Bool_t ROMEBuilder::WriteConfigRead(ROMEString &buffer,ROMEConfigParameterGroup 
          for (j = 0; j < subGroup->GetNumberOfReadGroupArrayInitLines(); j++) {
             buffer.AppendFormatted("%s   %s\n",sTab.Data(),subGroup->GetReadGroupArrayInitLineAt(j));
          }
-         buffer.AppendFormatted("%s   %sf%s = new ConfigData::%s%s*[%sf%sArraySize];\n",sTab.Data(),pointer.Data(),
-                                subGroup->GetGroupName().Data(),className.Data(),
-                                subGroup->GetGroupName().Data(),pointer.Data(),
+         buffer.AppendFormatted("%s   %sf%s = new ConfigData%s::%s%s%s*[%sf%sArraySize];\n",sTab.Data(),pointer.Data(),
+                                subGroup->GetGroupName().Data(),configClassSuffix.Data(),className.Data(),
+                                subGroup->GetGroupName().Data(),configClassSuffix.Data(),pointer.Data(),
                                 subGroup->GetGroupName().Data());
          buffer.AppendFormatted("%s   %sf%sModified = new bool[%sf%sArraySize];\n",sTab.Data(),pointer.Data(),
                                 subGroup->GetGroupName().Data(),pointer.Data(),
                                 subGroup->GetGroupName().Data());
          buffer.AppendFormatted("%s   for (i = 0; i < %sf%sArraySize; i++) {\n",sTab.Data(),pointer.Data(),
                                 subGroup->GetGroupName().Data());
-         buffer.AppendFormatted("%s      %sf%s[i] = new ConfigData::%s%s();\n",sTab.Data(),pointer.Data(),
-                                subGroup->GetGroupName().Data(),className.Data(),
-                                subGroup->GetGroupName().Data());
+         buffer.AppendFormatted("%s      %sf%s[i] = new ConfigData%s::%s%s%s();\n",sTab.Data(),pointer.Data(),
+                                subGroup->GetGroupName().Data(),configClassSuffix.Data(),className.Data(),
+                                subGroup->GetGroupName().Data(),configClassSuffix.Data());
       } else if (subGroup->GetArraySize() != "1") {
          buffer.AppendFormatted("%sfor (ii[%d] = 0; ii[%d] < %s; ii[%d]++) {\n",sTab.Data(),
                                 subGroup->GetHierarchyLevel(),
@@ -2762,7 +2764,7 @@ Bool_t ROMEBuilder::WriteConfigRead(ROMEString &buffer,ROMEConfigParameterGroup 
                                 subGroup->GetHierarchyLevel());
       }
       indexesT = indexes;
-      classNameT.SetFormatted("%s%s::",className.Data(),subGroup->GetGroupName().Data());
+      classNameT.SetFormatted("%s%s%s::",className.Data(),subGroup->GetGroupName().Data(),configClassSuffix.Data());
       sTabT = sTab.Data();
       if (subGroup->GetArraySize() == "unknown") {
          sTabT += "      ";
@@ -2812,8 +2814,9 @@ Bool_t ROMEBuilder::WriteConfigRead(ROMEString &buffer,ROMEConfigParameterGroup 
                                    pointer.Data(),subGroup->GetGroupName().Data());
          } else {
             temp = classNameT(0, classNameT.Length() - 2);
-            buffer.AppendFormatted("%sConfigData::%s* tmp%s_%d;\n", sTab.Data(), // for suppresion compiler warning
-                                   temp.Data(), subGroup->GetGroupName().Data(), *iSub);
+            buffer.AppendFormatted("%sConfigData%s::%s* tmp%s_%d;\n", sTab.Data(), // for suppresion compiler warning
+                                   configClassSuffix.Data(),temp.Data(),
+                                   subGroup->GetGroupName().Data(), *iSub);
             buffer.AppendFormatted("%stmp%s_%d = %sf%s;\n", sTab.Data(),
                                    subGroup->GetGroupName().Data(), *iSub,
                                    pointer.Data(), subGroup->GetGroupName().Data());
@@ -2865,7 +2868,7 @@ Bool_t ROMEBuilder::WriteConfigCheckModified(ROMEString &buffer,ROMEConfigParame
                                 subGroup->GetHierarchyLevel());
       }
       indexesT = indexes;
-      classNameT.SetFormatted("%s%s::",className.Data(),subGroup->GetGroupName().Data());
+      classNameT.SetFormatted("%s%s%s::",className.Data(),subGroup->GetGroupName().Data(),configClassSuffix.Data());
       sTabT = sTab.Data();
       if (subGroup->GetArraySize() == "unknown") {
          sTabT += "      ";
@@ -2918,7 +2921,7 @@ Bool_t ROMEBuilder::WriteConfigCheckModified(ROMEString &buffer,ROMEConfigParame
                                    *iSub,pointer.Data(),subGroup->GetGroupName().Data());
          } else {
             temp = classNameT(0, classNameT.Length()-2);
-            buffer.AppendFormatted("%sConfigData::%s* tmp%s_%d;\n",sTab.Data(),temp.Data(),
+            buffer.AppendFormatted("%sConfigData%s::%s* tmp%s_%d;\n",sTab.Data(),configClassSuffix.Data(),temp.Data(),
                                    subGroup->GetGroupName().Data(),*iSub);
             buffer.AppendFormatted("%stmp%s_%d = %sf%s;\n",sTab.Data(),subGroup->GetGroupName().Data(),
                                    *iSub,pointer.Data(),subGroup->GetGroupName().Data());

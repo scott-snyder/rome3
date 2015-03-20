@@ -71,20 +71,24 @@ void MIDTPrintValues::BeginOfRun()
 
 void MIDTPrintValues::Event()
 {
+
+   gAnalyzer->GetData()->SetADCSize(gAnalyzer->GetGSP()->GetNChannels());
+   gAnalyzer->GetData()->SetTDCSize(gAnalyzer->GetGSP()->GetNChannels());
+
    int i;
    cout << "\nEvent : " << gAnalyzer->GetCurrentEventNumber() << endl;
    cout << "TaskTestValue : " << gAnalyzer->GetPrintValuesTask()->GetSP()->GetTaskTestValue() << endl;
    cout << "TestValue : " << gAnalyzer->GetGSP()->GetTestValue() << endl;
    cout << "ADC0" << endl;
    for (i=0;i<gAnalyzer->GetMidasDAQ()->GetADC0BankEntries();i++) {
-      if (i < 8) {
+      if (i < gAnalyzer->GetData()->GetADCSize()) {
          gAnalyzer->GetData()->SetADCAt(i, gAnalyzer->GetMidasDAQ()->GetADC0BankAt(i));
       }
       cout << gAnalyzer->GetMidasDAQ()->GetADC0BankAt(i) << endl;
    }
    cout << "TDC0" << endl;
    for (i=0;i<gAnalyzer->GetMidasDAQ()->GetTDC0BankEntries();i++) {
-      if (i < 8) {
+      if (i < gAnalyzer->GetData()->GetTDCSize()) {
          gAnalyzer->GetData()->SetTDCAt(i, gAnalyzer->GetMidasDAQ()->GetTDC0BankAt(i));
       }
       cout << gAnalyzer->GetMidasDAQ()->GetTDC0BankAt(i) << endl;
