@@ -116,9 +116,14 @@
 					<xs:documentation>Name of the executable. The executable will be named as  [Shortcut][ProgramName].exe. (required)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ProgramName" type="xs:string" minOccurs="0">
+			<xs:element name="ProgramNameExtension" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Filename extension of the executable. The default is &quot;.exe&quot;. When it is &quot;auto&quot;, no extension is used for Unix-like systems, and &quot;.exe&quot; on Windows. (optional)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ConfigClassSuffix" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Attach a suffix to the class names of config objects. The default is empty. This can be used when the config name is pre-defined somewhere else (e.g. system header)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ProgramDefinitionVersion" type="xs:integer" minOccurs="0">
