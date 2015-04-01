@@ -13,4 +13,4 @@ $ ./analyzer
 In this example, a generated class MIDMidasDAQ (the source is in ../src/generated/) is used; therefore the bank structure is already defined in ../midas.xml.
 
 
-If you prefer to use a lower level handle for MIDAS files, you may choose to use ROMEMidasFile class in the $ROMESYS/src directory instead of the method shown in this example.
+If you prefer to use a lower level handle for MIDAS files, you may choose to use ROMEMidasFile class in the $ROMESYS/src directory instead of the method shown in this example. You can try ../standalone2.
