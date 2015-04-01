@@ -30,6 +30,8 @@
 
 ClassImp(PMTMixed)
 
+using namespace std;
+
 void PMTMixed::Init()
 {
    fHorz = new TGHorizontalFrame(this, (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()), (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()));

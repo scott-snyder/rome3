@@ -4446,19 +4446,15 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
          buffer.AppendFormatted(")\n");
          buffer.AppendFormatted("{\n");
          // following lines should be modified to use ROMEPrint instead of iostream.
-         buffer.AppendFormatted("   cout<<endl\n");
-         buffer.AppendFormatted("       <<\" Thread function %s is not implemented.\"<<endl\n",
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\" Please overwrite this function in derived class. For example,\"<<endl\n");
-         buffer.AppendFormatted("       <<\" In %sT%s.h,\"<<endl\n", shortCut.Data(), tabName[iTab].Data());
-         buffer.AppendFormatted("       <<\"   void %s();\"<<endl\n", threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\" In %sT%s.cpp,\"<<endl\n", shortCut.Data(), tabName[iTab].Data());
-         buffer.AppendFormatted("       <<\"   void %sT%s::%s()\"<<endl\n", shortCut.Data(), tabName[iTab].Data(),
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\"   {\"<<endl\n");
-         buffer.AppendFormatted("       <<\"      cout<<\\\"Thread function %s is running.\\\"<<endl;\"<<endl\n",
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\"   }\"<<endl<<endl;\n");
+         buffer.AppendFormatted("   ROMEPrint::Info(\" Thread function %s is not implemented.\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \" Please overwrite this function in derived class. For example,\\n\"\n");
+         buffer.AppendFormatted("                   \" In %sT%s.h,\\n\"\n", shortCut.Data(), tabName[iTab].Data());
+         buffer.AppendFormatted("                   \"   void %s();\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \" In %sT%s.cpp,\\n\"\n", shortCut.Data(), tabName[iTab].Data());
+         buffer.AppendFormatted("                   \"   void %sT%s::%s()\\n\"\n", shortCut.Data(), tabName[iTab].Data(), threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \"   {\\n\"\n");
+         buffer.AppendFormatted("                   \"      cout<<\\\"Thread function %s is running.\\\"<<endl;\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \"   }\\n\\n\");\n");
          buffer.AppendFormatted("   Stop%s();\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("}\n");
          buffer.AppendFormatted("\n");
@@ -5803,7 +5799,7 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
    buffer.AppendFormatted("void %sAnalyzer::FolderArrayOutOfBouds(Int_t index,const char* folder,const char* arraySize) const\n{\n",shortCut.Data());
    buffer.AppendFormatted("   ROMEPrint::Error(\"\\nYou have tried to access the %%d th element of the array folder %%s\\nwhich was defined with array size %%s.\\n\\nShutting down the program.\\n\",index,folder,arraySize);\n");
    buffer.AppendFormatted("   gSystem->StackTrace();\n");
-   buffer.AppendFormatted("   fApplication->Terminate(1);\n");
+   buffer.AppendFormatted("   if (fApplication) { fApplication->Terminate(1); }\n");
    buffer.AppendFormatted("   return;\n");
    buffer.AppendFormatted("}\n");
    buffer.Append(kMethodLine);
@@ -6102,7 +6098,7 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
       buffer.AppendFormatted("      ROMEPrint::Error(\"\\nYou have tried to access the %s DAQ system over a gAnalyzer->Get%sDAQ()\\nhandle but the current DAQ system is not '%s'.\\n\\nShutting down the program.\\n\");\n",
                              daqNameArray->At(i).Data(),daqNameArray->At(i).Data(),daqNameArray->At(i).Data());
       buffer.AppendFormatted("      gSystem->StackTrace();\n");
-      buffer.AppendFormatted("      fApplication->Terminate(1);\n");
+      buffer.AppendFormatted("      if (fApplication) { fApplication->Terminate(1); }\n");
       buffer.AppendFormatted("      return 0;\n");
       buffer.AppendFormatted("   }\n");
       buffer.AppendFormatted("   return f%sDAQ;\n",daqNameArray->At(i).Data());

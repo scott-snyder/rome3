@@ -10,13 +10,13 @@
 			<Field>
 				<FieldName>ADC</FieldName>
 				<FieldType>Int_t</FieldType>
-				<ArraySize>8</ArraySize>
+				<ArraySize>vector</ArraySize>
 				<FieldComment>ADC Values</FieldComment>
 			</Field>
 			<Field>
 				<FieldName>TDC</FieldName>
 				<FieldType>Int_t</FieldType>
-				<ArraySize>8</ArraySize>
+				<ArraySize>vector</ArraySize>
 				<FieldComment>TDC Values</FieldComment>
 			</Field>
 		</Folder>
@@ -64,7 +64,7 @@
 			<Histogram>
 				<HistName>ADC</HistName>
 				<HistFolderName>adc</HistFolderName>
-				<HistArraySize>8</HistArraySize>
+				<HistArraySize>gAnalyzer->GetGSP()->GetNChannels()</HistArraySize>
 				<HistType>TH1F</HistType>
 				<HistXLabel>ADC</HistXLabel>
 				<HistYLabel>Entries</HistYLabel>
@@ -104,6 +104,12 @@
 			<SPFieldName>TestValue</SPFieldName>
 			<SPFieldType>int</SPFieldType>
 			<SPFieldHotLink>true</SPFieldHotLink>
+		</SteeringParameterField>
+		<SteeringParameterField>
+			<SPFieldName>NChannels</SPFieldName>
+			<SPFieldType>int</SPFieldType>
+			<SPFieldInitialization>8</SPFieldInitialization>
+			<SPFieldComment>Array size of ADC and TDC</SPFieldComment>
 		</SteeringParameterField>
 	</GlobalSteeringParameters>
 	<Tree>

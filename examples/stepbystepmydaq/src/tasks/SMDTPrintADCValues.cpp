@@ -33,6 +33,8 @@
 
 ClassImp(SMDTPrintADCValues)
 
+using namespace std;
+
 void SMDTPrintADCValues::Init()
 {
 }

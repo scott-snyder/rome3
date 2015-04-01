@@ -31,6 +31,8 @@
 
 ClassImp(FOTTab)
 
+using namespace std;
+
 void FOTTab::Init()
 {
    //ODB

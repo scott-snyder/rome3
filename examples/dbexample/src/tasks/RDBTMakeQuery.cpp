@@ -36,6 +36,8 @@ This is an example to use SQL query from analyzer.
 
 ClassImp(RDBTMakeQuery)
 
+using namespace std;
+
 void RDBTMakeQuery::Init()
 {
 }

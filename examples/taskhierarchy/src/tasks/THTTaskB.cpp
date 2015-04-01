@@ -27,6 +27,8 @@
 
 ClassImp(THTTaskB)
 
+using namespace std;
+
 void THTTaskB::Init()
 {
    cout << "B:" << GetSP()->Getoutput().Data() << endl;

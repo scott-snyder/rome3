@@ -43,6 +43,8 @@ This task shows containts of folders.
 
 ClassImp(RDBTPrintFolders)
 
+using namespace std;
+
 void RDBTPrintFolders::Init()
 {
 }

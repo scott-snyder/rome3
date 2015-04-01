@@ -86,13 +86,13 @@ test_c: $(objects) main_c.o
 	$(CXX) $(LDFLAGS) -o $@ $(objects) main_c.o $(Libraries)
 
 test_f: $(objects) main_f.o
-	$(FC) $(LDFLAGS) -o $@ main_f.o $(objects) $(CXX_LIBS) $(Libraries)
+	$(FC) $(LDFLAGS) -o $@ main_f.o $(objects) $(CXX_LIBS) $(Libraries) -lstdc++
 
 ROME%.o : $(ROMESYS)/src/ROME%.cpp
 	$(CXX) -c $(CFlags) $(Includes) -MMD -MP -MF $(@:.o=.d) -MT $@ $< -o $@
 
 main_c.o : main_c.c
-	$(CC) -c $(CFlags) $(Includes) -MMD -MP -MF $(@:.o=.d) -MT $@ $< -o $@
+	$(CC) -c $(patsubst -stdlib=%,,$(patsubst -std=%,,$(CFlags))) $(patsubst -stdlib=%,,$(patsubst -std=%,,$(Includes))) -MMD -MP -MF $(@:.o=.d) -MT $@ $< -o $@
 
 main_f.o : main_f.F
 	$(FC) -c $(FFlags) $(Includes) $< -o $@
@@ -101,7 +101,7 @@ Dict.o : Dict.cpp Dict.h
 	$(CXX) -c $(CFlags) $(Includes) -MMD -MP -MF $(@:.o=.d) -MT $@ $< -o $@
 
 Dict.h Dict.cpp: $(DICTHEADERS) Makefile
-	$(ROOTCINT) -f Dict.cpp -c -p $(Includes) $(CINTFLAGS) $(DICTHEADERS) LinkDef.h
+	$(ROOTCINT) -f Dict.cpp -c -p $(patsubst -stdlib=%,,$(patsubst -std=%,,$(Includes))) $(patsubst -stdlib=%,,$(patsubst -std=%,,$(CINTFLAGS))) $(DICTHEADERS) LinkDef.h
 
 ## Cleaning rules
 clean:
