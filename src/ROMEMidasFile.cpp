@@ -122,6 +122,16 @@ Bool_t ROMEMidasFile::Open(const char* const dir, const char* const runStr)
             case LZMA_OPTIONS_ERROR:
                ROMEPrint::Error("XZ: Unsupported decompressor flags\n");
                break;
+            case LZMA_OK:
+            case LZMA_STREAM_END:
+            case LZMA_NO_CHECK:
+            case LZMA_UNSUPPORTED_CHECK:
+            case LZMA_GET_CHECK:
+            case LZMA_MEMLIMIT_ERROR:
+            case LZMA_FORMAT_ERROR:
+            case LZMA_DATA_ERROR:
+            case LZMA_BUF_ERROR:
+            case LZMA_PROG_ERROR:
             default:
                ROMEPrint::Error("XZ: Unknown error, possibly a bug\n");
                break;
@@ -304,6 +314,13 @@ ssize_t ROMEMidasFile::Read(void *buf, size_t size)
                   case LZMA_BUF_ERROR:
                      ROMEPrint::Error("Compressed file is truncated or otherwise corrupt\n");
                      break;
+                  case LZMA_OK:
+                  case LZMA_STREAM_END:
+                  case LZMA_NO_CHECK:
+                  case LZMA_UNSUPPORTED_CHECK:
+                  case LZMA_GET_CHECK:
+                  case LZMA_MEMLIMIT_ERROR:
+                  case LZMA_PROG_ERROR:
                   default:
                      ROMEPrint::Error("Unknown error, possibly a bug\n");
                      break;
@@ -323,7 +340,7 @@ ssize_t ROMEMidasFile::Read(void *buf, size_t size)
                   n = size;
                }
             }
-            if (n == size) {
+            if (n == static_cast<ssize_t>(size)) {
                break;
             }
          }
@@ -405,13 +422,21 @@ off_t ROMEMidasFile::Seek(Long64_t pos) const
 #ifdef HAVE_XZ
    case ROMEMidasFile::XZ:
       ROMEPrint::Error("Seek for xz midas files is not implemented. Please decompress the file.\n");
-      gROME->GetApplication()->Terminate(1);
+#if 0
+      if (gROME) { gROME->GetApplication()->Terminate(1); }
+#else
+      abort();
+#endif
       break;
 #endif
 #ifdef HAVE_BZ2
    case ROMEMidasFile::BZ2:
       ROMEPrint::Error("Seek for bzip2 midas files is not implemented. Please decompress the file.\n");
-      gROME->GetApplication()->Terminate(1);
+#if 0
+      if (gROME) ( gROME->GetApplication()->Terminate(1); }
+#else
+      abort();
+#endif
       break;
 #endif
    default:

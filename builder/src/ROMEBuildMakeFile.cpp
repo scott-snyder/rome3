@@ -1366,6 +1366,7 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
      buffer.AppendFormatted("%sMidasDAQOpt                   += -fno-strict-aliasing\n",shortCut.Data());
    }
    buffer.AppendFormatted("ROMEMidasDAQOpt                 += -fno-strict-aliasing\n");
+   buffer.AppendFormatted("ROMEMidasFileOpt                += -fno-strict-aliasing\n");
    buffer.AppendFormatted("ROMEAnalyzerOpt                 += $(NOWFMTNLIT)\n");
    buffer.AppendFormatted("\n");
 #endif // R__UNIX

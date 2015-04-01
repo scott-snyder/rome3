@@ -148,7 +148,9 @@ ROMEPICDEF = -DUSE_PIC_UPPER
 endif
 endif
 
-DICTIONARIES = bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/HAddDict$(DICT_HEADER_SUF)
+DICTIONARIES = bin/ROMEBuilderDict$(DICT_HEADER_SUF) \
+               bin/UpdateVersionHDict$(DICT_HEADER_SUF) \
+               bin/HAddDict$(DICT_HEADER_SUF)
 
 NEED_TARRAYL64 = no
 ifeq ($(ROOT_MAJOR), 5)
@@ -250,7 +252,6 @@ LibObjects := obj/ROMEStr2DArray.o \
               obj/ROMETGraph.o \
               obj/ROMETGraphErrors.o \
               obj/ROMETCutG.o \
-              obj/ROMEMidasFile.o \
               obj/TNetFolder.o \
               obj/TNetFolderServer.o \
               obj/XMLToForm.o \
