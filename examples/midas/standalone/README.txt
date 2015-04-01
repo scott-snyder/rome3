@@ -6,6 +6,7 @@ $ make -C $ROMESYS
 $ cd ..
 $ $ROMESYS/bin/romebuilder.exe -i midas.xml -o .
 $ make
+$ make so
 $ cd -
 $ make .
 $ ./analyzer

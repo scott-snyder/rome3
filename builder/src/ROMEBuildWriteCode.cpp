@@ -4446,19 +4446,15 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
          buffer.AppendFormatted(")\n");
          buffer.AppendFormatted("{\n");
          // following lines should be modified to use ROMEPrint instead of iostream.
-         buffer.AppendFormatted("   cout<<endl\n");
-         buffer.AppendFormatted("       <<\" Thread function %s is not implemented.\"<<endl\n",
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\" Please overwrite this function in derived class. For example,\"<<endl\n");
-         buffer.AppendFormatted("       <<\" In %sT%s.h,\"<<endl\n", shortCut.Data(), tabName[iTab].Data());
-         buffer.AppendFormatted("       <<\"   void %s();\"<<endl\n", threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\" In %sT%s.cpp,\"<<endl\n", shortCut.Data(), tabName[iTab].Data());
-         buffer.AppendFormatted("       <<\"   void %sT%s::%s()\"<<endl\n", shortCut.Data(), tabName[iTab].Data(),
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\"   {\"<<endl\n");
-         buffer.AppendFormatted("       <<\"      cout<<\\\"Thread function %s is running.\\\"<<endl;\"<<endl\n",
-                                threadFunctionName[iTab][i].Data());
-         buffer.AppendFormatted("       <<\"   }\"<<endl<<endl;\n");
+         buffer.AppendFormatted("   ROMEPrint::Info(\" Thread function %s is not implemented.\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \" Please overwrite this function in derived class. For example,\\n\"\n");
+         buffer.AppendFormatted("                   \" In %sT%s.h,\\n\"\n", shortCut.Data(), tabName[iTab].Data());
+         buffer.AppendFormatted("                   \"   void %s();\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \" In %sT%s.cpp,\\n\"\n", shortCut.Data(), tabName[iTab].Data());
+         buffer.AppendFormatted("                   \"   void %sT%s::%s()\\n\"\n", shortCut.Data(), tabName[iTab].Data(), threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \"   {\\n\"\n");
+         buffer.AppendFormatted("                   \"      cout<<\\\"Thread function %s is running.\\\"<<endl;\\n\"\n", threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("                   \"   }\\n\\n\");\n");
          buffer.AppendFormatted("   Stop%s();\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("}\n");
          buffer.AppendFormatted("\n");

@@ -77,6 +77,8 @@ const UShort_t TID_LAST      = 17;      //< end of TID list indicator
 #endif
 #endif
 
+using namespace std;
+
 int main(int argc, char *argv[])
 {
    ROMEMidasFile *mfile = new ROMEMidasFile();

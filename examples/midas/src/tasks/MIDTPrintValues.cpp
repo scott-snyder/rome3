@@ -42,6 +42,8 @@
 
 ClassImp(MIDTPrintValues)
 
+using namespace std;
+
 void MIDTPrintValues::Init()
 {
 }

@@ -10,7 +10,7 @@ endif
 
 
 CXXFLAGS      := -g -O -Wall -fexceptions -I../include -I$(ROMESYS) -I$(ROMESYS)/include $(shell $(ROOTCONFIG) --cflags)
-LIBS          := $(shell $(ROOTCONFIG) --libs)
+LIBS          := $(shell $(ROOTCONFIG) --libs) -lz
 
 # Enable here to read compressed MIDAS files (.xz)
 CXXFLAGS      += -DHAVE_XZ
@@ -59,7 +59,7 @@ obj:
 obj/ROME%.o: $(ROMESYS)/src/ROME%.cpp $(ROMESYS)/include/ROME%.h
 	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(@:.o=.d) -MT $@ -c $< -o $@
 
-obj/ROME%Dict.o: ROME%Dict.cpp ROME%Dict.h
+obj/ROME%Dict.o: ROME%Dict.cpp ROME%Dict$(DICT_HEADER_SUF)
 	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(@:.o=.d) -MT $@ -c $< -o $@
 
 ROMEMidasDict$(DICT_HEADER_SUF) ROMEMidasDict.cpp: $(ROMEMidasDictHeaders) Makefile

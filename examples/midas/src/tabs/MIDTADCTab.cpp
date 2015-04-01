@@ -30,6 +30,8 @@
 
 ClassImp(MIDTADCTab)
 
+using namespace std;
+
 //______________________________________________________________________________
 void MIDTADCTab::Init()
 {

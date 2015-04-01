@@ -33,6 +33,8 @@
 
 ClassImp(SDAQTPrintADCValues)
 
+using namespace std;
+
 void SDAQTPrintADCValues::Init()
 {
 }

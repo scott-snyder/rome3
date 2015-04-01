@@ -3,6 +3,8 @@
 #include "generated/MIDAnalyzer.h"
 #include "generated/MIDMidasDAQ.h"
 
+using namespace std;
+
 int main(int argc, char *argv[])
 {
    // Initialization of ROME objects

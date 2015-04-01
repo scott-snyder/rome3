@@ -30,6 +30,8 @@
 
 ClassImp(PMTThread)
 
+using namespace std;
+
 void PMTThread::Init()
 {
    fHorz = new TGHorizontalFrame(this, (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()), (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()));

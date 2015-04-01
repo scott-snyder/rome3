@@ -12,12 +12,9 @@ endif
 
 # directory where mxml.c and strlcpy.c resides
 CXXFLAGS      := -g -O -Wall -fexceptions -I../include -I$(ROMESYS)/include $(shell $(ROOTCONFIG) --cflags)
-LIBS          := $(shell $(ROOTCONFIG) --libs) -Wl,-rpath=$(PWDST)/../obj  -Wl,-rpath=$(ROMESYS)
+LIBS          := $(shell $(ROOTCONFIG) --libs) -Wl,-rpath=$(PWDST)/../obj -Wl,-rpath=$(ROMESYS)
 
 ROMELIB = -L../obj -lmidanalyzer
-ifeq ($(LIBROME), yes)
-ROMELIB += -L$(ROMESYS) -lrome
-endif
 
 all: analyzer
 

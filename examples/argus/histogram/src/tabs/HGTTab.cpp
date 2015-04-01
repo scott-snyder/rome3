@@ -30,6 +30,8 @@
 
 ClassImp(HGTTab)
 
+using namespace std;
+
 void HGTTab::Init()
 {
    // Create a vertical frame containing buttons and canvas
