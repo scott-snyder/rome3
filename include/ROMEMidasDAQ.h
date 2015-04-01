@@ -244,6 +244,8 @@ public:
    Int_t          GetTimeStamp() { return fTimeStamp; }
    const char    *GetName() const { return "midas"; }
 
+   ROMEMidasFile* GetMidasFile() const { return fMidasFile; }
+
    Bool_t         Init();
    Bool_t         BeginOfRun();
    Long64_t       Seek(Long64_t event);

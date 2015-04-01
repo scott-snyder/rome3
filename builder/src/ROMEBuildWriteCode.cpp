@@ -5803,7 +5803,7 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
    buffer.AppendFormatted("void %sAnalyzer::FolderArrayOutOfBouds(Int_t index,const char* folder,const char* arraySize) const\n{\n",shortCut.Data());
    buffer.AppendFormatted("   ROMEPrint::Error(\"\\nYou have tried to access the %%d th element of the array folder %%s\\nwhich was defined with array size %%s.\\n\\nShutting down the program.\\n\",index,folder,arraySize);\n");
    buffer.AppendFormatted("   gSystem->StackTrace();\n");
-   buffer.AppendFormatted("   fApplication->Terminate(1);\n");
+   buffer.AppendFormatted("   if (fApplication) { fApplication->Terminate(1); }\n");
    buffer.AppendFormatted("   return;\n");
    buffer.AppendFormatted("}\n");
    buffer.Append(kMethodLine);
@@ -6102,7 +6102,7 @@ Bool_t ROMEBuilder::WriteAnalyzerCpp()
       buffer.AppendFormatted("      ROMEPrint::Error(\"\\nYou have tried to access the %s DAQ system over a gAnalyzer->Get%sDAQ()\\nhandle but the current DAQ system is not '%s'.\\n\\nShutting down the program.\\n\");\n",
                              daqNameArray->At(i).Data(),daqNameArray->At(i).Data(),daqNameArray->At(i).Data());
       buffer.AppendFormatted("      gSystem->StackTrace();\n");
-      buffer.AppendFormatted("      fApplication->Terminate(1);\n");
+      buffer.AppendFormatted("      if (fApplication) { fApplication->Terminate(1); }\n");
       buffer.AppendFormatted("      return 0;\n");
       buffer.AppendFormatted("   }\n");
       buffer.AppendFormatted("   return f%sDAQ;\n",daqNameArray->At(i).Data());
