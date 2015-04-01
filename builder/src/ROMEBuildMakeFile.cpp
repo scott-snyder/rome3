@@ -132,8 +132,10 @@ void ROMEBuilder::AddRomeHeaders()
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormElement.h");
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormElementSignal.h");
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormWindow.h");
-   if (numOfEvent > 0 || midas)
+   if (numOfEvent > 0 || midas) {
+      romeHeaders->Add("$(ROMESYS)/include/ROMEMidasFile.h");
       romeHeaders->Add("$(ROMESYS)/include/ROMEMidasDAQ.h");
+   }
    if (this->orca)
       romeHeaders->Add("$(ROMESYS)/include/ROMEOrcaDAQ.h");
    if (numOfTree > 0)
@@ -182,6 +184,8 @@ void ROMEBuilder::AddRomeDictHeaders()
    romeDictHeaders->Add("$(ROMESYS)/include/ROMERint.h");
    romeLinkDefSuffix->Add("");
    if (numOfEvent > 0 || midas) {
+      romeDictHeaders->Add("$(ROMESYS)/include/ROMEMidasFile.h");
+      romeLinkDefSuffix->Add("");
       romeDictHeaders->Add("$(ROMESYS)/include/ROMEMidasDAQ.h");
       romeLinkDefSuffix->Add("");
    }
@@ -290,8 +294,10 @@ void ROMEBuilder::AddRomeSources()
    romeSources->Add("$(ROMESYS)/src/ROMEODBOnlineDataBase.cpp");
    romeSources->Add("$(ROMESYS)/src/ROMEPrint.cpp");
    romeSources->Add("$(ROMESYS)/src/ROMERint.cpp");
-   if (numOfEvent > 0 || midas)
+   if (numOfEvent > 0 || midas) {
+      romeSources->Add("$(ROMESYS)/src/ROMEMidasFile.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMEMidasDAQ.cpp");
+   }
    if (!librome) {
       romeSources->Add("$(ROMESYS)/src/mxml.c");
       romeSources->Add("$(ROMESYS)/src/ROMEDAQSystem.cpp");

@@ -250,6 +250,7 @@ LibObjects := obj/ROMEStr2DArray.o \
               obj/ROMETGraph.o \
               obj/ROMETGraphErrors.o \
               obj/ROMETCutG.o \
+              obj/ROMEMidasFile.o \
               obj/TNetFolder.o \
               obj/TNetFolderServer.o \
               obj/XMLToForm.o \
