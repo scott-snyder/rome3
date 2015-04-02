@@ -1082,60 +1082,6 @@ INT ROMEMidasDAQ::bk_swap(void *event, BOOL force) const
    return CM_SUCCESS;
 }
 
-//______________________________________________________________________________
-BOOL ROMEMidasDAQ::bk_is32(void *event)
-{
-   return ((static_cast<BANK_HEADER*>(event)->flags & BANK_FORMAT_32BIT) > 0);
-}
-
-//______________________________________________________________________________
-INT ROMEMidasDAQ::bk_find(BANK_HEADER* pbkh, const char *name, DWORD* bklen, DWORD* bktype,void *pdata)
-{
-   Int_t tid_size[] = {0,1,1,1,2,2,4,4,4,4,8,1,0,0,0,0,0};
-   BANK *pbk;
-   BANK32 *pbk32;
-   UInt_t dname;
-
-   if (bk_is32(pbkh)) {
-      pbk32 = reinterpret_cast<BANK32*>(pbkh + 1);
-      strncpy(reinterpret_cast<char*>(&dname), name, 4);
-      do {
-         if (*reinterpret_cast<UInt_t*>(pbk32->name) == dname) {
-            *reinterpret_cast<void**>(pdata) = pbk32 + 1;
-            if (tid_size[pbk32->type & 0xFF] == 0) {
-               *bklen = pbk32->data_size;
-            } else {
-               *bklen = pbk32->data_size / tid_size[pbk32->type & 0xFF];
-            }
-
-            *bktype = pbk32->type;
-            return 1;
-         }
-         pbk32 = reinterpret_cast<BANK32*>(reinterpret_cast<char*>(pbk32 + 1) + ALIGN8(pbk32->data_size));
-      } while (reinterpret_cast<size_t>(pbk32) - reinterpret_cast<size_t>(pbkh) <
-               reinterpret_cast<BANK_HEADER*>(pbkh)->data_size + sizeof(BANK_HEADER));
-   } else {
-      pbk = reinterpret_cast<BANK*>(reinterpret_cast<BANK_HEADER*>(pbkh) + 1);
-      strncpy(reinterpret_cast<char*>(&dname), name, 4);
-      do {
-         if (*reinterpret_cast<UInt_t*>(pbk->name) == dname) {
-            *reinterpret_cast<void**>(pdata) = pbk + 1;
-            if (tid_size[pbk->type & 0xFF] == 0) {
-               *bklen = pbk->data_size;
-            } else {
-               *bklen = pbk->data_size / tid_size[pbk->type & 0xFF];
-            }
-
-            *bktype = pbk->type;
-            return 1;
-         }
-         pbk = reinterpret_cast<BANK*>(reinterpret_cast<char*>(pbk + 1) + ALIGN8(pbk->data_size));
-      } while (reinterpret_cast<size_t>(pbk) - reinterpret_cast<size_t>(pbkh) <
-               reinterpret_cast<BANK_HEADER*>(pbkh)->data_size + sizeof(BANK_HEADER));
-   }
-   *reinterpret_cast<void**>(pdata) = 0;
-   return 0;
-}
 #endif
 
 //______________________________________________________________________________
