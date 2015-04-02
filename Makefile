@@ -7,11 +7,13 @@
 #
 #####################################################################
 
-### Switch for creating librome.a and librome.so
-###  If yes, ROME classes are packed in librome.a and linked to each projects
+### Switch for creating librome.so or librome.a
+###  If LIBROME is yes, ROME classes are packed in librome.so and linked to each projects
 ###  instead of compiling in each projects.
+###  when LIBROMESTATIC is yes, a static library librome.a is used instead.
 ###  When you changed this key, you need to do "make clean"
 # LIBROME = yes
+# LIBROMESTATIC = yes
 
 ### Add -g compile option when compiling librome.a
 # ROMEDEBUG = yes
@@ -177,15 +179,20 @@ endif
 
 -include Makefile.arch
 
+ifeq ($(LIBROMESTATIC), yes)
+  INCLUDE  += -DHAVE_LIBROMESTATIC
+  LIBROMEFILE := librome.a
+  DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
+  TARGET += $(LIBROMEFILE)
+else
 ifeq ($(LIBROME), yes)
   INCLUDE  += -DHAVE_LIBROME
-  LIBROMEFILEStatic  := librome.a
-  LIBROMEFILEDynamic := librome.so
+  LIBROMEFILE := librome.so
   DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
-  TARGET += $(LIBROMEFILEStatic) $(LIBROMEFILEDynamic)
+  TARGET += $(LIBROMEFILE)
 else
-  LIBROMEFILEStatic  =
-  LIBROMEFILEDynamic =
+  LIBROMEFILE  =
+endif
 endif
 
 BldObjects := obj/ROMEBuilder.o \
@@ -422,7 +429,7 @@ obj/ROMEBuild%.o: builder/src/ROMEBuild%.cpp builder/include/ROMEBuilder.h
 	$(call romeechoing, "compiling $@")
 	$(Q)$(CXX) $(CXXFLAGS) $(ROMEBLD_FLAGS) $(ROMEPICDEF) $(INCLUDE) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
-obj/ROMEBuildWriteCode%.o: builder/src/ROMEBuildWriteCode%.cpp builder/include/ROMEBuilder.h $(LIBROMEFILEStatic)
+obj/ROMEBuildWriteCode%.o: builder/src/ROMEBuildWriteCode%.cpp builder/include/ROMEBuilder.h $(LIBROMEFILE)
 	$(call romeechoing, "compiling $@")
 	$(Q)$(CXX) $(CXXFLAGS) $(ROMEBLD_FLAGS) $(ROMEPICDEF) $(INCLUDE) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 

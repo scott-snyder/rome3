@@ -1384,10 +1384,12 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
    minRebuild = false;
    quietMake = false;
    makeFlag = "";
-#if defined (HAVE_LIBROME)
-   librome = true;
+#if defined (HAVE_LIBROMESTATIC)
+   librome = kLIBStatic;
+#elif defined (HAVE_LIBROME)
+   librome = kLIBDynamic;
 #else
-   librome = false;
+   librome = kLIBNone;
 #endif
    dynamicLink = true;
 
