@@ -13,12 +13,12 @@ CXXFLAGS      := -g -O -Wall -fexceptions -I../include -I$(ROMESYS) -I$(ROMESYS)
 LIBS          := $(shell $(ROOTCONFIG) --libs) -lz
 
 # Enable here to read compressed MIDAS files (.xz)
-CXXFLAGS      += -DHAVE_XZ
-LIBS          += -llzma
+#CXXFLAGS      += -DHAVE_XZ
+#LIBS          += -llzma
 
 # Enable here to read compressed MIDAS files (.bz2)
-CXXFLAGS      += -DHAVE_BZ2
-LIBS          += -lbz2
+#CXXFLAGS      += -DHAVE_BZ2
+#LIBS          += -lbz2
 
 
 CXX           := g++

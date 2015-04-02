@@ -2,81 +2,6 @@
 #include <Riostream.h>
 #include "ROMEMidasFile.h"
 
-#if defined ( HAVE_MIDAS ) && !defined ( __MAKECINT__ )
-#   include "midas.h"
-#else
-#if defined( R__VISUAL_CPLUSPLUS )
-typedef unsigned long   DWORD;
-typedef int    BOOL;
-#else
-typedef UInt_t   DWORD;
-typedef DWORD    BOOL;
-#ifndef TRUE
-   const BOOL TRUE = 1;
-#endif
-#ifndef FALSE
-   const BOOL FALSE = 0;
-#endif
-#endif
-typedef Int_t    HNDLE;
-typedef Int_t    INT;
-typedef UShort_t WORD;
-const Int_t CM_SUCCESS = 1;
-#   define BANK_FORMAT_32BIT   (1<<4)
-#   define EVENTID_BOR      ((short) 0x8000)  /**< Begin-of-run      */
-#   define EVENTID_EOR      ((short) 0x8001)  /**< End-of-run        */
-#   define EVENTID_MESSAGE  ((short) 0x8002)  /**< Message events    */
-
-typedef struct {
-   Short_t event_id;
-   Short_t trigger_mask;
-   DWORD   serial_number;
-   DWORD   time_stamp;
-   DWORD   data_size;
-} EVENT_HEADER;
-
-typedef struct {
-   DWORD   data_size;
-   DWORD   flags;
-} BANK_HEADER;
-
-typedef struct {
-   char    name[4];
-   WORD    type;
-   WORD    data_size;
-} BANK;
-
-typedef struct {
-   char    name[4];
-   DWORD   type;
-   DWORD   data_size;
-} BANK32;
-
-#   define ALIGN8(x)  (((x)+7) & ~7)
-//Data types Definition                         min      max
-const UShort_t TID_BYTE      = 1;       //< unsigned byte         0       255
-const UShort_t TID_SBYTE     = 2;       //< signed byte         -128      127
-const UShort_t TID_CHAR      = 3;       //< single character      0       255
-const UShort_t TID_WORD      = 4;       //< two bytes             0      65535
-const UShort_t TID_SHORT     = 5;       //< signed word        -32768    32767I
-const UShort_t TID_DWORD     = 6;       //< four bytes            0      2^32-1
-const UShort_t TID_INT       = 7;       //< signed dword        -2^31    2^31-1
-const UShort_t TID_BOOL      = 8;       //< four bytes bool       0        1
-const UShort_t TID_FLOAT     = 9;       //< 4 Byte float format
-const UShort_t TID_DOUBLE    = 10;      //< 8 Byte float format
-const UShort_t TID_BITFIELD  = 11;      //< 32 Bits Bitfield      0  111... (32)
-const UShort_t TID_STRING    = 12;      //< zero terminated string
-const UShort_t TID_ARRAY     = 13;      //< array with unknown contents
-const UShort_t TID_STRUCT    = 14;      //< structure with fixed length
-const UShort_t TID_KEY       = 15;      //< key in online database
-const UShort_t TID_LINK      = 16;      //< link in online database
-const UShort_t TID_LAST      = 17;      //< end of TID list indicator
-
-#ifndef MAX_EVENT_SIZE                      /* value can be set via Makefile      */
-#  define MAX_EVENT_SIZE         0x400000   /**< maximum event size 4MB           */
-#endif
-#endif
-
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -85,6 +10,7 @@ int main(int argc, char *argv[])
    union {
       char         *rawData;
       EVENT_HEADER *pevent;
+      BANK_HEADER  *pbank;
    };
    rawData = new char[MAX_EVENT_SIZE];
 
@@ -144,11 +70,31 @@ int main(int argc, char *argv[])
          continue;
       }
 
-      // Add code to decode your MIDAS banks
+      // Decode MIDAS banks
+      DWORD bktype;
+      DWORD ADC0Length  = 0;
+      union {
+         WORD* ADC0Pointer;
+         void* ADC0VoidPointer;
+      };
+      ADC0Pointer = 0;
+      if (pevent->event_id == 1) {
+         pevent++;
+         if (bk_find(pbank, "ADC0", &ADC0Length, &bktype, &ADC0VoidPointer)) {
+
+            // byteswap ADC0 data if necessary
+            // you may use bk_swap implemented in $MIDASSYS/src/midas.c
+
+            unsigned int iCh;
+            for (iCh = 0; iCh < ADC0Length; iCh++) {
+               cout<<"ADC"<<iCh<<"="<<ADC0Pointer[iCh]<<endl;
+            }
+         }
+      }
+
    }
 
    delete mfile;
-   delete [] rawData;
 
    return 0;
 }
