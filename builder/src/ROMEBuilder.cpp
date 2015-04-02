@@ -54,8 +54,12 @@ ROMEBuilder::ROMEBuilder()
 ,sqlite(kFALSE)
 ,sqlite3(kFALSE)
 ,noVP(kFALSE)
-,librome(kFALSE)
+,librome(kLIBNone)
+#if defined( R__MACOSX )
+,dynamicLink(kFALSE)
+#else
 ,dynamicLink(kTRUE)
+#endif
 ,pch(kFALSE)
 ,minRebuild(kFALSE)
 ,quietMake(kFALSE)
@@ -1391,7 +1395,12 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
 #else
    librome = kLIBNone;
 #endif
-   dynamicLink = true;
+
+#if defined( R__MACOSX )
+   dynamicLink = kFALSE;
+#else
+   dynamicLink = kTRUE;
+#endif
 
    char workDir[kMAXPATHLEN];
    strcpy(workDir,gSystem->WorkingDirectory());
@@ -1613,7 +1622,7 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
       } else if (!strcmp(argv[i],"-nl")) {
          noLink = true;
       } else if (!strcmp(argv[i],"-dl")) {
-#if 0 /* this option is obsolete */
+#if 1
 #if defined(USE_PIC_UPPER) || defined(USE_PIC_LOWER)
 #   if defined( R__UNIX )
          dynamicLink = true;
@@ -1883,7 +1892,15 @@ void ROMEBuilder::Usage()
    cout<<"  -o        Outputfile path"<<endl;
    cout<<"  -v        Verbose Mode (no Argument)"<<endl;
    cout<<"  -nl       No Linking (no Argument)"<<endl;
-   cout<<"  -st       Link all to the executable binary (no Argument)"<<endl;
+#if defined( R__MACOSX )
+   cout<<"  -dl       Makes ROME library and link to generated executable binary (no Argument)"<<endl;
+   cout<<"  -st       Link all compiled objects to the executable binary instead of linking ROME library (no Argument)"<<endl;
+   cout<<"            This option is on by default"<<endl;
+#else
+   cout<<"  -dl       Makes ROME library and link to generated executable binary (no Argument)"<<endl;
+   cout<<"            This option is on by default"<<endl;
+   cout<<"  -st       Link all compiled objects to the executable binary instead of linking ROME library (no Argument)"<<endl;
+#endif
    cout<<"  -pch      Use precompiled header (no Argument)"<<endl;
    cout<<"  -nopch    Not use precompiled header (no Argument)"<<endl;
 #if defined( R__VISUAL_CPLUSPLUS )

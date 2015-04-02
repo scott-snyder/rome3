@@ -2175,6 +2175,8 @@ void ROMEBuilder::WriteMakefileBuildRule(ROMEString& buffer,const char *builder)
       buffer.AppendFormatted(" -nl");
    if (!dynamicLink)
       buffer.AppendFormatted(" -st");
+   else
+      buffer.AppendFormatted(" -dl");
    if (orca)
       buffer.AppendFormatted(" -orca");
    if (midas)
@@ -2336,17 +2338,6 @@ void ROMEBuilder::WriteMakefile() {
       } else {
          buffer.AppendFormatted("objects += $(ROMESYS)/librome.a\n");
       }
-   } else if (librome == kLIBDynamic) {
-      if (dynamicLink) {
-         buffer.AppendFormatted("dlobjects += $(ROMESYS)/librome.so\n");
-      } else {
-         buffer.AppendFormatted("objects += $(ROMESYS)/librome.so\n");
-      }
-#if defined( R__MACOSX )
-      buffer.AppendFormatted("LDFLAGS += -Xlinker -rpath -Xlinker $(ROMESYS)\n");
-#else
-      buffer.AppendFormatted("LDFLAGS += -Wl,-rpath=$(ROMESYS)\n");
-#endif
    }
    buffer.AppendFormatted("\n\n");
 
@@ -2511,15 +2502,23 @@ void ROMEBuilder::WriteMakefile() {
                              shortCut.Data(),mainProgName.Data(), kSharedObjectSuffix);
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
 #if defined( R__MACOSX )
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) ",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
                              shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Xlinker -rpath -Xlinker $(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
 #else
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) ",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
                              shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Wl,-rpath=$(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
 #endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    } else {
@@ -2527,8 +2526,21 @@ void ROMEBuilder::WriteMakefile() {
                              mainProgName.ToLower(tmp2),mainProgNameExtension.Data(),
                              shortCut.ToLower(tmp3),mainProgName.ToLower(tmp4));
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) && \\\n", linker.Data(),
+#if defined( R__MACOSX )
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) ", linker.Data(),
                              shortCut.ToUpper(tmp));
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Xlinker -rpath -Xlinker $(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
+#else
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) n", linker.Data(),
+                             shortCut.ToUpper(tmp));
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Wl,-rpath=$(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
+#endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    }
    buffer.AppendFormatted("ifneq (,$(findstring obj/lib%s%s%s, $(shell ls)))\n",shortCut.ToLower(tmp),
