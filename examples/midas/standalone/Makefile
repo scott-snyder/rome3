@@ -15,7 +15,7 @@ CXXFLAGS      := -g -O -Wall -fexceptions -I../include -I$(ROMESYS)/include $(sh
 LIBS          := $(shell $(ROOTCONFIG) --libs) -Wl,-rpath=$(PWDST)/../obj -Wl,-rpath=$(ROMESYS)
 
 ROMELIB = -L../obj -lmidanalyzer
-ifeq ($(LIBROME), yes)
+ifeq ($(LIBROMEDYNAMIC), yes)
 ROMELIB += -L$(ROMESYS) -lrome
 endif
 

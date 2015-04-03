@@ -8,12 +8,17 @@
 #####################################################################
 
 ### Switch for creating librome.so or librome.a
-###  If LIBROME is yes, ROME classes are packed in librome.so and linked to each projects
+###  If LIBROMEDYNAMIC is yes, ROME classes are packed in librome.so and linked to each projects
 ###  instead of compiling in each projects.
 ###  when LIBROMESTATIC is yes, a static library librome.a is used instead.
 ###  When you changed this key, you need to do "make clean"
-# LIBROME = yes
+# LIBROMEDYNAMIC = yes
 # LIBROMESTATIC = yes
+
+# backward compatibility
+ifeq ($(LIBROME), yes)
+  LIBROMESTATIC = yes
+endif
 
 ### Add -g compile option when compiling librome.a
 # ROMEDEBUG = yes
@@ -185,8 +190,8 @@ ifeq ($(LIBROMESTATIC), yes)
   DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
   TARGET += $(LIBROMEFILE)
 else
-ifeq ($(LIBROME), yes)
-  INCLUDE  += -DHAVE_LIBROME
+ifeq ($(LIBROMEDYNAMIC), yes)
+  INCLUDE  += -DHAVE_LIBROMEDYNAMIC
   LIBROMEFILE := librome.so
   DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
   TARGET += $(LIBROMEFILE)

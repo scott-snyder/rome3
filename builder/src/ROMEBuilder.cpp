@@ -1390,7 +1390,7 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
    makeFlag = "";
 #if defined (HAVE_LIBROMESTATIC)
    librome = kLIBStatic;
-#elif defined (HAVE_LIBROME)
+#elif defined (HAVE_LIBROMEDYNAMIC)
    librome = kLIBDynamic;
 #else
    librome = kLIBNone;
