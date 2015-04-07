@@ -4504,6 +4504,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
          buffer.AppendFormatted("      m%s = new TThread(\"Thread%s\",static_cast<void(*) (void *)>(&Thread%s),static_cast<void*>(this));\n",
                                 threadFunctionName[iTab][i].Data(), threadFunctionName[iTab][i].Data(),
                                 threadFunctionName[iTab][i].Data());
+         buffer.AppendFormatted("      m%s->SetCancelOn();\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("      m%s->Run();\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("   }\n");
          buffer.AppendFormatted("   return kTRUE;\n");
@@ -4513,7 +4514,9 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
          buffer.AppendFormatted("Bool_t %sT%s_Base::Stop%s()\n{\n", shortCut.Data(), tabName[iTab].Data(),
                                 threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("   f%sActive = kFALSE;\n", threadFunctionName[iTab][i].Data());
+#if 0 /* this causes crash 'cannot join detached thread' */
          buffer.AppendFormatted("   m%s->Join(); // wait a while for threads to halt\n", threadFunctionName[iTab][i].Data());
+#endif
          buffer.AppendFormatted("   if (m%s) {\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("      TThread::Delete(m%s);\n", threadFunctionName[iTab][i].Data());
          buffer.AppendFormatted("      m%s = 0;\n", threadFunctionName[iTab][i].Data());
