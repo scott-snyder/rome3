@@ -42,6 +42,7 @@
 /////////////////////////////////////----///////////////////////////////////////
 #include "generated/HGUIAnalyzer.h"
 
+#include "ArgusHistoDisplay.h"
 #include "include/tasks/HGUITFillHisto.h"
 #include <TRandom.h>
 #include "Riostream.h"
@@ -50,6 +51,9 @@ ClassImp(HGUITFillHisto)
 
 void HGUITFillHisto::Init()
 {
+   GetMyGraph()->SetMarkerStyle(31);
+   GetMyGraphError()->SetMarkerStyle(8);
+   GetMyGraphError()->SetMarkerColor(4);
 }
 
 void HGUITFillHisto::BeginOfRun()
@@ -62,16 +66,18 @@ void HGUITFillHisto::Event()
    GetMyHistoAt(1)->Fill(gRandom->Gaus(0,20));
    GetMyHistoAt(2)->Fill(gRandom->Gaus(0,30));
    GetMyOtherHisto()->Fill(gRandom->Gaus(0,40));
-   GetMyGraph()->SetPoint(0,0,gRandom->Gaus(0,1));
-   GetMyGraph()->SetPoint(1,1,gRandom->Gaus(0,1));
-   GetMyGraph()->SetPoint(2,2,gRandom->Gaus(0,1));
-   GetMyGraph()->SetPoint(3,3,gRandom->Gaus(0,1));
-   GetMyGraph()->SetPoint(4,4,gRandom->Gaus(0,1));
-   GetMyGraphError()->SetPoint(0,0,gRandom->Gaus(0,1));
-   GetMyGraphError()->SetPoint(1,1,gRandom->Gaus(0,1));
-   GetMyGraphError()->SetPoint(2,2,gRandom->Gaus(0,1));
-   GetMyGraphError()->SetPoint(3,3,gRandom->Gaus(0,1));
-   GetMyGraphError()->SetPoint(4,4,gRandom->Gaus(0,1));
+   GetMyGraph()->SetPoint(0,0,gRandom->Rndm());
+   GetMyGraph()->SetPoint(1,1,gRandom->Rndm());
+   GetMyGraph()->SetPoint(2,2,gRandom->Rndm());
+   GetMyGraph()->SetPoint(3,3,gRandom->Rndm());
+   GetMyGraph()->SetPoint(4,4,gRandom->Rndm());
+   GetMyGraphError()->SetPoint(0,0,gRandom->Rndm());
+   GetMyGraphError()->SetPoint(1,1,gRandom->Rndm());
+   GetMyGraphError()->SetPoint(2,2,gRandom->Rndm());
+   GetMyGraphError()->SetPoint(3,3,gRandom->Rndm());
+   GetMyGraphError()->SetPoint(4,4,gRandom->Rndm());
+   ArgusHistoDisplay::SetLimits(GetMyGraph());
+   ArgusHistoDisplay::SetLimits(GetMyGraphError());
 }
 
 void HGUITFillHisto::EndOfRun()
