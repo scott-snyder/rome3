@@ -518,10 +518,17 @@ void ArgusHistoDisplay::BaseSetupPads(Int_t nx, Int_t ny, Bool_t redraw)
             ptr1 = static_cast<TObjArray*>(fObjects->At(fCurrentDisplayType->At(j)))->At(i);
             if (!strcmp(ptr1->ClassName(), "ROMETGraph") || 
                 !strcmp(ptr1->ClassName(), "ROMETCutG")) {
-               if (j==0) {
-                  ptr1->Draw("A L");
+               if (!fDrawOption->At(fDisplayObjIndex).Length()) {
+                  str = "LP ";
                } else {
-                  ptr1->Draw("L SAME");
+                  str = fDrawOption->At(fDisplayObjIndex);
+               }
+               if (j==0) {
+                  str += " A";
+               }
+               TGraph *grp = dynamic_cast<TGraph*>(ptr1);
+               if (grp && grp->GetN()) {
+                  ptr1->Draw(str.Data());
                }
             } else {
                if (j==0) {

@@ -3923,12 +3923,16 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                tabSingleObjectName[iTab][j].Data(),j,
                                                tabSingleObjectTaskHierarchyIndex[iTab][j],
                                                tabSingleObjectObjectIndex[iTab][j]);
-                        if (second)
-                           buffer.AppendFormatted("      f%sSingleObject%d->Draw(\"L SAME\");\n",
-                                                  tabSingleObjectName[iTab][j].Data(),j);
-                        else
-                           buffer.AppendFormatted("      f%sSingleObject%d->Draw(\"AL\");\n",
-                                                  tabSingleObjectName[iTab][j].Data(),j);
+                        buffer.AppendFormatted("      if (!fDrawOption->At(%d).Length()) {\n", j);
+                        buffer.AppendFormatted("         str = \"LP \";\n");
+                        buffer.AppendFormatted("      } else {\n");
+                        buffer.AppendFormatted("         str = fDrawOption->At(%d);\n", j);
+                        buffer.AppendFormatted("      }\n");
+                        if (!second) {
+                           buffer.AppendFormatted("      str += \" A\";\n");
+                        };
+                        buffer.AppendFormatted("      f%sSingleObject%d->Draw(str.Data());\n",
+                                               tabSingleObjectName[iTab][j].Data(),j);
                      } else {
                         for (k = tabSingleObjectArrayIndexStart[iTab][j]; k <= tabSingleObjectArrayIndexEnd[iTab][j];
                              k++) {
@@ -3977,6 +3981,16 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                            else
                               buffer.AppendFormatted("      f%sSingleObject%d_%d->Draw(\"AL\");\n",
                                                      tabSingleObjectName[iTab][j].Data(),j,k);
+                           buffer.AppendFormatted("      if (!fDrawOption->At(%d).Length()) {\n", j);
+                           buffer.AppendFormatted("         str = \"LP \";\n");
+                           buffer.AppendFormatted("      } else {\n");
+                           buffer.AppendFormatted("         str = fDrawOption->At(%d);\n", j);
+                           buffer.AppendFormatted("      }\n");
+                           if (!second) {
+                              buffer.AppendFormatted("      str += \" A\";\n");
+                           };
+                           buffer.AppendFormatted("      f%sSingleObject%d_%d->Draw(str.Data());\n",
+                                                  tabSingleObjectName[iTab][j].Data(),j,k);
                         }
                      }
                   }
@@ -4286,6 +4300,10 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                             graphType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
                                             tabSingleObjectTaskHierarchyIndex[iTab][j],
                                             tabSingleObjectObjectIndex[iTab][j]);
+                     buffer.AppendFormatted("      if (f%sSingleObject%d->GetN() == 0)\n",
+                                            tabSingleObjectName[iTab][j].Data(),j);
+                     buffer.AppendFormatted("         f%sSingleObject%d->Set(1);\n",
+                                            tabSingleObjectName[iTab][j].Data(),j);
                      buffer.AppendFormatted("      f%sPad%d->Modified();\n",tabSingleObjectName[iTab][j].Data(),j);
                   } else {
                      for (k = tabSingleObjectArrayIndexStart[iTab][j]; k <= tabSingleObjectArrayIndexEnd[iTab][j];
@@ -4295,6 +4313,10 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                graphType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
                                                tabSingleObjectTaskHierarchyIndex[iTab][j],
                                                tabSingleObjectObjectIndex[iTab][j],k);
+                        buffer.AppendFormatted("      if (f%sSingleObject%d_%d->GetN() == 0)\n",
+                                               tabSingleObjectName[iTab][j].Data(),j,k);
+                        buffer.AppendFormatted("         f%sSingleObject%d_%d->Set(1);\n",
+                                               tabSingleObjectName[iTab][j].Data(),j,k);
                         buffer.AppendFormatted("      f%sPad%d_%d->Modified();\n",tabSingleObjectName[iTab][j].Data(),
                                                j, k);
                      }
