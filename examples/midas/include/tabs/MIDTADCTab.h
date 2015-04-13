@@ -13,6 +13,7 @@
  * following line will be lost next time ROMEBuilder is executed.             */
 /////////////////////////////////////----///////////////////////////////////////
 
+#include <TStyle.h>
 #include "generated/MIDTADCTab_Base.h"
 #include "TGButton.h"
 #include "TRootEmbeddedCanvas.h"
@@ -26,6 +27,7 @@ class MIDWindow;
 class MIDTADCTab : public MIDTADCTab_Base
 {
 protected:
+   TStyle              *fStyle;
    TGVerticalFrame     *fVert;
    TRootEmbeddedCanvas *fCanvas;
    TGTextButton        *fBUpdate;
@@ -36,6 +38,7 @@ private:
 
 public:
    MIDTADCTab(MIDWindow* window = 0):MIDTADCTab_Base(window)
+   ,fStyle(0)
    ,fVert(0)
    ,fCanvas(0)
    ,fBUpdate(0)
@@ -48,6 +51,7 @@ public:
       delete fVert;
       delete fCanvas;
       delete fBUpdate;
+      delete fStyle;
    }
 
    void Init();
