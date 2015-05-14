@@ -2237,7 +2237,7 @@ Bool_t ROMEBuilder::ReadXMLTask()
                            FormatText(histoSingleObjectTabIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]], kTRUE);
                         }
                         // array index
-                        if (type == 1 && !strcmp(name,"HistArrayIndex")) {
+                        if (type == 1 && (!strcmp(name,"HistArrayIndex") || !strcmp(name,"ObjectArrayIndex"))) {
                            xml->GetValue(histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
                                          histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]]);
                            FormatText(histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
@@ -2480,7 +2480,7 @@ Bool_t ROMEBuilder::ReadXMLTask()
                                       kTRUE);
                         }
                         // array index
-                        if (type == 1 && !strcmp(name,"HistArrayIndex")) {
+                        if (type == 1 && (!strcmp(name,"HistArrayIndex") || !strcmp(name,"ObjectArrayIndex"))) {
                            xml->GetValue(graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
                                          graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]]);
                            FormatText(graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
