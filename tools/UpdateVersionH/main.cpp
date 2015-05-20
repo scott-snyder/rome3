@@ -25,7 +25,7 @@ using namespace std;
 // change following values when release
 const Int_t romeMajor       =  3; // format must be changed when it is larger than 9
 const Int_t romeMinor       =  2; // must be less than 100
-const Int_t romePatch       =  4; // must be less than 100
+const Int_t romePatch       =  5; // must be less than 100
 const Int_t isStableVersion =  1; // 0: development version, 1: stable version
 //------
 

@@ -1190,7 +1190,10 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
 
    buffer.AppendFormatted("## Compile and link flags\n");
    buffer.AppendFormatted("rootlibs  := $(shell $(ROOTCONFIG) --libs) -lHtml -lThread\n");
-   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread -lX11 -lGX11\n");
+   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread\n");
+   buffer.AppendFormatted("ifeq ($(shell $(ROOTCONFIG) --has-x11), yes)\n");
+   buffer.AppendFormatted("rootglibs += -lX11 -lGX11\n");
+   buffer.AppendFormatted("endif\n");
    buffer.AppendFormatted("rootcxxflags:=                  $(shell $(ROOTCONFIG) --cflags)\n");
    buffer.AppendFormatted("rootcflags:= $(patsubst -std=%%,,$(shell $(ROOTCONFIG) --cflags))\n");
    buffer.AppendFormatted("defflags  :=");

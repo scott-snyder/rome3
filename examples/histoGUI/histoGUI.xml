@@ -19,12 +19,12 @@
 				<Argus>
 					<Tab>
 						<TabName>GeneratedHisto</TabName>
-						<HistArrayIndex>0-1</HistArrayIndex>
+						<ObjectArrayIndex>0-1</ObjectArrayIndex>
 						<Index>0</Index>
 					</Tab>
 					<Tab>
 						<TabName>GeneratedHisto</TabName>
-						<HistArrayIndex>2</HistArrayIndex>
+						<ObjectArrayIndex>2</ObjectArrayIndex>
 						<Index>2</Index>
 					</Tab>
 				</Argus>

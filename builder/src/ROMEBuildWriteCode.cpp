@@ -3831,7 +3831,12 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                   buffer.AppendFormatted(") {\n");
                   if (tabSingleObjectType[iTab][j] == "Histogram") {
                      if (histoArraySize[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]] == "1") {
-                        buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",i + 1);
+                        if (tabSingleObjectIndex[iTab][j] != -1) {
+                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n", tabSingleObjectIndex[iTab][j] + 1);
+                        } else {
+                           // automatical order
+                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",i + 1);
+                        }
                         buffer.AppendFormatted("      f%sPad%d = static_cast<TPad*>(gPad);\n",
                                                tabSingleObjectName[iTab][j].Data(),j);
                         buffer.AppendFormatted("      f%sPad%d->SetLogx(fLogScaleX->At(%d));\n",
@@ -3857,8 +3862,13 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                      } else {
                         for (k = tabSingleObjectArrayIndexStart[iTab][j]; k <= tabSingleObjectArrayIndexEnd[iTab][j];
                              k++) {
-                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",
-                                                  i + 1 + k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           if (tabSingleObjectIndex[iTab][j] != -1) {
+                              buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n", tabSingleObjectIndex[iTab][j] + 1 + k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           } else {
+                              // automatical order
+                              buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",
+                                                     i + 1 + k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           }
                            buffer.AppendFormatted("      f%sPad%d_%d = static_cast<TPad*>(gPad);\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k);
                            buffer.AppendFormatted("      f%sPad%d_%d->SetLogx(fLogScaleX->At(%d));\n",
@@ -3885,7 +3895,12 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                      }
                   } else if (tabSingleObjectType[iTab][j] == "Graph") {
                      if (graphArraySize[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]] == "1") {
-                        buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",i + 1);
+                        if (tabSingleObjectIndex[iTab][j] != -1) {
+                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",tabSingleObjectIndex[iTab][j] + 1);
+                        } else {
+                           // automatical order
+                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",i + 1);
+                        }
                         buffer.AppendFormatted("      f%sPad%d = static_cast<TPad*>(gPad);\n",
                                                tabSingleObjectName[iTab][j].Data(),j);
                         buffer.AppendFormatted("      f%sPad%d->SetLogx(fLogScaleX->At(%d));\n",
@@ -3936,8 +3951,13 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                      } else {
                         for (k = tabSingleObjectArrayIndexStart[iTab][j]; k <= tabSingleObjectArrayIndexEnd[iTab][j];
                              k++) {
-                           buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",
-                                                  i + 1 + k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           if (tabSingleObjectIndex[iTab][j] != -1) {
+                              buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n", tabSingleObjectIndex[iTab][j] + 1+ k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           } else {
+                              // automatical order
+                              buffer.AppendFormatted("      fGeneratedCanvas->GetCanvas()->cd(%d);\n",
+                                                     i + 1 + k - tabSingleObjectArrayIndexStart[iTab][j]);
+                           }
                            buffer.AppendFormatted("      f%sPad%d_%d = static_cast<TPad*>(gPad);\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k);
                            buffer.AppendFormatted("      f%sPad%d_%d->SetLogx(fLogScaleX->At(%d));\n",

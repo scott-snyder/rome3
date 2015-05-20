@@ -35,6 +35,23 @@ using namespace std;
 //______________________________________________________________________________
 void MIDTADCTab::Init()
 {
+   // Create style for this tab
+   TStyle *orgStyle = gStyle;
+   fStyle = new TStyle(*orgStyle); // copy the original style
+   fStyle->SetOptTitle(1);
+   fStyle->SetTitleOffset(0.38, "y");
+   fStyle->SetPadGridX(1);
+   fStyle->SetPadGridY(1);
+   fStyle->SetPadTickX(1);
+   fStyle->SetPadTickY(1);
+   fStyle->SetFrameBorderSize(0);
+   fStyle->SetFrameBorderMode(0);
+   fStyle->SetFrameFillStyle(0);
+   fStyle->SetTitleSize(0.06, "t");
+   fStyle->SetStatH(0.30);
+   fStyle->SetStatW(0.30);
+   fStyle->cd();
+
    // Create a vertical frame containing buttons and canvas
    fVert = new TGVerticalFrame(this, (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()), (UInt_t) (700 * gAnalyzer->GetWindow()->GetWindowScale()));
 
@@ -51,6 +68,8 @@ void MIDTADCTab::Init()
    AddFrame(fVert, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 10, 10, 4, 4));
 
    ConnectAll();
+
+   orgStyle->cd();
 }
 
 //______________________________________________________________________________
@@ -83,6 +102,9 @@ void MIDTADCTab::TabUnSelected()
 //______________________________________________________________________________
 void MIDTADCTab::Update()
 {
+   TStyle *orgStyle = gStyle;
+   fStyle->cd();
+
    TH1 *histo;
 
    for (Int_t i = 0; i < 8; i++) {
@@ -98,6 +120,8 @@ void MIDTADCTab::Update()
    fCanvas->GetCanvas()->cd(0);
    fCanvas->GetCanvas()->Modified();
    fCanvas->GetCanvas()->Update();
+
+   orgStyle->cd();
 
    return;
 }
