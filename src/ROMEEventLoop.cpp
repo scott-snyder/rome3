@@ -1096,8 +1096,13 @@ Bool_t ROMEEventLoop::UserInput()
               gROME->Now() <                      fUserInputLastTime + 300
 #endif
               ) {
+      gROME->GetApplication()->DisableFPETrap();
+      gSystem->ProcessEvents();
+      gROME->GetApplication()->EnableFPETrap();
       return true;
    }
+
+   // Check user input
    fUserInputLastTime = gROME->Now();
 
    while (wait || first) {

@@ -13664,20 +13664,25 @@ Bool_t ROMEBuilder::WriteReadTreesC()
          typeLen = folderName[iFold].Length() + scl;
    }
    buffer.AppendFormatted("   // Create objects to fill data\n");
-   for (iFold = 0; iFold < numOfFolder; iFold++) {
-      if (!folderUsed[iFold]) {
-         continue;
-      }
-      if (!isBranch[iFold]) {
-         continue;
-      }
-      if (folderArray[iFold] == "1") {
-         buffer.AppendFormatted("   %s%s*%*s %s = new %s%s();\n", shortCut.Data(),
-                                folderName[iFold].Data(), typeLen - folderName[iFold].Length() - scl, "",
-                                folderName[iFold].Data(), shortCut.Data(), folderName[iFold].Data());
-      } else {
-         buffer.AppendFormatted("   TClonesArray*%*s %s = new TClonesArray(\"%s%s\");\n", typeLen - ltc, "",
-                                folderName[iFold].Data(), shortCut.Data(), folderName[iFold].Data());
+   for (iTree = 0; iTree < numOfTree; iTree++) {
+      for (iBranch = 0; iBranch < numOfBranch[iTree]; iBranch++) {
+         iFold = branchFolderNum[iTree][iBranch];
+         if (!folderUsed[iFold]) {
+            continue;
+         }
+         if (!isBranch[iFold]) {
+            continue;
+         }
+         if (folderArray[iFold] == "1") {
+            buffer.AppendFormatted("   %s%s*%*s %s%s = new %s%s();\n", shortCut.Data(),
+                                   folderName[iFold].Data(), typeLen - folderName[iFold].Length() - scl, "",
+                                   treeName[iTree].Data(),
+                                   folderName[iFold].Data(), shortCut.Data(), folderName[iFold].Data());
+         } else {
+            buffer.AppendFormatted("   TClonesArray*%*s %s%s = new TClonesArray(\"%s%s\");\n", typeLen - ltc, "",
+                                   treeName[iTree].Data(),
+                                   folderName[iFold].Data(), shortCut.Data(), folderName[iFold].Data());
+         }
       }
    }
    buffer.AppendFormatted("\n");
@@ -13690,17 +13695,18 @@ Bool_t ROMEBuilder::WriteReadTreesC()
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
          }
-         buffer.AppendFormatted("   TBranch *branch%s = 0;\n", branchNameTmp[iTree][iBranch]->Data());
+         buffer.AppendFormatted("   TBranch *branch%s%s = 0;\n", treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data());
       }
       buffer.AppendFormatted("   if (read%s) {\n", treeName[iTree].Data());
       for (iBranch = 0; iBranch < numOfBranch[iTree]; iBranch++) {
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
          }
-         buffer.AppendFormatted("      branch%s = %s->GetBranch(\"%s\");\n", branchNameTmp[iTree][iBranch]->Data(),
+         buffer.AppendFormatted("      branch%s%s = %s->GetBranch(\"%s\");\n", treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
                                 treeName[iTree].Data(), branchName[iTree][iBranch].Data());
-         buffer.AppendFormatted("      if(branch%s)\n", branchNameTmp[iTree][iBranch]->Data());
-         buffer.AppendFormatted("         branch%s->SetAddress(&%s);\n", branchNameTmp[iTree][iBranch]->Data(),
+         buffer.AppendFormatted("      if(branch%s%s)\n", treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data());
+         buffer.AppendFormatted("         branch%s%s->SetAddress(&%s%s);\n", treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
+                                treeName[iTree].Data(),
                                 branchFolder[iTree][iBranch].Data());
       }
       buffer.AppendFormatted("   }\n");
@@ -13723,9 +13729,9 @@ Bool_t ROMEBuilder::WriteReadTreesC()
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
          }
-         buffer.AppendFormatted("      if (read%s && branch%s)\n", treeName[iTree].Data(),
+         buffer.AppendFormatted("      if (read%s && branch%s%s)\n", treeName[iTree].Data(), treeName[iTree].Data(),
                                 branchNameTmp[iTree][iBranch]->Data());
-         buffer.AppendFormatted("         branch%s->GetEntry(i);\n", branchNameTmp[iTree][iBranch]->Data());
+         buffer.AppendFormatted("         branch%s%s->GetEntry(i);\n", treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data());
       }
    }
    buffer.AppendFormatted("\n");
@@ -13745,32 +13751,38 @@ Bool_t ROMEBuilder::WriteReadTreesC()
                   // not yet implemented
                } else {
                   if (valueDimension[iFold][iValue] > 0 ) {
-                     buffer.AppendFormatted("//       cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<%s->Get%sAt(",treeName[iTree].Data(),
+                     buffer.AppendFormatted("//       cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<%s%s->Get%sAt(",treeName[iTree].Data(),
                                             branchNameTmp[iTree][iBranch]->Data(), valueName[iFold][iValue].Data(),
+                                            treeName[iTree].Data(),
                                             folderName[iFold].Data(), valueName[iFold][iValue].Data());
                      for (iDm = 0; iDm < valueDimension[iFold][iValue]; iDm++)
                         buffer.AppendFormatted("0, ");
                      buffer.Resize(buffer.Length() - 2);
                      buffer.AppendFormatted(")<<endl;\n");
                   } else {
-                     buffer.AppendFormatted("         cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<%s->Get%s()<<endl;\n",
+                     buffer.AppendFormatted("         cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<%s%s->Get%s()<<endl;\n",
                                             treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
-                                            valueName[iFold][iValue].Data(), folderName[iFold].Data(),
+                                            valueName[iFold][iValue].Data(),        
+                                            treeName[iTree].Data(),
+                                            folderName[iFold].Data(),
                                             valueName[iFold][iValue].Data());
                   }
                }
             }
          } else {
-            buffer.AppendFormatted("         if (%s->GetEntriesFast()) {\n", folderName[iFold].Data());
+            buffer.AppendFormatted("         if (%s%s->GetEntriesFast()) {\n",
+                                   treeName[iTree].Data(),
+                                   folderName[iFold].Data());
             for (iValue = 0; iValue < numOfValue[iFold]; iValue++) {
                if (isFolder(valueType[iFold][iValue].Data())) {
                   // not yet implemented
                } else {
                   if (valueDimension[iFold][iValue] > 0 ) {
                      // rootcint does not like static_cast
-                     buffer.AppendFormatted("//          cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<((%s%s*)(%s->At(0)))->Get%sAt(",
+                     buffer.AppendFormatted("//          cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<((%s%s*)(%s%s->At(0)))->Get%sAt(",
                                             treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
                                             valueName[iFold][iValue].Data(), shortCut.Data(), folderName[iFold].Data(),
+                                            treeName[iTree].Data(),
                                             folderName[iFold].Data(), valueName[iFold][iValue].Data());
                      for (iDm = 0; iDm < valueDimension[iFold][iValue]; iDm++)
                         buffer.AppendFormatted("0, ");
@@ -13778,9 +13790,10 @@ Bool_t ROMEBuilder::WriteReadTreesC()
                      buffer.AppendFormatted(")<<endl;\n");
                   } else {
                      // rootcint does not like static_cast
-                     buffer.AppendFormatted("            cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<((%s%s*)(%s->At(0)))->Get%s()<<endl;\n",
+                     buffer.AppendFormatted("            cout<<left<<setw(50)<<\"   /%s/%s/%s \"<<((%s%s*)(%s%s->At(0)))->Get%s()<<endl;\n",
                                             treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
                                             valueName[iFold][iValue].Data(), shortCut.Data(), folderName[iFold].Data(),
+                                            treeName[iTree].Data(),
                                             folderName[iFold].Data(), valueName[iFold][iValue].Data());
                   }
                }
@@ -14147,11 +14160,12 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
          }
-         buffer.AppendFormatted("   TBranch *branch%s = inTree->GetBranch(\"%s\");\n", branchNameTmp[iTree][iBranch]->Data(),
+         buffer.AppendFormatted("   TBranch *branch%s%s = inTree->GetBranch(\"%s\");\n",
+                                treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
                                 branchName[iTree][iBranch].Data());
-         buffer.AppendFormatted("   if (kRead_%s && branch%s) branch%s->SetAddress(&%s);\n",
-                                branchNameTmp[iTree][iBranch]->Data(), branchNameTmp[iTree][iBranch]->Data(),
-                                branchNameTmp[iTree][iBranch]->Data(), branchNameTmp[iTree][iBranch]->Data());
+         buffer.AppendFormatted("   if (kRead_%s && branch%s%s) branch%s%s->SetAddress(&%s);\n",
+                                branchNameTmp[iTree][iBranch]->Data(), treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(),
+                                treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data(), branchNameTmp[iTree][iBranch]->Data());
       }
       buffer.AppendFormatted("\n");
 
@@ -14222,8 +14236,8 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
          if (branchFolderNum[iTree][iBranch] == -1) {
             continue;
          }
-         buffer.AppendFormatted("      if (kRead_%s) branch%s->GetEntry(ev);\n",
-                                branchNameTmp[iTree][iBranch]->Data(), branchNameTmp[iTree][iBranch]->Data());
+         buffer.AppendFormatted("      if (kRead_%s) branch%s%s->GetEntry(ev);\n",
+                                branchNameTmp[iTree][iBranch]->Data(), treeName[iTree].Data(), branchNameTmp[iTree][iBranch]->Data());
       }
       buffer.AppendFormatted("      if (EventSelection()) {\n");
       buffer.AppendFormatted("         outTree->Fill();\n");
