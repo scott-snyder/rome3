@@ -70,6 +70,11 @@ void TMTT3::Init()
    fCanvas->GetCanvas()->cd(3); h3->Draw();
    fCanvas->GetCanvas()->cd(4); h4->Draw();
 
+   fCanvas->GetCanvas()->GetPad(1)->AddExec("ex1", ".x OpenCanvas.C");
+   fCanvas->GetCanvas()->GetPad(2)->AddExec("ex2", ".x OpenCanvas.C");
+   fCanvas->GetCanvas()->GetPad(3)->AddExec("ex3", ".x OpenCanvas.C");
+   fCanvas->GetCanvas()->GetPad(4)->AddExec("ex4", ".x OpenCanvas.C");
+
    fCanvas->GetCanvas()->cd();
    fCanvas->GetCanvas()->Modified();
    fCanvas->GetCanvas()->Update();
