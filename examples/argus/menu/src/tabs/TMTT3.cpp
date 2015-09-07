@@ -90,16 +90,16 @@ void TMTT3::MenuClicked(TGPopupMenu * /* menu */, Long_t param)
 {
    switch (param) {
    case TMWindow::M_T3_Open_Pad1:
-      OpenPad(0);
-      break;
-   case TMWindow::M_T3_Open_Pad2:
       OpenPad(1);
       break;
-   case TMWindow::M_T3_Open_Pad3:
+   case TMWindow::M_T3_Open_Pad2:
       OpenPad(2);
       break;
-   case TMWindow::M_T3_Open_Pad4:
+   case TMWindow::M_T3_Open_Pad3:
       OpenPad(3);
+      break;
+   case TMWindow::M_T3_Open_Pad4:
+      OpenPad(4);
       break;
    }
 }
