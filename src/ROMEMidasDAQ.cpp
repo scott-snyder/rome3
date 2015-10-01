@@ -78,6 +78,7 @@ ClassImp(ROMEMidasDAQ)
 ROMEMidasDAQ::ROMEMidasDAQ()
 :ROMEDAQSystem()
 ,fMaxEventSize(MAX_EVENT_SIZE)
+,fFileName("")
 #if defined( R__BYTESWAP )
 ,fByteSwap(kFALSE)
 #else
@@ -198,7 +199,7 @@ Bool_t ROMEMidasDAQ::BeginOfRun()
          fMidasFile = new ROMEMidasFile();
          ROMEString runNumberString;
          gROME->GetCurrentRunNumberString(runNumberString);
-         if (!fMidasFile->Open(gROME->GetInputDir(), runNumberString.Data())) {
+         if (!fMidasFile->Open(gROME->GetInputDir(), runNumberString.Data(), fFileName.Data())) {
             return kFALSE;
          }
          ROMEPrint::Print("Reading Midas-File ");

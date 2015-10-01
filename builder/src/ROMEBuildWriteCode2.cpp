@@ -1586,6 +1586,23 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->ReadComment(ROMEConfig::kCommentLevelGroup,"Midas","/xs:schema/xs:complexType[@name='ConfigurationDesc']/xs:sequence/xs:element[@name='Midas']/xs:annotation/xs:documentation");
       mainParGroup->AddSubGroup(subGroup);
 
+      // file name
+      subGroup->AddParameter(new ROMEConfigParameter("MidasFileName"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName(),
+                                                "/xs:schema/xs:complexType[@name='ConfigurationDesc']/xs:sequence/xs:element[@name='Midas']/xs:complexType/xs:sequence/xs:element[@name=MidasFileName]/xs:annotation/xs:documentation");
+      subGroup->GetLastParameter()->AddSetLine("if (gAnalyzer->IsMidasDAQ()) {");
+      subGroup->GetLastParameter()->AddSetLine("   gAnalyzer->GetMidasDAQ()->SetFileName(##);");
+      subGroup->GetLastParameter()->AddSetLine("}");
+      subGroup->GetLastParameter()->AddWriteLine("if (gAnalyzer->IsMidasDAQ()) {");
+      subGroup->GetLastParameter()->AddWriteLine("   writeString = gAnalyzer->GetMidasDAQ()->GetFileName();");
+      subGroup->GetLastParameter()->AddWriteLine("}");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("else {");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("   if (##Modified)");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("      writeString = ##;");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("   else");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("      writeString = \"false\";");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("}");
+
       // byte swap
       subGroup->AddParameter(new ROMEConfigParameter("MidasByteSwap","1","CheckButton"));
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName(),

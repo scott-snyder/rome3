@@ -50,10 +50,17 @@ ROMEMidasFile::ROMEMidasFile()
 }
 
 //______________________________________________________________________________
-Bool_t ROMEMidasFile::Open(const char* const dir, const char* const runStr)
+Bool_t ROMEMidasFile::Open(const char* const dir, const char* const runStr, const char* filenamechar = 0)
 {
-   ROMEString filename;
+   ROMEString filename = filenamechar;
    ROMEString tmpname;
+
+   if (filename.IsNull()) {
+      filename.SetFormatted("%srun%s.mid", dir, runStr);
+   } else {
+      tmpname = filenamechar;
+      gROME->ConstructFilePath(dir, tmpname.Data(), filename);
+   }
 
    Int_t retplain = -1;
    Int_t retgz    = -1;
@@ -66,77 +73,93 @@ Bool_t ROMEMidasFile::Open(const char* const dir, const char* const runStr)
 
    Close();
 
-   filename.SetFormatted("%srun%s.mid", dir, runStr);
-
    // Plain
-   tmpname.SetFormatted("%s", filename.Data());
+   if (!filename.EndsWith(".gz") &&
+       !filename.EndsWith(".xz") &&
+       !filename.EndsWith(".bz2")) {
+      tmpname.SetFormatted("%s", filename.Data());
 
-   fPlainFileHandle = open(tmpname.Data(), O_RDONLY_BINARY);
-   retplain = errno;
-   if (fPlainFileHandle != -1) {
-      fType = ROMEMidasFile::PLAIN;
-      fFileName = tmpname;
+      fPlainFileHandle = open(tmpname.Data(), O_RDONLY_BINARY);
+      retplain = errno;
+      if (fPlainFileHandle != -1) {
+         fType = ROMEMidasFile::PLAIN;
+         fFileName = tmpname;
+      }
    }
 
    // GZ
-   if (fType == ROMEMidasFile::NONE) {
-      tmpname.SetFormatted("%s.gz", filename.Data());
-      fGZFileHandle = gzopen(tmpname.Data(), "rb");
-      retgz = errno;
-      if (fGZFileHandle) {
-         fType = ROMEMidasFile::GZ;
-         fFileName = tmpname;
+   if (!filename.EndsWith(".xz") &&
+       !filename.EndsWith(".bz2")) {
+      if (fType == ROMEMidasFile::NONE) {
+         if (filename.EndsWith(".mid")) {
+            tmpname.SetFormatted("%s.gz", filename.Data());
+         } else {
+            tmpname = filename.Data();
+         }
+         fGZFileHandle = gzopen(tmpname.Data(), "rb");
+         retgz = errno;
+         if (fGZFileHandle) {
+            fType = ROMEMidasFile::GZ;
+            fFileName = tmpname;
+         }
       }
    }
 
    // XZ
 #ifdef HAVE_XZ
-   if (fType == ROMEMidasFile::NONE) {
-      tmpname.SetFormatted("%s.xz", filename.Data());
-      fXZFileHandle = fopen(tmpname.Data(), "rb");
-      retxz = errno;
-      if (fXZFileHandle) {
-         fXZStream = new lzma_stream;
-         lzma_stream lzma_init = LZMA_STREAM_INIT;
-         *fXZStream = lzma_init;
+   if (!filename.EndsWith(".gz") &&
+       !filename.EndsWith(".bz2")) {
+      if (fType == ROMEMidasFile::NONE) {
+         if (filename.EndsWith(".mid")) {
+            tmpname.SetFormatted("%s.xz", filename.Data());
+         } else {
+            tmpname = filename.Data();
+         }
+         fXZFileHandle = fopen(tmpname.Data(), "rb");
+         retxz = errno;
+         if (fXZFileHandle) {
+            fXZStream = new lzma_stream;
+            lzma_stream lzma_init = LZMA_STREAM_INIT;
+            *fXZStream = lzma_init;
 #if 0 /* check usage */
-         UInt_t level = 9;
-         ULong64_t memlimit = lzma_easy_decoder_memusage(level);
+            UInt_t level = 9;
+            ULong64_t memlimit = lzma_easy_decoder_memusage(level);
 #else /* set by hand */
-         ULong64_t memlimit = (128 << 20);
+            ULong64_t memlimit = (128 << 20);
 #endif
 #if 0
-         lzma_ret ret = lzma_stream_decoder(fXZStream, memlimit, LZMA_TELL_UNSUPPORTED_CHECK | LZMA_CONCATENATED);
+            lzma_ret ret = lzma_stream_decoder(fXZStream, memlimit, LZMA_TELL_UNSUPPORTED_CHECK | LZMA_CONCATENATED);
 #else
-         lzma_ret ret = lzma_stream_decoder(fXZStream, memlimit, 0);
+            lzma_ret ret = lzma_stream_decoder(fXZStream, memlimit, 0);
 #endif
-         if (ret == LZMA_OK) {
-            fType = ROMEMidasFile::XZ;
-            fFileName = tmpname;
-            fXZInputBuffer = new uint8_t[kXZBufferSize];
-         } else {
-            switch (ret) {
-            case LZMA_MEM_ERROR:
-               ROMEPrint::Error("XZ: Memory allocation failed\n");
-               break;
-            case LZMA_OPTIONS_ERROR:
-               ROMEPrint::Error("XZ: Unsupported decompressor flags\n");
-               break;
-            case LZMA_OK:
-            case LZMA_STREAM_END:
-            case LZMA_NO_CHECK:
-            case LZMA_UNSUPPORTED_CHECK:
-            case LZMA_GET_CHECK:
-            case LZMA_MEMLIMIT_ERROR:
-            case LZMA_FORMAT_ERROR:
-            case LZMA_DATA_ERROR:
-            case LZMA_BUF_ERROR:
-            case LZMA_PROG_ERROR:
-            default:
-               ROMEPrint::Error("XZ: Unknown error, possibly a bug\n");
-               break;
+            if (ret == LZMA_OK) {
+               fType = ROMEMidasFile::XZ;
+               fFileName = tmpname;
+               fXZInputBuffer = new uint8_t[kXZBufferSize];
+            } else {
+               switch (ret) {
+               case LZMA_MEM_ERROR:
+                  ROMEPrint::Error("XZ: Memory allocation failed\n");
+                  break;
+               case LZMA_OPTIONS_ERROR:
+                  ROMEPrint::Error("XZ: Unsupported decompressor flags\n");
+                  break;
+               case LZMA_OK:
+               case LZMA_STREAM_END:
+               case LZMA_NO_CHECK:
+               case LZMA_UNSUPPORTED_CHECK:
+               case LZMA_GET_CHECK:
+               case LZMA_MEMLIMIT_ERROR:
+               case LZMA_FORMAT_ERROR:
+               case LZMA_DATA_ERROR:
+               case LZMA_BUF_ERROR:
+               case LZMA_PROG_ERROR:
+               default:
+                  ROMEPrint::Error("XZ: Unknown error, possibly a bug\n");
+                  break;
+               }
+               fclose(fXZFileHandle);
             }
-            fclose(fXZFileHandle);
          }
       }
    }
@@ -144,21 +167,28 @@ Bool_t ROMEMidasFile::Open(const char* const dir, const char* const runStr)
 
    // BZ2
 #ifdef HAVE_BZ2
-   if (fType == ROMEMidasFile::NONE) {
-      tmpname.SetFormatted("%s.bz2", filename.Data());
-      fBZ2FileHandle = fopen(tmpname.Data(), "rb");
-      retbz2 = errno;
-      Int_t bzerror;
-      if (fBZ2FileHandle) {
-         fBZ2File = BZ2_bzReadOpen(&bzerror, fBZ2FileHandle, 0/* verbose 0-4 */, 0, 0, 0);
-         if (bzerror == BZ_OK) {
-            fType = ROMEMidasFile::BZ2;
-            fFileName = tmpname;
+   if (!filename.EndsWith(".gz") &&
+       !filename.EndsWith(".xz")) {
+      if (fType == ROMEMidasFile::NONE) {
+         if (filename.EndsWith(".mid")) {
+            tmpname.SetFormatted("%s.bz2", filename.Data());
          } else {
-            BZ2_bzReadClose(&bzerror, fBZ2File);
-            fBZ2File = 0;
-            ROMEPrint::Error("Failed to read a bzip2 midas file.\n");
-            fclose(fBZ2FileHandle);
+            tmpname = filename.Data();
+         }
+         fBZ2FileHandle = fopen(tmpname.Data(), "rb");
+         retbz2 = errno;
+         Int_t bzerror;
+         if (fBZ2FileHandle) {
+            fBZ2File = BZ2_bzReadOpen(&bzerror, fBZ2FileHandle, 0/* verbose 0-4 */, 0, 0, 0);
+            if (bzerror == BZ_OK) {
+               fType = ROMEMidasFile::BZ2;
+               fFileName = tmpname;
+            } else {
+               BZ2_bzReadClose(&bzerror, fBZ2File);
+               fBZ2File = 0;
+               ROMEPrint::Error("Failed to read a bzip2 midas file.\n");
+               fclose(fBZ2FileHandle);
+            }
          }
       }
    }
