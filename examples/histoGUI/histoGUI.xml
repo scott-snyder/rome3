@@ -10,7 +10,7 @@
 				<HistName>MyHisto</HistName>
 				<HistFolderName>myhistos</HistFolderName>
 				<HistType>TH1F</HistType>
-				<HistArraySize>3</HistArraySize>
+				<HistArraySize>4</HistArraySize>
 				<HistXLabel>X</HistXLabel>
 				<HistYLabel>Entries</HistYLabel>
 				<HistXNbins>100</HistXNbins>
@@ -24,8 +24,9 @@
 					</Tab>
 					<Tab>
 						<TabName>GeneratedHisto</TabName>
-						<ObjectArrayIndex>2</ObjectArrayIndex>
+						<ObjectArrayIndex>2-3</ObjectArrayIndex>
 						<Index>2</Index>
+						<DrawSamePad>true</DrawSamePad>
 					</Tab>
 				</Argus>
 			</Histogram>

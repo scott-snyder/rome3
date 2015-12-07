@@ -65,6 +65,9 @@ void HGUITFillHisto::Event()
    GetMyHistoAt(0)->Fill(gRandom->Gaus(0,10));
    GetMyHistoAt(1)->Fill(gRandom->Gaus(0,20));
    GetMyHistoAt(2)->Fill(gRandom->Gaus(0,30));
+   GetMyHistoAt(3)->Fill(gRandom->Gaus(0,10));
+   GetMyHistoAt(2)->SetLineColor(2);
+   GetMyHistoAt(3)->SetLineColor(4);
    GetMyOtherHisto()->Fill(gRandom->Gaus(0,40));
    GetMyGraph()->SetPoint(0,0,gRandom->Rndm());
    GetMyGraph()->SetPoint(1,1,gRandom->Rndm());
