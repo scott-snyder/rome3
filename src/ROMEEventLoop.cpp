@@ -403,6 +403,10 @@ Int_t ROMEEventLoop::RunEvent()
    // Run one Event.
    gROME->SetSkipEvent(false);
    fCurrentEvent++;
+   gROME->IncrementEventStepCounter();
+   if (!gROME->CheckEventStep()) {
+      gROME->SetSkipEvent();
+   }
    ROMEPrint::Debug("ROMEEventLoop::RunEvent()");
 
    // Update
@@ -871,6 +875,7 @@ Bool_t ROMEEventLoop::DAQEvent()
    if (gROME->IsDontReadNextEvent()) {
       gROME->SetDontReadNextEvent(false);
       fCurrentEvent--;
+      gROME->DecrementEventStepCounter();
       return true;
    }
    this->SetAnalyze();
@@ -885,6 +890,7 @@ Bool_t ROMEEventLoop::DAQEvent()
        gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != 1) {
       // event number is not incremented when non-trigger events.
       fCurrentEvent--;
+      gROME->DecrementEventStepCounter();
    }
    if (this->isContinue()) {
       return true;

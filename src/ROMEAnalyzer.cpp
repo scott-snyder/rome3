@@ -122,6 +122,8 @@ ROMEAnalyzer::ROMEAnalyzer(ROMERint *app, Bool_t batch, Bool_t daemon, Bool_t no
 ,fSplashScreen(!nographics)
 ,fDontReadNextEvent(kFALSE)
 ,fSkipEvent(kFALSE)
+,fEventStep(1)
+,fEventStepCounter(-1)
 ,fInputDir("./")
 ,fInputDirConstructed("")
 ,fOutputDir("./")

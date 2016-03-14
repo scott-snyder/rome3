@@ -133,6 +133,8 @@ protected:
 
    Bool_t         fDontReadNextEvent;            //! Don't read the next event from file/buffer
    Bool_t         fSkipEvent;                    //! Prevents the analyzer from analyzing the subsequent tasks of an event
+   Int_t          fEventStep;                    //! Analyzer every N events
+   Int_t          fEventStepCounter;             //! Counter for event step
 
    // Directories
    ROMEString     fInputDir;                     //! General Input Directory
@@ -438,6 +440,13 @@ public:
    // Skip Event
    Bool_t          IsSkipEvent() const { return fSkipEvent; }
    void            SetSkipEvent(Bool_t skip = true) { fSkipEvent = skip; }
+
+   // Event Step
+   Int_t           GetEventStep() const { return fEventStep; }
+   void            SetEventStep(Int_t step) { fEventStep = step; }
+   Bool_t          CheckEventStep() { return (fEventStepCounter % fEventStep == 0); }
+   void            IncrementEventStepCounter() { fEventStepCounter = (fEventStepCounter + 1) % fEventStep; }
+   void            DecrementEventStepCounter() { fEventStepCounter = (fEventStepCounter + fEventStep - 1) % fEventStep; }
 
    // Tree IO
    Bool_t          isTreeAccumulation() const { return fTreeAccumulation;  }

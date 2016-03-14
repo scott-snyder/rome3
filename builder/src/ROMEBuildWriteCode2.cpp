@@ -704,6 +704,11 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
       subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetEventNumbers(##);");
       subGroup->GetLastParameter()->AddWriteLine("writeString = gAnalyzer->GetEventNumberStringOriginal();");
+      // EventStep
+      subGroup->AddParameter(new ROMEConfigParameter("EventStep"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
+      subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetEventStep(strtol(##,&cstop, 10));");
+      subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%d\", gAnalyzer->GetEventStep());");
       // InputFileNames
       subGroup->AddParameter(new ROMEConfigParameter("InputFileNames"));
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
