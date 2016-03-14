@@ -124,6 +124,13 @@
           <ScreenShotFileName></ScreenShotFileName>
           <NewWindow>false</NewWindow>
         </Tab>
+
+        <Tab>
+          <TabName>T3</TabName>
+          <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
+        </Tab>
       </Tabs>
     </Monitor>
   </MainConfiguration>

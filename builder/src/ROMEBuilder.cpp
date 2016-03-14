@@ -208,6 +208,7 @@ ROMEBuilder::ROMEBuilder()
 ,histoSingleObjectTabName(0)
 ,histoSingleObjectTabIndex(0)
 ,histoSingleObjectTabArrayIndex(0)
+,histoSingleObjectTabDrawSamePad(0)
 ,numOfGraphs(0)
 ,graphName(0)
 ,graphTitle(0)
@@ -229,6 +230,7 @@ ROMEBuilder::ROMEBuilder()
 ,graphSingleObjectTabName(0)
 ,graphSingleObjectTabIndex(0)
 ,graphSingleObjectTabArrayIndex(0)
+,graphSingleObjectTabDrawSamePad(0)
 ,numOfTaskHierarchy(0)
 ,taskHierarchyName(0)
 ,taskHierarchyParentIndex(0)
@@ -312,6 +314,7 @@ ROMEBuilder::ROMEBuilder()
 ,tabSingleObjectTaskIndex(0)
 ,tabSingleObjectObjectIndex(0)
 ,tabSingleObjectType(0)
+,tabSingleObjectDrawSamePad(0)
 ,tabSingleObjectIndexMax(0)
 ,numOfTabObjectDisplays(0)
 ,tabObjectDisplayName(0)
@@ -611,6 +614,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(histoSingleObjectTabName);
    FreeArray(histoSingleObjectTabIndex);
    FreeArray(histoSingleObjectTabArrayIndex);
+   FreeArray(histoSingleObjectTabDrawSamePad);
    FreeArray(numOfGraphs);
    FreeArray(graphName);
    FreeArray(graphTitle);
@@ -632,6 +636,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(graphSingleObjectTabName);
    FreeArray(graphSingleObjectTabIndex);
    FreeArray(graphSingleObjectTabArrayIndex);
+   FreeArray(graphSingleObjectTabDrawSamePad);
 
    // task hierarchy
    FreeArray(taskHierarchyName);
@@ -717,6 +722,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(tabSingleObjectTaskIndex);
    FreeArray(tabSingleObjectObjectIndex);
    FreeArray(tabSingleObjectType);
+   FreeArray(tabSingleObjectDrawSamePad);
    FreeArray(tabSingleObjectIndexMax);
    FreeArray(numOfTabObjectDisplays);
    FreeArray(tabObjectDisplayName);
@@ -990,6 +996,8 @@ Bool_t ROMEBuilder::StartBuilder()
             tabSingleObjectTaskIndex[tabNumber][histoNumber] = taskHierarchyClassIndex[i];
             tabSingleObjectObjectIndex[tabNumber][histoNumber] = j;
             tabSingleObjectType[tabNumber][histoNumber] = "Histogram";
+            tabSingleObjectDrawSamePad[tabNumber][histoNumber] =
+               histoSingleObjectTabDrawSamePad[taskHierarchyClassIndex[i]][j][k].ToBool();
             numOfTabSingleObjects[tabNumber]++;
          }
       }
@@ -1055,6 +1063,8 @@ Bool_t ROMEBuilder::StartBuilder()
             tabSingleObjectTaskIndex[tabNumber][graphNumber] = taskHierarchyClassIndex[i];
             tabSingleObjectObjectIndex[tabNumber][graphNumber] = j;
             tabSingleObjectType[tabNumber][graphNumber] = "Graph";
+            tabSingleObjectDrawSamePad[tabNumber][graphNumber]
+               = graphSingleObjectTabDrawSamePad[taskHierarchyClassIndex[i]][j][k].ToBool();
             numOfTabSingleObjects[tabNumber]++;
          }
       }

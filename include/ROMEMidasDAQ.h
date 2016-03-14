@@ -22,6 +22,7 @@ class ROMEStr2DArray;
 class ROMEMidasDAQ : public ROMEDAQSystem {
 protected:
    Long_t        fMaxEventSize;                            //! Max midas event size
+   TString       fFileName;
    Bool_t        fByteSwap;
    char         *fRawDataEvent[kRawDataEvents];            //! Midas Inputdata Stack
    char         *fRawDataDummy;                            //! Buffer for dummy read
@@ -97,6 +98,10 @@ public:
    void           SetEventRequestID(Int_t i,Short_t value)    { fEventRequestID[i] = value; }
    void           SetEventRequestMask(Int_t i,Short_t value)  { fEventRequestMask[i] = value; }
    void           SetEventRequestRate(Int_t i,Int_t value)  { fEventRequestRate[i] = value; }
+
+   // File name
+   void           SetFileName(const char* filename) { fFileName = filename; }
+   const char*    GetFileName() const { return fFileName.Data(); }
 
    // Byte swap flag
    void           SetByteSwap(Bool_t flag = kTRUE) { fByteSwap = flag; }

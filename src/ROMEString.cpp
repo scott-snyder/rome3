@@ -232,10 +232,10 @@ Float_t ROMEString::ToFloat() const
 //______________________________________________________________________________
 Bool_t ROMEString::ToBool() const
 {
-   if (CompareTo("true", TString::kIgnoreCase)) {
+   if (CompareTo("true", TString::kIgnoreCase) == 0) {
       return true;
    }
-   if (CompareTo("false", TString::kIgnoreCase)) {
+   if (CompareTo("false", TString::kIgnoreCase) == 0) {
       return false;
    }
    return ToInteger() != 0;

@@ -142,7 +142,7 @@ public:
    virtual ~ROMEMidasFile();
 
    const TString &GetFileName() const { return fFileName; }
-   Bool_t   Open(const char* const dir, const char* const runStr);
+   Bool_t   Open(const char* const dir, const char* const runStr, const char* filename);
    void     Close();
    off_t    CurrentPosition() const;
    ssize_t  Read(void *buf, size_t size);

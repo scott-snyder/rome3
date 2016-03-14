@@ -272,6 +272,7 @@ protected:
    ROMEString ***histoSingleObjectTabName;
    ROMEString ***histoSingleObjectTabIndex;
    ROMEString ***histoSingleObjectTabArrayIndex;
+   ROMEString ***histoSingleObjectTabDrawSamePad;
    Int_t        *numOfGraphs;
    ROMEString  **graphName;
    ROMEString  **graphTitle;
@@ -293,6 +294,7 @@ protected:
    ROMEString ***graphSingleObjectTabName;
    ROMEString ***graphSingleObjectTabIndex;
    ROMEString ***graphSingleObjectTabArrayIndex;
+   ROMEString ***graphSingleObjectTabDrawSamePad;
 
 // task hierarchy
    Int_t         numOfTaskHierarchy;
@@ -385,6 +387,7 @@ protected:
    Int_t       **tabSingleObjectTaskIndex;
    Int_t       **tabSingleObjectObjectIndex;
    ROMEString  **tabSingleObjectType;
+   Bool_t      **tabSingleObjectDrawSamePad;
    Int_t        *tabSingleObjectIndexMax;
    Int_t        *numOfTabObjectDisplays;
    ROMEString  **tabObjectDisplayName;
