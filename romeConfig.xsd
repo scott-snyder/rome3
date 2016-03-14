@@ -63,6 +63,11 @@
 					<xs:documentation>The event numbers, which have to be analyzed. Use the same syntax as for the run numbers. (optional)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="EventStep" type="xs:integer" default="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Analyze every N-th events (optional)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="InputFileNames" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>The input file names containing the runs, which have to be analyzed. If no input file is specified the DAQ systems will work with a run number based file IO. All files must be specified in the 'MainConfiguration' even if they are overriden by a 'RunConfiguration'. (optional)</xs:documentation>
