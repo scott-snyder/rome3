@@ -64,7 +64,7 @@
 #   define dbgcout cout<<"=== "<<gSystem->BaseName(__FILE__)<<":"<<__LINE__<<" in "<<__FUNCTION__<<": "
 #else
 #   define dbgprintf(...) (printf("=== %s:%u in %s:",gSystem->BaseName(__FILE__),__LINE__,__func__),printf(" "__VA_ARGS__))
-#   define dbgcout cout<<"==== "<<gSystem->BaseName(__FILE__)<<":"<<__LINE__<<" in "<<__func__<<": "
+#   define dbgcout std::cout<<"==== "<<gSystem->BaseName(__FILE__)<<":"<<__LINE__<<" in "<<__func__<<": "
 #endif
 
 #if (ROOT_VERSION_CODE < ROOT_VERSION(4,3,2))
