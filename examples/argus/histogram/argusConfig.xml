@@ -5,7 +5,7 @@
 
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="romeConfig.xsd">
   <ProgramConfiguration>
-    <ProgramMode>1</ProgramMode>
+    <ProgramMode>3</ProgramMode>
   </ProgramConfiguration>
 
   <MainConfiguration>
@@ -17,6 +17,7 @@
     <Offline>
       <RunNumbers></RunNumbers>
       <EventNumbers></EventNumbers>
+      <EventStep>1</EventStep>
       <InputFileNames></InputFileNames>
     </Offline>
 
@@ -89,6 +90,13 @@
         <EndOfEvent></EndOfEvent>
         <EndOfRun></EndOfRun>
       </Macros>
+
+      <Tasks>
+        <Task>
+          <TaskName>MakeHistogram</TaskName>
+          <Active>true</Active>
+        </Task>
+      </Tasks>
     </Analyzer>
 
     <Monitor>
@@ -125,6 +133,20 @@
           <Active>true</Active>
           <ScreenShotFileName></ScreenShotFileName>
           <NewWindow>false</NewWindow>
+        </Tab>
+
+        <Tab>
+          <TabName>GeneratedHisto</TabName>
+          <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
+          <SingleObject>
+            <SingleObjectName>hAdc</SingleObjectName>
+            <DrawOption></DrawOption>
+            <LogScaleX>false</LogScaleX>
+            <LogScaleY>false</LogScaleY>
+            <LogScaleZ>false</LogScaleZ>
+          </SingleObject>
         </Tab>
       </Tabs>
     </Monitor>

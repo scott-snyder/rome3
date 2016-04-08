@@ -17,6 +17,7 @@
     <Offline>
       <RunNumbers>1</RunNumbers>
       <EventNumbers></EventNumbers>
+      <EventStep>1</EventStep>
       <InputFileNames></InputFileNames>
     </Offline>
 
@@ -99,10 +100,39 @@
     </Analyzer>
 
     <Monitor>
+      <Display>
+        <WindowScale>1.0</WindowScale>
+        <StatusBar>true</StatusBar>
+        <UpdateFrequency>1000</UpdateFrequency>
+        <ScreenShotPeriod>60</ScreenShotPeriod>
+        <ListTreeView>false</ListTreeView>
+        <TimeZone>local</TimeZone>
+        <AnalyzerController>
+          <Active>false</Active>
+          <NetFolderName></NetFolderName>
+        </AnalyzerController>
+      </Display>
+
       <SocketClient>
         <Host>localhost</Host>
         <Port>9090</Port>
       </SocketClient>
+
+      <Tabs>
+        <Tab>
+          <TabName>GeneratedHisto</TabName>
+          <Active>true</Active>
+          <ScreenShotFileName></ScreenShotFileName>
+          <NewWindow>false</NewWindow>
+          <SingleObject>
+            <SingleObjectName>hAdc</SingleObjectName>
+            <DrawOption></DrawOption>
+            <LogScaleX>false</LogScaleX>
+            <LogScaleY>false</LogScaleY>
+            <LogScaleZ>false</LogScaleZ>
+          </SingleObject>
+        </Tab>
+      </Tabs>
     </Monitor>
   </MainConfiguration>
 </Configuration>
