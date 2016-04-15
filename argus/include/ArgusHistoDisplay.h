@@ -37,13 +37,13 @@ class ArgusHistoDisplay : public ArgusTab
 {
 protected:
    enum {
-      kMaxNumberOfPads = 120,
+      kMaxNumberOfPads = 360,
       kMaxNumberOfPadsX = 10,
       kMaxNumberOfPadsY = 20,
-      kNumberOfDisplayViewSelections0 = 30,
+      kNumberOfDisplayViewSelections0 = 54,
       kNumberOfDisplayViewSelections1 = 10,
       kNumberOfDisplayViewSelections2 = 10,
-      kMaxNumberOfLines = 41
+      kMaxNumberOfLines = 81
    };
    enum MenuEnumeration {
       M_ROOT = 900,
