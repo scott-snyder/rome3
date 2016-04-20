@@ -1144,6 +1144,21 @@
 					<xs:documentation>The initial number of pads in vertical direction. This tag is only used for tabs with display objects.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="DrawStat" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Stat box is drawn when this is true.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StatW" type="xs:float" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Stat box width.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StatFontSize" type="xs:float" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Font size in stat box.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="PadConfiguration" type="xs:boolean" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Tells the tab to activate the pad configuration. This tag is only used for tabs with display objects.</xs:documentation>

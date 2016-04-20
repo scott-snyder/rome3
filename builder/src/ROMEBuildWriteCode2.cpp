@@ -2167,6 +2167,27 @@ Bool_t ROMEBuilder::AddTabConfigParameters(ROMEConfigParameterGroup *parGroup,In
                                                           tabUsedIndex[iTab], j);
             subGroup->AddSubGroup(subSubGroup);
          }
+         // DrawStat
+         subGroup->AddParameter(new ROMEConfigParameter("DrawStat","1","CheckButton"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetDrawStat(## == \"true\");",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[tabObject%d->IsDrawStat()?1:0];",
+                                                    tabUsedIndex[iTab]);
+         // StatW
+         subGroup->AddParameter(new ROMEConfigParameter("StatW"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatW(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatW());",
+                                                    tabUsedIndex[iTab]);
+         // StatFontSize
+         subGroup->AddParameter(new ROMEConfigParameter("StatFontSize"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatFontSize(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatFontSize());",
+                                                    tabUsedIndex[iTab]);
          // Number Of Pads X
          subGroup->AddParameter(new ROMEConfigParameter("NumberOfPadsX"));
          subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");

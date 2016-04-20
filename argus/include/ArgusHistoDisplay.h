@@ -106,6 +106,7 @@ private:
 
 public:
    ArgusHistoDisplay(ArgusWindow* window, const char* title, ROMEStrArray *drawOpt,
+					 Bool_t drawStat, Float_t statW, Float_t statFontSize,
                      TArrayI *logX, TArrayI *logY, TArrayI *logZ, Int_t nUserMenus,
                      const char* inheritName, Int_t nDisplayType);
    virtual       ~ArgusHistoDisplay();

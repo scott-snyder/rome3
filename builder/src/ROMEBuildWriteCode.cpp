@@ -3612,11 +3612,14 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
          buffer.AppendFormatted(", \"%s\"", tabTitle[iTab].Data());
          if (numOfTabSingleObjects[iTab] > 0) {
             buffer.AppendFormatted(", new ROMEStrArray()");
+            buffer.AppendFormatted(", kTRUE");
+            buffer.AppendFormatted(", 0.1");
+            buffer.AppendFormatted(", 0");
             buffer.AppendFormatted(", new TArrayI(%d)",numOfTabSingleObjects[iTab]);
             buffer.AppendFormatted(", new TArrayI(%d)",numOfTabSingleObjects[iTab]);
             buffer.AppendFormatted(", new TArrayI(%d)",numOfTabSingleObjects[iTab]);
          } else {
-            buffer.AppendFormatted(", 0, 0, 0, 0");
+            buffer.AppendFormatted(", 0, kTRUE, 0.1, 0, 0, 0, 0");
          }
 
          int numMenu = numOfMenu[iTab];
@@ -3859,7 +3862,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                tabSingleObjectName[iTab][j].Data(),j,j);
                         buffer.AppendFormatted("      f%sSingleObject%d = new %s();\n",
                                                tabSingleObjectName[iTab][j].Data(),j,
-                                               histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                               histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                         buffer.AppendFormatted("      *(f%sSingleObject%d) = *static_cast<%s*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d));\n",
                                                tabSingleObjectName[iTab][j].Data(),j,
                                                histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
@@ -3893,7 +3896,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                              k++) {
                            buffer.AppendFormatted("      f%sSingleObject%d_%d = new %s();\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
-                                                  histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                                  histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                            buffer.AppendFormatted("      *(f%sSingleObject%d_%d) = *static_cast<%s*>(static_cast<TObjArray*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d))->At(%d));\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
                                                   histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
@@ -3927,7 +3930,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                   tabSingleObjectName[iTab][j].Data(),j,k,j);
                            buffer.AppendFormatted("      f%sSingleObject%d_%d = new %s();\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
-                                                  histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                                  histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                            buffer.AppendFormatted("      *(f%sSingleObject%d_%d) = *static_cast<%s*>(static_cast<TObjArray*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d))->At(%d));\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
                                                   histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),

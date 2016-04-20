@@ -149,6 +149,14 @@
           </SingleObject>
 
           <SingleObject>
+            <SingleObjectName>My2DHisto</SingleObjectName>
+            <DrawOption>col</DrawOption>
+            <LogScaleX>false</LogScaleX>
+            <LogScaleY>false</LogScaleY>
+            <LogScaleZ>false</LogScaleZ>
+          </SingleObject>
+
+          <SingleObject>
             <SingleObjectName>MyGraph</SingleObjectName>
             <DrawOption></DrawOption>
             <LogScaleX>false</LogScaleX>
