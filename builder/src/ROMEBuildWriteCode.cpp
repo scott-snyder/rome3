@@ -3859,7 +3859,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                tabSingleObjectName[iTab][j].Data(),j,j);
                         buffer.AppendFormatted("      f%sSingleObject%d = new %s();\n",
                                                tabSingleObjectName[iTab][j].Data(),j,
-                                               histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                               histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                         buffer.AppendFormatted("      *(f%sSingleObject%d) = *static_cast<%s*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d));\n",
                                                tabSingleObjectName[iTab][j].Data(),j,
                                                histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
@@ -3893,7 +3893,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                              k++) {
                            buffer.AppendFormatted("      f%sSingleObject%d_%d = new %s();\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
-                                                  histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                                  histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                            buffer.AppendFormatted("      *(f%sSingleObject%d_%d) = *static_cast<%s*>(static_cast<TObjArray*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d))->At(%d));\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
                                                   histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
@@ -3927,7 +3927,7 @@ Bool_t ROMEBuilder::WriteBaseTabCpp()
                                                   tabSingleObjectName[iTab][j].Data(),j,k,j);
                            buffer.AppendFormatted("      f%sSingleObject%d_%d = new %s();\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
-                                                  histoType[tabSingleObjectTaskIndex[iTab][i]][tabSingleObjectObjectIndex[iTab][i]].Data());
+                                                  histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data());
                            buffer.AppendFormatted("      *(f%sSingleObject%d_%d) = *static_cast<%s*>(static_cast<TObjArray*>(gAnalyzer->GetTaskObjectAt(%d)->GetHistoAt(%d))->At(%d));\n",
                                                   tabSingleObjectName[iTab][j].Data(),j,k,
                                                   histoType[tabSingleObjectTaskIndex[iTab][j]][tabSingleObjectObjectIndex[iTab][j]].Data(),
