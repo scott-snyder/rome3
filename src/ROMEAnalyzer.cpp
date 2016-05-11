@@ -2278,3 +2278,25 @@ const char* ROMEAnalyzer::GetHistosSnapShotFileName()
    ReplaceWithRunAndEventNumber(fHistoSnapShotFileNameConstructed);
    return fHistoSnapShotFileNameConstructed;
 }
+
+//______________________________________________________________________________
+void ROMEAnalyzer::ResetHistos()
+{
+   for (Int_t i = 0; i < fTaskObjects->GetEntriesFast(); i++) {
+      ROMETask *task = static_cast<ROMETask*>(fTaskObjects->At(i));
+      if (task->IsActive()) {
+         task->ResetHisto();
+      }
+   }
+}
+
+//______________________________________________________________________________
+void ROMEAnalyzer::ResetGraphs()
+{
+   for (Int_t i = 0; i < fTaskObjects->GetEntriesFast(); i++) {
+      ROMETask *task = static_cast<ROMETask*>(fTaskObjects->At(i));
+      if (task->IsActive()) {
+         task->ResetGraph();
+      }
+   }
+}

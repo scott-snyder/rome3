@@ -457,6 +457,8 @@ public:
    ROMETask       *GetTaskObjectAt(Int_t index) const { return static_cast<ROMETask*>(fTaskObjects->At(index)); }
    Int_t           GetTaskObjectEntries() const { return fTaskObjects->GetEntries(); }
    Bool_t          IsTaskActive(Int_t taskIndex);
+   void            ResetHistos();
+   void            ResetGraphs();
 
    // Trees
    void            AddTree(TTree *tree) { fTreeObjects->Add(new ROMETree(tree)); }
