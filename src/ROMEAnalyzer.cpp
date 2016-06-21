@@ -194,6 +194,7 @@ ROMEAnalyzer::ROMEAnalyzer(ROMERint *app, Bool_t batch, Bool_t daemon, Bool_t no
 ,fOnlineExperiment("")
 ,fOnlineAnalyzerName(onlineName)
 ,fOnlineMemoryBuffer("SYSTEM")
+,fReadConfigFromODB(kFALSE)
 ,fSocketServerActive(kFALSE)
 ,fSocketServerPortNumber(9090)
 ,fObjectStorageUpdated(kFALSE)

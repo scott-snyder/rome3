@@ -100,6 +100,11 @@
 					<xs:documentation>The name of the memory buffer to be accessed. (optional)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="ReadConfigFromODB" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>When this is true ODB settings are used instead of config XML</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PathsDesc">

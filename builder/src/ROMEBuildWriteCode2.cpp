@@ -745,6 +745,11 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->GetLastParameter()->AddSetLine("if (##.Length())");
       subGroup->GetLastParameter()->AddSetLine("   gAnalyzer->SetOnlineMemoryBuffer(##.Data());");
       subGroup->GetLastParameter()->AddWriteLine("writeString = gAnalyzer->GetOnlineMemoryBuffer();");
+      // ReadConfigFromODB
+      subGroup->AddParameter(new ROMEConfigParameter("ReadConfigFromODB"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
+      subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetReadConfigFromODB(## == \"true\");");
+      subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[gAnalyzer->GetReadConfigFromODB()?1:0];");
    }
 
    // Paths
@@ -5305,8 +5310,8 @@ ROMEString& ROMEBuilder::GetSteerPath(ROMEString& steerPath,int iTask,int iSteer
 {
    steerPath.SetFormatted("%s",steerFieldName[iTask][iSteer][iField].Data());
    while (steerParent[iTask][iSteer] != -1) {
-      iSteer = steerParent[iTask][iSteer];
       steerPath.InsertFormatted(0, "%s%s",steerName[iTask][iSteer].Data(),seperator);
+      iSteer = steerParent[iTask][iSteer];
    }
    return steerPath;
 }

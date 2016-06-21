@@ -1294,12 +1294,19 @@ Bool_t ROMEMidasDAQ::InitOnlineCommunication(ROMEMidasDAQ *localThis)
          str = "//Tree switches/";
          str.Insert(1, gROME->GetOnlineAnalyzerName());
          str.Append(gROME->GetTreeObjectAt(i)->GetTree()->GetName());
-         db_check_record(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(str.Data()),
-                         const_cast<char*>(gROME->GetTreeObjectAt(i)->GetSwitchesString()), TRUE);
+         if (gROME->GetReadConfigFromODB()) {
+            db_create_record(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(str.Data()),
+                  const_cast<char*>(gROME->GetTreeObjectAt(i)->GetSwitchesString()));
+         } else {
+            db_check_record(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(str.Data()),
+                  const_cast<char*>(gROME->GetTreeObjectAt(i)->GetSwitchesString()), TRUE);
+         }
          db_find_key(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(str.Data()), &hKey);
-         if (db_set_record(gROME->GetMidasOnlineDataBase(), hKey, gROME->GetTreeObjectAt(i)->GetSwitches(),
-                           gROME->GetTreeObjectAt(i)->GetSwitchesSize(), 0) != DB_SUCCESS) {
-            ROMEPrint::Warning("\nCan not write to tree switches record.\n");
+         if (!gROME->GetReadConfigFromODB()) {
+            if (db_set_record(gROME->GetMidasOnlineDataBase(), hKey, gROME->GetTreeObjectAt(i)->GetSwitches(),
+                     gROME->GetTreeObjectAt(i)->GetSwitchesSize(), 0) != DB_SUCCESS) {
+               ROMEPrint::Warning("\nCan not write to tree switches record.\n");
+            }
          }
          if (db_open_record(gROME->GetMidasOnlineDataBase(), hKey, gROME->GetTreeObjectAt(i)->GetSwitches(),
                             gROME->GetTreeObjectAt(i)->GetSwitchesSize(), MODE_READ, 0, 0) != DB_SUCCESS) {

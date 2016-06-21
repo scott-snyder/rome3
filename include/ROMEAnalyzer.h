@@ -236,6 +236,7 @@ protected:
    ROMEString     fOnlineExperiment;             //! Name of the Online Experiment
    ROMEString     fOnlineAnalyzerName;           //! The name of the analyzer in the midas environment
    ROMEString     fOnlineMemoryBuffer;           //! The name of the midas memory buffer
+   Bool_t         fReadConfigFromODB;            //! When this is true, ODB settings overwrite XML settings (XML file not overwritten)
 
    // Socket Server
    Bool_t         fSocketServerActive;           //! Socket active
@@ -641,11 +642,13 @@ public:
    const char     *GetOnlineExperiment() const { return fOnlineExperiment.Data(); }
    const char     *GetOnlineAnalyzerName() const { return fOnlineAnalyzerName.Data(); }
    const char     *GetOnlineMemoryBuffer() const { return fOnlineMemoryBuffer.Data(); }
+   Bool_t          GetReadConfigFromODB() const { return fReadConfigFromODB; }
 
    void            SetOnlineHost(const char *host) { fOnlineHost = host; }
    void            SetOnlineExperiment(const char *experiment) { fOnlineExperiment = experiment; }
    void            SetOnlineAnalyzerName(const char *analyzerName) { fOnlineAnalyzerName = analyzerName; }
    void            SetOnlineMemoryBuffer(const char *memoryBufferName) { fOnlineMemoryBuffer = memoryBufferName; }
+   void            SetReadConfigFromODB(Bool_t flg) { fReadConfigFromODB = flg; }
 
    // Socket Server
    Int_t           GetSocketServerPortNumber() const { return fSocketServerPortNumber; }

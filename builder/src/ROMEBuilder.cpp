@@ -2083,13 +2083,13 @@ bool ROMEBuilder::toMidasODBType(ROMEString& type,ROMEString& midasODBType)
    typeStr.StripSpaces();
    if (typeStr == "char" ||
        typeStr == "Char_t") {
-      midasODBType = "char";
+      midasODBType = "CHAR";
    } else if (typeStr == "unsigned char" ||
               typeStr == "UChar_t") {
-      midasODBType = "unsigned char";
+      midasODBType = "BYTE";
    } else if (typeStr == "short" ||
               typeStr == "Short_t") {
-      midasODBType = "short";
+      midasODBType = "SHORT";
    } else if (typeStr == "unsigned short" ||
               typeStr == "UShort_t") {
       midasODBType = "WORD";
@@ -2104,10 +2104,10 @@ bool ROMEBuilder::toMidasODBType(ROMEString& type,ROMEString& midasODBType)
       midasODBType = "BOOL";
    } else if (typeStr == "float" ||
               typeStr == "Float_t") {
-      midasODBType = "float";
+      midasODBType = "FLOAT";
    } else if (typeStr == "double" ||
               typeStr == "Double_t") {
-      midasODBType = "double";
+      midasODBType = "DOUBLE";
    } else {
       cout<<type<<" no conversion to a midas odb type available"<<endl;
       return false;
