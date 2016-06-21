@@ -745,6 +745,11 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->GetLastParameter()->AddSetLine("if (##.Length())");
       subGroup->GetLastParameter()->AddSetLine("   gAnalyzer->SetOnlineMemoryBuffer(##.Data());");
       subGroup->GetLastParameter()->AddWriteLine("writeString = gAnalyzer->GetOnlineMemoryBuffer();");
+      // ReadConfigFromODB
+      subGroup->AddParameter(new ROMEConfigParameter("ReadConfigFromODB"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
+      subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetReadConfigFromODB(## == \"true\");");
+      subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[gAnalyzer->GetReadConfigFromODB()?1:0];");
    }
 
    // Paths
@@ -2167,6 +2172,27 @@ Bool_t ROMEBuilder::AddTabConfigParameters(ROMEConfigParameterGroup *parGroup,In
                                                           tabUsedIndex[iTab], j);
             subGroup->AddSubGroup(subSubGroup);
          }
+         // DrawStat
+         subGroup->AddParameter(new ROMEConfigParameter("DrawStat","1","CheckButton"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetDrawStat(## == \"true\");",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[tabObject%d->IsDrawStat()?1:0];",
+                                                    tabUsedIndex[iTab]);
+         // StatW
+         subGroup->AddParameter(new ROMEConfigParameter("StatW"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatW(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatW());",
+                                                    tabUsedIndex[iTab]);
+         // StatFontSize
+         subGroup->AddParameter(new ROMEConfigParameter("StatFontSize"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatFontSize(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatFontSize());",
+                                                    tabUsedIndex[iTab]);
          // Number Of Pads X
          subGroup->AddParameter(new ROMEConfigParameter("NumberOfPadsX"));
          subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
@@ -5284,8 +5310,8 @@ ROMEString& ROMEBuilder::GetSteerPath(ROMEString& steerPath,int iTask,int iSteer
 {
    steerPath.SetFormatted("%s",steerFieldName[iTask][iSteer][iField].Data());
    while (steerParent[iTask][iSteer] != -1) {
-      iSteer = steerParent[iTask][iSteer];
       steerPath.InsertFormatted(0, "%s%s",steerName[iTask][iSteer].Data(),seperator);
+      iSteer = steerParent[iTask][iSteer];
    }
    return steerPath;
 }

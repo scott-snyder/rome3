@@ -80,6 +80,27 @@
 					</Tab>
 				</Argus>
 			</Histogram>
+			<Histogram>
+				<HistName>My2DHisto</HistName>
+				<HistFolderName>myhistos</HistFolderName>
+				<HistType>TH2F</HistType>
+				<HistArraySize>2</HistArraySize>
+				<HistXLabel>X</HistXLabel>
+				<HistYLabel>Y</HistYLabel>
+				<HistXNbins>10</HistXNbins>
+				<HistXmin>-100</HistXmin>
+				<HistXmax>100</HistXmax>
+				<HistYNbins>10</HistYNbins>
+				<HistYmin>-100</HistYmin>
+				<HistYmax>100</HistYmax>
+				<Argus>
+					<Tab>
+						<TabName>GeneratedHisto</TabName>
+						<ObjectArrayIndex>0-1</ObjectArrayIndex>
+						<Index>6</Index>
+					</Tab>
+				</Argus>
+			</Histogram>
 		</Task>
 	</Tasks>
 </ROMEFrameworkDefinition>

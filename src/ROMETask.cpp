@@ -938,7 +938,7 @@ TObject *ROMETask::GetHistoAt(Int_t i)
    if (!CheckHistoActive(i)) {
       return 0;
    }
-   if (gROME->IsROMEMonitor() && !fHistoUpToDate[i]) {
+   if (gROME->IsROMEMonitor()) {
       ROMEString command;
       command.SetFormatted("Task_%d:Histo_%d", fTaskIndex, i);
       fHisto->AddAt(gROME->GetSocketClientNetFolder()->FindObjectAny(command.Data()), i);

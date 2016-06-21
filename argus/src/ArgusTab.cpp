@@ -47,6 +47,7 @@ ClassImp(ArgusTab)
 
 //______________________________________________________________________________
 ArgusTab::ArgusTab(ArgusWindow* window, const char* title, ROMEStrArray *drawOpt,
+                   Bool_t drawStat, Float_t statW, Float_t statFontSize,
                    TArrayI *logX, TArrayI *logY, TArrayI *logZ, Int_t nUserMenus)
 :TGCompositeFrame(NULL,1,1)
 ,fWindow(window)
@@ -66,6 +67,9 @@ ArgusTab::ArgusTab(ArgusWindow* window, const char* title, ROMEStrArray *drawOpt
 ,fID(-1)
 ,fUserPopupMenus(new TObjArray(nUserMenus))
 ,fDrawOption(drawOpt)
+,fDrawStat(drawStat)
+,fStatW(statW)
+,fStatFontSize(statFontSize)
 ,fLogScaleX(logX)
 ,fLogScaleY(logY)
 ,fLogScaleZ(logZ)

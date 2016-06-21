@@ -74,6 +74,8 @@ ClassImp(ROMEEventLoop)
 
 extern TVirtualMutex *gObjectStorageMutex; // declared in ROMEAnalyzer.cpp
 
+using namespace std;
+
 //______________________________________________________________________________
 ROMEEventLoop::ROMEEventLoop(const char *name, const char *title)
 :ROMETask(name, title, 0, 0, 0, 0, 0, 0, 0)
@@ -181,6 +183,13 @@ void ROMEEventLoop::ExecuteTask(Option_t *option)
 #endif
       }
    }
+
+#if defined( HAVE_MIDAS )
+   if (gROME->GetReadConfigFromODB()) {
+      this->UpdateHotLinks();
+      ROMEEventLoop::fHotLinksChanged = false;
+   }
+#endif // HAVE_MIDAS
 
    if (gROME->IsStandAloneROME() || gROME->IsROMEAndARGUS()) {
       ROMEPrint::Debug("Executing Init tasks\n");

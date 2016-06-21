@@ -16,6 +16,7 @@
 // This task contains the following histgrams :                               //
 //    MyHisto                                                                 //
 //    MyOtherHisto                                                            //
+//    My2DHisto                                                               //
 // This task contains the following graphs :                                  //
 //    MyGraph                                                                 //
 //    MyGraphError                                                            //
@@ -81,6 +82,8 @@ void HGUITFillHisto::Event()
    GetMyGraphError()->SetPoint(4,4,gRandom->Rndm());
    ArgusHistoDisplay::SetLimits(GetMyGraph());
    ArgusHistoDisplay::SetLimits(GetMyGraphError());
+   GetMy2DHistoAt(0)->Fill(gRandom->Gaus(0,10), gRandom->Gaus(0,10));
+   GetMy2DHistoAt(1)->Fill(gRandom->Gaus(0,20), gRandom->Gaus(0,20));
 }
 
 void HGUITFillHisto::EndOfRun()
