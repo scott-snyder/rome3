@@ -522,6 +522,12 @@ Long64_t ROMEMidasDAQ::StepEvent(Bool_t forward)
             if (pevent->data_size <= 0) {
                readError = kTRUE;
             } else {
+               if (fMaxEventSize < static_cast<Long_t>(sizeof(EVENT_HEADER) + pevent->data_size)) {
+                  ROMEPrint::Error("The MIDAS event buffer size (%lu) is smaller than actual data size (%lu).\n"
+                                   "Please increase it by setting your environment variable MIDAS_MAX_EVENT_SIZE.\n"
+                                   "Then recompile after removing obj/ROMEMidasDAQ.o\n",
+                                   fMaxEventSize, sizeof(EVENT_HEADER) + pevent->data_size);
+               }
                n = fMidasFile->Read(pevent + 1, pevent->data_size);
                if (n != static_cast<Long_t>(pevent->data_size)) {
                   readError = kTRUE;
@@ -950,6 +956,12 @@ Bool_t ROMEMidasDAQ::ReadODBOffline()
          if (pevent->data_size <= 0) {
             readError = kTRUE;
          } else {
+            if (fMaxEventSize < static_cast<Long_t>(sizeof(EVENT_HEADER) + pevent->data_size)) {
+               ROMEPrint::Error("The MIDAS event buffer size (%lu) is smaller than the size of ODB (%lu).\n"
+                                "Please increase it by setting your environment variable MIDAS_MAX_EVENT_SIZE.\n"
+                                "Then recompile after removing obj/ROMEMidasDAQ.o\n",
+                                fMaxEventSize, sizeof(EVENT_HEADER) + pevent->data_size);
+            }
             n = fMidasFile->Read(pevent + 1, pevent->data_size);
             if (n != static_cast<Long_t>(pevent->data_size)) {
                readError = kTRUE;
