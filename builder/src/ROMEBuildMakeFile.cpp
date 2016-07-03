@@ -132,8 +132,10 @@ void ROMEBuilder::AddRomeHeaders()
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormElement.h");
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormElementSignal.h");
    romeHeaders->Add("$(ROMESYS)/include/XMLToFormWindow.h");
-   if (numOfEvent > 0 || midas)
+   if (numOfEvent > 0 || midas) {
+      romeHeaders->Add("$(ROMESYS)/include/ROMEMidasFile.h");
       romeHeaders->Add("$(ROMESYS)/include/ROMEMidasDAQ.h");
+   }
    if (this->orca)
       romeHeaders->Add("$(ROMESYS)/include/ROMEOrcaDAQ.h");
    if (numOfTree > 0)
@@ -155,7 +157,7 @@ void ROMEBuilder::AddRomeDictHeaders()
 {
    romeDictHeaders = new ROMEStrArray(21);
    romeLinkDefSuffix = new ROMEStrArray(21);
-   if (!librome) {
+   if (librome == kLIBNone) {
       romeDictHeaders->Add("$(ROMESYS)/include/XMLToForm.h");
       romeLinkDefSuffix->Add("");
       romeDictHeaders->Add("$(ROMESYS)/include/XMLToFormFrame.h");
@@ -182,10 +184,12 @@ void ROMEBuilder::AddRomeDictHeaders()
    romeDictHeaders->Add("$(ROMESYS)/include/ROMERint.h");
    romeLinkDefSuffix->Add("");
    if (numOfEvent > 0 || midas) {
+      romeDictHeaders->Add("$(ROMESYS)/include/ROMEMidasFile.h");
+      romeLinkDefSuffix->Add("");
       romeDictHeaders->Add("$(ROMESYS)/include/ROMEMidasDAQ.h");
       romeLinkDefSuffix->Add("");
    }
-   if (!librome) {
+   if (librome == kLIBNone) {
       romeDictHeaders->Add("$(ROMESYS)/include/ROMEGraph.h");
       romeLinkDefSuffix->Add("+");
       romeDictHeaders->Add("$(ROMESYS)/include/ROMEHisto.h");
@@ -290,9 +294,11 @@ void ROMEBuilder::AddRomeSources()
    romeSources->Add("$(ROMESYS)/src/ROMEODBOnlineDataBase.cpp");
    romeSources->Add("$(ROMESYS)/src/ROMEPrint.cpp");
    romeSources->Add("$(ROMESYS)/src/ROMERint.cpp");
-   if (numOfEvent > 0 || midas)
+   if (numOfEvent > 0 || midas) {
+      romeSources->Add("$(ROMESYS)/src/ROMEMidasFile.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMEMidasDAQ.cpp");
-   if (!librome) {
+   }
+   if (librome == kLIBNone) {
       romeSources->Add("$(ROMESYS)/src/mxml.c");
       romeSources->Add("$(ROMESYS)/src/ROMEDAQSystem.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMEDataBaseDAQ.cpp");
@@ -363,7 +369,7 @@ void ROMEBuilder::AddArgusHeaders()
 {
    argusHeaders = new ROMEStrArray(5);
    argusLinkDefSuffix = new ROMEStrArray(5);
-   if (!librome) {
+   if (librome == kLIBNone) {
       argusHeaders->Add("$(ROMESYS)/argus/include/ArgusWindow.h");
       argusLinkDefSuffix->Add("");
       argusHeaders->Add("$(ROMESYS)/argus/include/ArgusTextDialog.h");
@@ -381,7 +387,7 @@ void ROMEBuilder::AddArgusHeaders()
 void ROMEBuilder::AddArgusSources()
 {
    argusSources = new ROMEStrArray(6);
-   if (!librome) {
+   if (librome == kLIBNone) {
       argusSources->Add("$(ROMESYS)/argus/src/ArgusWindow.cpp");
       argusSources->Add("$(ROMESYS)/argus/src/ArgusTextDialog.cpp");
       argusSources->Add("$(ROMESYS)/argus/src/ArgusAnalyzerController.cpp");
@@ -1184,7 +1190,10 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
 
    buffer.AppendFormatted("## Compile and link flags\n");
    buffer.AppendFormatted("rootlibs  := $(shell $(ROOTCONFIG) --libs) -lHtml -lThread\n");
-   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread -lX11 -lGX11\n");
+   buffer.AppendFormatted("rootglibs := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread\n");
+   buffer.AppendFormatted("ifeq ($(shell $(ROOTCONFIG) --has-x11), yes)\n");
+   buffer.AppendFormatted("rootglibs += -lX11 -lGX11\n");
+   buffer.AppendFormatted("endif\n");
    buffer.AppendFormatted("rootcxxflags:=                  $(shell $(ROOTCONFIG) --cflags)\n");
    buffer.AppendFormatted("rootcflags:= $(patsubst -std=%%,,$(shell $(ROOTCONFIG) --cflags))\n");
    buffer.AppendFormatted("defflags  :=");
@@ -1360,6 +1369,7 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
      buffer.AppendFormatted("%sMidasDAQOpt                   += -fno-strict-aliasing\n",shortCut.Data());
    }
    buffer.AppendFormatted("ROMEMidasDAQOpt                 += -fno-strict-aliasing\n");
+   buffer.AppendFormatted("ROMEMidasFileOpt                += -fno-strict-aliasing\n");
    buffer.AppendFormatted("ROMEAnalyzerOpt                 += $(NOWFMTNLIT)\n");
    buffer.AppendFormatted("\n");
 #endif // R__UNIX
@@ -2168,6 +2178,8 @@ void ROMEBuilder::WriteMakefileBuildRule(ROMEString& buffer,const char *builder)
       buffer.AppendFormatted(" -nl");
    if (!dynamicLink)
       buffer.AppendFormatted(" -st");
+   else
+      buffer.AppendFormatted(" -dl");
    if (orca)
       buffer.AppendFormatted(" -orca");
    if (midas)
@@ -2323,7 +2335,7 @@ void ROMEBuilder::WriteMakefile() {
    WriteMakefileObjects(buffer,databaseSources);
    WriteMakefileObjects(buffer,dictionarySources);
    WriteMakefileAdditionalSourceFilesObjects(buffer);
-   if (librome) {
+   if (librome == kLIBStatic) {
       if (dynamicLink) {
          buffer.AppendFormatted("dlobjects += $(ROMESYS)/librome.a\n");
       } else {
@@ -2493,15 +2505,23 @@ void ROMEBuilder::WriteMakefile() {
                              shortCut.Data(),mainProgName.Data(), kSharedObjectSuffix);
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
 #if defined( R__MACOSX )
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Xlinker -rpath -Xlinker $(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) ",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
                              shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Xlinker -rpath -Xlinker $(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
 #else
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) && \\\n",
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) -Wl,-rpath=$(PWDST)/obj $(LDFLAGS) -o .$@ obj/main.o $(PWDST)/obj/lib%s%s%s $(objects) $(Libraries) ",
                              linker.Data(),
                              shortCut.ToUpper(tmp),
                              shortCut.Data(),mainProgName.Data(),kSharedObjectSuffix);
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Wl,-rpath=$(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
 #endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    } else {
@@ -2509,8 +2529,21 @@ void ROMEBuilder::WriteMakefile() {
                              mainProgName.ToLower(tmp2),mainProgNameExtension.Data(),
                              shortCut.ToLower(tmp3),mainProgName.ToLower(tmp4));
       buffer.AppendFormatted("\t$(call %sechoing, \"linking   $@\")\n",shortCut.ToLower(tmp));
-      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) && \\\n", linker.Data(),
+#if defined( R__MACOSX )
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) ", linker.Data(),
                              shortCut.ToUpper(tmp));
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Xlinker -rpath -Xlinker $(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
+#else
+      buffer.AppendFormatted("\t%s $(%sLDFLAGS) $(LDFLAGS) -o .$@ $(objects) $(Libraries) n", linker.Data(),
+                             shortCut.ToUpper(tmp));
+      if (librome == kLIBDynamic) {
+         buffer.AppendFormatted("-Wl,-rpath=$(ROMESYS) -L$(ROMESYS) -lrome ");
+      }
+      buffer.AppendFormatted("&& \\\n");
+#endif
       buffer.AppendFormatted("\tmv .$@ $@\n");
    }
    buffer.AppendFormatted("ifneq (,$(findstring obj/lib%s%s%s, $(shell ls)))\n",shortCut.ToLower(tmp),
@@ -2586,13 +2619,18 @@ void ROMEBuilder::WriteMakefile() {
    ROMEString additionalDep = "";
 
 #if 0
-   // recompile librome.a.
+   // recompile librome.[so,a].
    // commented out because of two reasons.
-   //  1. This is, in priciple, responsibility of users. One should recompile librome.a when ROME is updated.
+   //  1. This is, in priciple, responsibility of users. One should recompile librome.[so,a] when ROME is updated.
    //  2. It is not known if the user has write permission of the directory. ROMESYS can be in system, or shared directory read by several users.
-   if (librome) {
+   if (librome == kLIBStatic) {
       buffer.AppendFormatted("$(ROMESYS)/librome.a: $(ROMESYS)/include/*h $(ROMESYS)/src/*cpp\n");
       buffer.AppendFormatted("\t@$(MAKE) -C $(ROMESYS) librome.a\n");
+      buffer.AppendFormatted("\n");
+   }
+   if (librome == kLIBDynamic) {
+      buffer.AppendFormatted("$(ROMESYS)/librome.so: $(ROMESYS)/include/*h $(ROMESYS)/src/*cpp\n");
+      buffer.AppendFormatted("\t@$(MAKE) -C $(ROMESYS) librome.so\n");
       buffer.AppendFormatted("\n");
    }
 #endif

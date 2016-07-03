@@ -4,6 +4,8 @@
 #include "ROMEDAQSystem.h"
 #include "Riostream.h"
 
+using namespace std;
+
 class SMDmydaqDAQ : public ROMEDAQSystem
 {
 protected:

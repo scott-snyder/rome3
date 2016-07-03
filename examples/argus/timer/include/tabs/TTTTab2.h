@@ -74,8 +74,8 @@ public:
    void EventHandler();
    bool ProcessMessage(Long_t msg, Long_t param1, Long_t param2);
 
-   void func_2_1(){ cout<<"func_2_1"<<endl; }
-   void func_2_2(){ cout<<"func_2_2"<<endl; }
+   void func_2_1(){ std::cout<<"func_2_1"<<std::endl; }
+   void func_2_2(){ std::cout<<"func_2_2"<<std::endl; }
 
    Bool_t Startfunc_2_1(Int_t interval = 1000){
       if(!fTimer2_1){

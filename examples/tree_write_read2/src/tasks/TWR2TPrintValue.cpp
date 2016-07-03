@@ -41,6 +41,8 @@
 
 ClassImp(TWR2TPrintValue)
 
+using namespace std;
+
 void TWR2TPrintValue::Init()
 {
 }

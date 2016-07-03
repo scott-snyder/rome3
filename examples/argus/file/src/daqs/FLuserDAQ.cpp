@@ -3,6 +3,8 @@
 #include <include/generated/FLConfig.h>
 #include "TSystem.h"
 
+using namespace std;
+
 FLuserDAQ::FLuserDAQ()
 {
 }

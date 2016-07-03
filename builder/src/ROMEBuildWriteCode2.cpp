@@ -704,6 +704,11 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
       subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetEventNumbers(##);");
       subGroup->GetLastParameter()->AddWriteLine("writeString = gAnalyzer->GetEventNumberStringOriginal();");
+      // EventStep
+      subGroup->AddParameter(new ROMEConfigParameter("EventStep"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
+      subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetEventStep(strtol(##,&cstop, 10));");
+      subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%d\", gAnalyzer->GetEventStep());");
       // InputFileNames
       subGroup->AddParameter(new ROMEConfigParameter("InputFileNames"));
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
@@ -740,6 +745,11 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->GetLastParameter()->AddSetLine("if (##.Length())");
       subGroup->GetLastParameter()->AddSetLine("   gAnalyzer->SetOnlineMemoryBuffer(##.Data());");
       subGroup->GetLastParameter()->AddWriteLine("writeString = gAnalyzer->GetOnlineMemoryBuffer();");
+      // ReadConfigFromODB
+      subGroup->AddParameter(new ROMEConfigParameter("ReadConfigFromODB"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName());
+      subGroup->GetLastParameter()->AddSetLine("gAnalyzer->SetReadConfigFromODB(## == \"true\");");
+      subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[gAnalyzer->GetReadConfigFromODB()?1:0];");
    }
 
    // Paths
@@ -1586,6 +1596,23 @@ Bool_t ROMEBuilder::AddConfigParameters()
       subGroup->ReadComment(ROMEConfig::kCommentLevelGroup,"Midas","/xs:schema/xs:complexType[@name='ConfigurationDesc']/xs:sequence/xs:element[@name='Midas']/xs:annotation/xs:documentation");
       mainParGroup->AddSubGroup(subGroup);
 
+      // file name
+      subGroup->AddParameter(new ROMEConfigParameter("MidasFileName"));
+      subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName(),
+                                                "/xs:schema/xs:complexType[@name='ConfigurationDesc']/xs:sequence/xs:element[@name='Midas']/xs:complexType/xs:sequence/xs:element[@name=MidasFileName]/xs:annotation/xs:documentation");
+      subGroup->GetLastParameter()->AddSetLine("if (gAnalyzer->IsMidasDAQ()) {");
+      subGroup->GetLastParameter()->AddSetLine("   gAnalyzer->GetMidasDAQ()->SetFileName(##);");
+      subGroup->GetLastParameter()->AddSetLine("}");
+      subGroup->GetLastParameter()->AddWriteLine("if (gAnalyzer->IsMidasDAQ()) {");
+      subGroup->GetLastParameter()->AddWriteLine("   writeString = gAnalyzer->GetMidasDAQ()->GetFileName();");
+      subGroup->GetLastParameter()->AddWriteLine("}");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("else {");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("   if (##Modified)");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("      writeString = ##;");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("   else");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("      writeString = \"false\";");
+      subGroup->GetLastParameter()->AddAdditionalWriteLine("}");
+
       // byte swap
       subGroup->AddParameter(new ROMEConfigParameter("MidasByteSwap","1","CheckButton"));
       subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, subGroup->GetGroupName(),
@@ -2145,6 +2172,27 @@ Bool_t ROMEBuilder::AddTabConfigParameters(ROMEConfigParameterGroup *parGroup,In
                                                           tabUsedIndex[iTab], j);
             subGroup->AddSubGroup(subSubGroup);
          }
+         // DrawStat
+         subGroup->AddParameter(new ROMEConfigParameter("DrawStat","1","CheckButton"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetDrawStat(## == \"true\");",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString = kFalseTrueString[tabObject%d->IsDrawStat()?1:0];",
+                                                    tabUsedIndex[iTab]);
+         // StatW
+         subGroup->AddParameter(new ROMEConfigParameter("StatW"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatW(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatW());",
+                                                    tabUsedIndex[iTab]);
+         // StatFontSize
+         subGroup->AddParameter(new ROMEConfigParameter("StatFontSize"));
+         subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
+         subGroup->GetLastParameter()->AddSetLine("tabObject%d->SetStatFontSize(##.ToFloat());",
+                                                  tabUsedIndex[iTab]);
+         subGroup->GetLastParameter()->AddWriteLine("writeString.SetFormatted(\"%%f\",tabObject%d->GetStatFontSize());",
+                                                    tabUsedIndex[iTab]);
          // Number Of Pads X
          subGroup->AddParameter(new ROMEConfigParameter("NumberOfPadsX"));
          subGroup->GetLastParameter()->ReadComment(ROMEConfig::kCommentLevelParam, "Tab");
@@ -5262,8 +5310,8 @@ ROMEString& ROMEBuilder::GetSteerPath(ROMEString& steerPath,int iTask,int iSteer
 {
    steerPath.SetFormatted("%s",steerFieldName[iTask][iSteer][iField].Data());
    while (steerParent[iTask][iSteer] != -1) {
-      iSteer = steerParent[iTask][iSteer];
       steerPath.InsertFormatted(0, "%s%s",steerName[iTask][iSteer].Data(),seperator);
+      iSteer = steerParent[iTask][iSteer];
    }
    return steerPath;
 }

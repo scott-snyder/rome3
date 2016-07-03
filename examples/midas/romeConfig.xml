@@ -306,6 +306,8 @@
 
     <Midas>
       <!-- Describes the midas dependent part of the framework. -->
+      <!-- Input filename of midas files in offline mode. The '#' in the name is subsitituted by the run number. -->
+      <MidasFileName></MidasFileName>
       <!-- When it is true, framework does byte swapping when reading MIDAS files. Default is false. -->
       <MidasByteSwap>false</MidasByteSwap>
       <!-- When it is true, in online mode, framework communicates with MIDAS server by using dedicated thread. You may use this option when you have time consuming functions in event loop. When there is a time consuming function in event loop, the program may not receive signals from MIDAS server to start/stop runs. This can cause error in MIDAS server. Timeout of MIDAS communication is different depends on OS, it is typically around 1 minute. If this option is true, ODB functions in user code may not work properly, because MIDAS communication is implemented with assuming done in a thread. -->

@@ -46,6 +46,8 @@
 #include <Riostream.h>
 #include "TF1.h"
 
+using namespace std;
+
 Double_t lognormal(Double_t *x, Double_t *par) {
    Double_t x2 = x[0]-par[3];
    Double_t sigma = par[0];

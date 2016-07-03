@@ -7,11 +7,18 @@
 #
 #####################################################################
 
-### Switch for creating librome.a
-###  If yes, ROME classes are packed in librome.a and linked to each projects
+### Switch for creating librome.so or librome.a
+###  If LIBROMEDYNAMIC is yes, ROME classes are packed in librome.so and linked to each projects
 ###  instead of compiling in each projects.
+###  when LIBROMESTATIC is yes, a static library librome.a is used instead.
 ###  When you changed this key, you need to do "make clean"
-# LIBROME = yes
+# LIBROMEDYNAMIC = yes
+# LIBROMESTATIC = yes
+
+# backward compatibility
+ifeq ($(LIBROME), yes)
+  LIBROMESTATIC = yes
+endif
 
 ### Add -g compile option when compiling librome.a
 # ROMEDEBUG = yes
@@ -148,7 +155,9 @@ ROMEPICDEF = -DUSE_PIC_UPPER
 endif
 endif
 
-DICTIONARIES = bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/HAddDict$(DICT_HEADER_SUF)
+DICTIONARIES = bin/ROMEBuilderDict$(DICT_HEADER_SUF) \
+               bin/UpdateVersionHDict$(DICT_HEADER_SUF) \
+               bin/HAddDict$(DICT_HEADER_SUF)
 
 NEED_TARRAYL64 = no
 ifeq ($(ROOT_MAJOR), 5)
@@ -175,13 +184,20 @@ endif
 
 -include Makefile.arch
 
-ifeq ($(LIBROME), yes)
-  INCLUDE  += -DHAVE_LIBROME
+ifeq ($(LIBROMESTATIC), yes)
+  INCLUDE  += -DHAVE_LIBROMESTATIC
   LIBROMEFILE := librome.a
   DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
   TARGET += $(LIBROMEFILE)
 else
-  LIBROMEFILE =
+ifeq ($(LIBROMEDYNAMIC), yes)
+  INCLUDE  += -DHAVE_LIBROMEDYNAMIC
+  LIBROMEFILE := librome.so
+  DICTIONARIES += bin/ROMELibDict$(DICT_HEADER_SUF)
+  TARGET += $(LIBROMEFILE)
+else
+  LIBROMEFILE  =
+endif
 endif
 
 BldObjects := obj/ROMEBuilder.o \

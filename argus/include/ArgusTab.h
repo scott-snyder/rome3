@@ -47,6 +47,9 @@ protected:
 
    // General Histo/Graph parameters (object displays, single objects)
    ROMEStrArray  *fDrawOption;            //!
+   Bool_t         fDrawStat;              //!
+   Float_t        fStatW;                 //!
+   Float_t        fStatFontSize;          //!
    TArrayI       *fLogScaleX;             //!
    TArrayI       *fLogScaleY;             //!
    TArrayI       *fLogScaleZ;             //!
@@ -61,6 +64,7 @@ private:
 
 public:
    ArgusTab(ArgusWindow* window, const char* title, ROMEStrArray *drawOpt,
+            Bool_t drawStat, Float_t statW, Float_t statFontSize,
             TArrayI *logX, TArrayI *logY, TArrayI *logZ, Int_t nUserMenus);
    virtual ~ArgusTab();
 
@@ -84,6 +88,13 @@ public:
 
    void           SetDrawOptionAt(Int_t displayTypeIndex,const char* option) { fDrawOption->AddAt(option,displayTypeIndex); }
    const char    *GetDrawOptionAt(Int_t displayTypeIndex) { return fDrawOption->At2(displayTypeIndex).Data(); }
+
+   void           SetDrawStat(Bool_t f=kTRUE)  { fDrawStat = f; }
+   Bool_t         IsDrawStat() const           { return fDrawStat; }
+   void           SetStatW(Float_t v=0.1)      { fStatW = v; }
+   Float_t        GetStatW() const             { return fStatW; }
+   void           SetStatFontSize(Float_t v=0) { fStatFontSize = v; }
+   Float_t        GetStatFontSize() const      { return fStatFontSize; }
 
    // User Methods
    void           SetTitle(const char* title) { fTitle = title; }

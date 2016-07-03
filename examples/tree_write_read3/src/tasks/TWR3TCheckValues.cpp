@@ -37,6 +37,8 @@
 
 ClassImp(TWR3TCheckValues)
 
+using namespace std;
+
 void TWR3TCheckValues::Init()
 {
 }

@@ -323,6 +323,8 @@ Bool_t ROMEBuilder::AllocateMemorySpace()
                                                                              maxNumberOfHistoSingleObjectTabs));
    histoSingleObjectTabArrayIndex = static_cast<ROMEString***>(AllocateROMEString(maxNumberOfTasks,maxNumberOfHistos,
                                                                                   maxNumberOfHistoSingleObjectTabs));
+   histoSingleObjectTabDrawSamePad = static_cast<ROMEString***>(AllocateROMEString(maxNumberOfTasks,maxNumberOfHistos,
+                                                                                   maxNumberOfHistoSingleObjectTabs));
    numOfGraphs = static_cast<Int_t*>(AllocateInt(maxNumberOfTasks));
    graphName = static_cast<ROMEString**>(AllocateROMEString(maxNumberOfTasks,maxNumberOfGraphs));
    graphTitle = static_cast<ROMEString**>(AllocateROMEString(maxNumberOfTasks,maxNumberOfGraphs));
@@ -347,6 +349,8 @@ Bool_t ROMEBuilder::AllocateMemorySpace()
                                                                              maxNumberOfGraphSingleObjectTabs));
    graphSingleObjectTabArrayIndex = static_cast<ROMEString***>(AllocateROMEString(maxNumberOfTasks,maxNumberOfGraphs,
                                                                                   maxNumberOfGraphSingleObjectTabs));
+   graphSingleObjectTabDrawSamePad = static_cast<ROMEString***>(AllocateROMEString(maxNumberOfTasks,maxNumberOfGraphs,
+                                                                                   maxNumberOfGraphSingleObjectTabs));
 
    // task hierarchy
    taskHierarchyName = static_cast<ROMEString*>(AllocateROMEString(2*maxNumberOfTasks));
@@ -455,6 +459,7 @@ Bool_t ROMEBuilder::AllocateMemorySpace()
    tabSingleObjectTaskIndex = static_cast<Int_t**>(AllocateInt(maxNumberOfTabs,maxNumberOfTabSingleObjects));
    tabSingleObjectObjectIndex = static_cast<Int_t**>(AllocateInt(maxNumberOfTabs,maxNumberOfTabSingleObjects));
    tabSingleObjectType = static_cast<ROMEString**>(AllocateROMEString(maxNumberOfTabs,maxNumberOfTabSingleObjects));
+   tabSingleObjectDrawSamePad = static_cast<Bool_t**>(AllocateBool(maxNumberOfTabs,maxNumberOfTabSingleObjects));
    tabSingleObjectIndexMax = static_cast<Int_t*>(AllocateInt(maxNumberOfTabs));
    numOfTabObjectDisplays = static_cast<Int_t*>(AllocateInt(maxNumberOfTabs));
    tabObjectDisplayName = static_cast<ROMEString**>(AllocateROMEString(maxNumberOfTabs,maxNumberOfTabObjectDisplays));
@@ -2221,6 +2226,7 @@ Bool_t ROMEBuilder::ReadXMLTask()
                      histoSingleObjectTabName[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]] = "";
                      histoSingleObjectTabIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]] = "0";
                      histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]] = "0";
+                     histoSingleObjectTabDrawSamePad[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]] = "false";
                      while (xml->NextLine()) {
                         type = xml->GetType();
                         name = xml->GetName();
@@ -2237,10 +2243,17 @@ Bool_t ROMEBuilder::ReadXMLTask()
                            FormatText(histoSingleObjectTabIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]], kTRUE);
                         }
                         // array index
-                        if (type == 1 && !strcmp(name,"HistArrayIndex")) {
+                        if (type == 1 && (!strcmp(name,"HistArrayIndex") || !strcmp(name,"ObjectArrayIndex"))) {
                            xml->GetValue(histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
                                          histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]]);
                            FormatText(histoSingleObjectTabArrayIndex[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
+                                      kTRUE);
+                        }
+                        // draw same pad
+                        if (type == 1 && (!strcmp(name,"DrawSamePad"))) {
+                           xml->GetValue(histoSingleObjectTabDrawSamePad[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
+                                         histoSingleObjectTabDrawSamePad[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]]);
+                           FormatText(histoSingleObjectTabDrawSamePad[numOfTask][numOfHistos[numOfTask]][numOfHistoSingleObjectTabs[numOfTask][numOfHistos[numOfTask]]],
                                       kTRUE);
                         }
                         // tab end
@@ -2462,6 +2475,7 @@ Bool_t ROMEBuilder::ReadXMLTask()
                      graphSingleObjectTabName[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]] = "";
                      graphSingleObjectTabIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]] = "0";
                      graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]] = "0";
+                     graphSingleObjectTabDrawSamePad[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]] = "false";
                      while (xml->NextLine()) {
                         type = xml->GetType();
                         name = xml->GetName();
@@ -2480,10 +2494,17 @@ Bool_t ROMEBuilder::ReadXMLTask()
                                       kTRUE);
                         }
                         // array index
-                        if (type == 1 && !strcmp(name,"HistArrayIndex")) {
+                        if (type == 1 && (!strcmp(name,"HistArrayIndex") || !strcmp(name,"ObjectArrayIndex"))) {
                            xml->GetValue(graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
                                          graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]]);
                            FormatText(graphSingleObjectTabArrayIndex[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
+                                      kTRUE);
+                        }
+                        // draw same pad
+                        if (type == 1 && (!strcmp(name,"DrawSamePad"))) {
+                           xml->GetValue(graphSingleObjectTabDrawSamePad[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
+                                         graphSingleObjectTabDrawSamePad[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]]);
+                           FormatText(graphSingleObjectTabDrawSamePad[numOfTask][numOfGraphs[numOfTask]][numOfGraphSingleObjectTabs[numOfTask][numOfGraphs[numOfTask]]],
                                       kTRUE);
                         }
                         // tab end

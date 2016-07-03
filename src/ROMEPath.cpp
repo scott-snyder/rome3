@@ -70,15 +70,21 @@ ROMEPath::ROMEPath()
 
 //______________________________________________________________________________
 ROMEPath::~ROMEPath() {
+   fTableNames->Delete();
+   fTableAbsolutePaths->Delete();
+   fTableConstraints->Delete();
+   fTableDBConstraints->Delete();
+   fTableIDName->Delete();
+   fTableIDXName->Delete();
+   fConstraintField->Delete();
+   fConstraintValue->Delete();
+
    SafeDelete(fTableNames);
    SafeDelete(fTableAbsolutePaths);
    SafeDelete(fTableConstraints);
    SafeDelete(fTableDBConstraints);
    SafeDelete(fTableIDName);
    SafeDelete(fTableIDXName);
-
-   fConstraintField->Delete();
-   fConstraintValue->Delete();
    SafeDelete(fConstraintField);
    SafeDelete(fConstraintValue);
 }

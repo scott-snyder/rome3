@@ -37,6 +37,8 @@
 
 ClassImp(RUNHTTask1)
 
+using namespace std;
+
 void RUNHTTask1::Init()
 {
 }

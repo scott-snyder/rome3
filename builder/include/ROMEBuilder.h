@@ -70,6 +70,12 @@ extern ROMEXML* configXSD;
 
 class ROMEBuilder
 {
+   enum {
+      kLIBStatic,
+      kLIBDynamic,
+      kLIBNone
+   };
+
 public:
    ROMEString    romeVersion;
    ROMEString    romeDescription;
@@ -98,7 +104,7 @@ protected:
    Bool_t        sqlite;
    Bool_t        sqlite3;
    Bool_t        noVP;
-   Bool_t        librome;
+   Int_t         librome;
    Bool_t        dynamicLink;
    Bool_t        pch;
    Bool_t        minRebuild;
@@ -266,6 +272,7 @@ protected:
    ROMEString ***histoSingleObjectTabName;
    ROMEString ***histoSingleObjectTabIndex;
    ROMEString ***histoSingleObjectTabArrayIndex;
+   ROMEString ***histoSingleObjectTabDrawSamePad;
    Int_t        *numOfGraphs;
    ROMEString  **graphName;
    ROMEString  **graphTitle;
@@ -287,6 +294,7 @@ protected:
    ROMEString ***graphSingleObjectTabName;
    ROMEString ***graphSingleObjectTabIndex;
    ROMEString ***graphSingleObjectTabArrayIndex;
+   ROMEString ***graphSingleObjectTabDrawSamePad;
 
 // task hierarchy
    Int_t         numOfTaskHierarchy;
@@ -379,6 +387,7 @@ protected:
    Int_t       **tabSingleObjectTaskIndex;
    Int_t       **tabSingleObjectObjectIndex;
    ROMEString  **tabSingleObjectType;
+   Bool_t      **tabSingleObjectDrawSamePad;
    Int_t        *tabSingleObjectIndexMax;
    Int_t        *numOfTabObjectDisplays;
    ROMEString  **tabObjectDisplayName;

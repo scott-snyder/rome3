@@ -99,7 +99,6 @@ void TTTTab1::func_1_1()
    ROME_LOCKGUARD(fgTab1Mutex);
    fText->SetY(fText->GetY() < 1 ? fText->GetY() + 0.01 : 0);
    fCanvas->GetCanvas()->cd();
-   fText->Draw();
    fCanvas->GetCanvas()->Modified();
    fCanvas->GetCanvas()->Update();
 }
@@ -109,7 +108,6 @@ void TTTTab1::func_1_2()
    ROME_LOCKGUARD(fgTab1Mutex);
    fText->SetX(fText->GetX() < 1 ? fText->GetX() + 0.01 : 0);
    fCanvas->GetCanvas()->cd();
-   fText->Draw();
    fCanvas->GetCanvas()->Modified();
    fCanvas->GetCanvas()->Update();
 }

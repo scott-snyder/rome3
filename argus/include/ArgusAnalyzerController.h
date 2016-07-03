@@ -41,6 +41,7 @@ protected:
    TGPictureButton    *fNextButton;
    TGPictureButton    *fUpdateButton;
    TGPictureButton    *fStopButton;
+   TGPictureButton    *fResetButton;
 //   TGPictureButton  *fFrwdButton;
    TGNumberEntry      *fRunNumberEntry;
    TGNumberEntry      *fEventNumberEntry;
@@ -55,6 +56,7 @@ protected:
       B_Next,
       B_Update,
       B_Stop,
+      B_Reset,
       B_Frwd,
       T_RunNumber,
       T_EventNumber,

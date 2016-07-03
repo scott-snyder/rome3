@@ -74,6 +74,8 @@ ClassImp(ROMEEventLoop)
 
 extern TVirtualMutex *gObjectStorageMutex; // declared in ROMEAnalyzer.cpp
 
+using namespace std;
+
 //______________________________________________________________________________
 ROMEEventLoop::ROMEEventLoop(const char *name, const char *title)
 :ROMETask(name, title, 0, 0, 0, 0, 0, 0, 0)
@@ -181,6 +183,13 @@ void ROMEEventLoop::ExecuteTask(Option_t *option)
 #endif
       }
    }
+
+#if defined( HAVE_MIDAS )
+   if (gROME->GetReadConfigFromODB()) {
+      this->UpdateHotLinks();
+      ROMEEventLoop::fHotLinksChanged = false;
+   }
+#endif // HAVE_MIDAS
 
    if (gROME->IsStandAloneROME() || gROME->IsROMEAndARGUS()) {
       ROMEPrint::Debug("Executing Init tasks\n");
@@ -403,6 +412,10 @@ Int_t ROMEEventLoop::RunEvent()
    // Run one Event.
    gROME->SetSkipEvent(false);
    fCurrentEvent++;
+   gROME->IncrementEventStepCounter();
+   if (!gROME->CheckEventStep()) {
+      gROME->SetSkipEvent();
+   }
    ROMEPrint::Debug("ROMEEventLoop::RunEvent()");
 
    // Update
@@ -871,6 +884,7 @@ Bool_t ROMEEventLoop::DAQEvent()
    if (gROME->IsDontReadNextEvent()) {
       gROME->SetDontReadNextEvent(false);
       fCurrentEvent--;
+      gROME->DecrementEventStepCounter();
       return true;
    }
    this->SetAnalyze();
@@ -885,6 +899,7 @@ Bool_t ROMEEventLoop::DAQEvent()
        gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != 1) {
       // event number is not incremented when non-trigger events.
       fCurrentEvent--;
+      gROME->DecrementEventStepCounter();
    }
    if (this->isContinue()) {
       return true;
@@ -1096,8 +1111,13 @@ Bool_t ROMEEventLoop::UserInput()
               gROME->Now() <                      fUserInputLastTime + 300
 #endif
               ) {
+      gROME->GetApplication()->DisableFPETrap();
+      gSystem->ProcessEvents();
+      gROME->GetApplication()->EnableFPETrap();
       return true;
    }
+
+   // Check user input
    fUserInputLastTime = gROME->Now();
 
    while (wait || first) {

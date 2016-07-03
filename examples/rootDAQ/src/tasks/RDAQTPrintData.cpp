@@ -32,6 +32,8 @@
 
 ClassImp(RDAQTPrintData)
 
+using namespace std;
+
 void RDAQTPrintData::Init()
 {
 }

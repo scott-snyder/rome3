@@ -147,5 +147,33 @@
 				</Menu>
 			</Menus>
 		</Tab>
+		<Tab>
+			<TabName>T3</TabName>
+			<TabTitle>T3</TabTitle>
+			<TabVersion>1</TabVersion>
+			<Menus>
+				<Menu>
+					<MenuTitle>Open and save pad</MenuTitle>
+					<MenuItems>
+						<MenuItem>
+							<MenuItemTitle>&amp;Pad 1</MenuItemTitle>
+							<MenuItemEnumName>M_T3_Open_Pad1</MenuItemEnumName>
+						</MenuItem>
+						<MenuItem>
+							<MenuItemTitle>&amp;Pad 2</MenuItemTitle>
+							<MenuItemEnumName>M_T3_Open_Pad2</MenuItemEnumName>
+						</MenuItem>
+						<MenuItem>
+							<MenuItemTitle>&amp;Pad 3</MenuItemTitle>
+							<MenuItemEnumName>M_T3_Open_Pad3</MenuItemEnumName>
+						</MenuItem>
+						<MenuItem>
+							<MenuItemTitle>&amp;Pad 4</MenuItemTitle>
+							<MenuItemEnumName>M_T3_Open_Pad4</MenuItemEnumName>
+						</MenuItem>
+					</MenuItems>
+				</Menu>
+			</Menus>
+		</Tab>
 	</Tabs>
 </ROMEFrameworkDefinition>

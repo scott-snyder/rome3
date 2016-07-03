@@ -11,6 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <RConfig.h>
 #if defined( R__VISUAL_CPLUSPLUS )
 #   if !defined( __CINT__ )
@@ -122,6 +123,8 @@ ROMEAnalyzer::ROMEAnalyzer(ROMERint *app, Bool_t batch, Bool_t daemon, Bool_t no
 ,fSplashScreen(!nographics)
 ,fDontReadNextEvent(kFALSE)
 ,fSkipEvent(kFALSE)
+,fEventStep(1)
+,fEventStepCounter(-1)
 ,fInputDir("./")
 ,fInputDirConstructed("")
 ,fOutputDir("./")
@@ -191,6 +194,7 @@ ROMEAnalyzer::ROMEAnalyzer(ROMERint *app, Bool_t batch, Bool_t daemon, Bool_t no
 ,fOnlineExperiment("")
 ,fOnlineAnalyzerName(onlineName)
 ,fOnlineMemoryBuffer("SYSTEM")
+,fReadConfigFromODB(kFALSE)
 ,fSocketServerActive(kFALSE)
 ,fSocketServerPortNumber(9090)
 ,fObjectStorageUpdated(kFALSE)
@@ -253,7 +257,9 @@ ROMEAnalyzer::~ROMEAnalyzer()
    Int_t i;
    for(i = 0; i < fNumberOfNetFolders; i++) {
       SafeDelete(fNetFolder[i]);
-      SafeDelete(fNetFolderSocket[i]);
+#if 0
+      SafeDelete(fNetFolderSocket[i]); // this is removed by TNetFolder
+#endif
    }
    SafeDeleteArray(fNetFolder);
    SafeDeleteArray(fNetFolderActive);
@@ -1233,7 +1239,7 @@ Int_t ROMEAnalyzer::ss_daemon_init(Bool_t keep_stdout)
       return kFALSE;
    } else if (pid != 0) {
       ROMEPrint::Print("Becoming a daemon... (PID = %d)\n", pid);
-      fApplication->Terminate(0); // parent finished
+      if (fApplication) { fApplication->Terminate(0); } // parent finished
    }
 
 
@@ -1516,10 +1522,15 @@ void ROMEAnalyzer::InitNetFolders(Int_t number)
    if (number < 1) {
       return;
    }
+   Int_t i;
+
    fNetFolder = new ROMENetFolder*[number];
    fNetFolderActive = new Bool_t[number];
    fNetFolderReconnect = new Bool_t[number];
    fNetFolderSocket = new TSocket*[number];
+   for(i = 0; i < fNumberOfNetFolders; i++) {
+      fNetFolderSocket[i] = 0;
+   }
    fNetFolderPort = new Int_t[number];
    fNetFolderName = new ROMEString[number];
    fNetFolderHost = new ROMEString[number];
@@ -1556,7 +1567,7 @@ ROMEDAQSystem* ROMEAnalyzer::GetActiveDAQ() const
                     "<Modes>\n"
                     "   <DAQSystem>\n\n"
                     "Shutting down the program.\n");
-   fApplication->Terminate(1);
+   if (fApplication) { fApplication->Terminate(1); }
    return 0;
 }
 
@@ -1570,7 +1581,7 @@ ROMEDataBase* ROMEAnalyzer::GetDataBase(Int_t i) const
                     "To use the databases you have to add it to the list of databases in the\n"
                     "ROME configuration file under <DataBases>.\n\n"
                     "Shutting down the program.\n");
-   fApplication->Terminate(1);
+   if (fApplication) { fApplication->Terminate(1); }
    return 0;
 }
 
@@ -1585,7 +1596,7 @@ ROMEDataBase* ROMEAnalyzer::GetDataBase(const char *name) const
    ROMEPrint::Error("\nYou have tried to access the %s database without initialisation.\n"
                     "To use the %s database you have to add it to the list of databases in the\n"
                     "ROME configuration file under <DataBases>.\n\nShutting down the program.\n", name, name);
-   fApplication->Terminate(1);
+   if (fApplication) { fApplication->Terminate(1); }
    return 0;
 }
 
@@ -2267,4 +2278,26 @@ const char* ROMEAnalyzer::GetHistosSnapShotFileName()
    fHistoSnapShotFileNameConstructed = fHistoSnapShotFileName;
    ReplaceWithRunAndEventNumber(fHistoSnapShotFileNameConstructed);
    return fHistoSnapShotFileNameConstructed;
+}
+
+//______________________________________________________________________________
+void ROMEAnalyzer::ResetHistos()
+{
+   for (Int_t i = 0; i < fTaskObjects->GetEntriesFast(); i++) {
+      ROMETask *task = static_cast<ROMETask*>(fTaskObjects->At(i));
+      if (task->IsActive()) {
+         task->ResetHisto();
+      }
+   }
+}
+
+//______________________________________________________________________________
+void ROMEAnalyzer::ResetGraphs()
+{
+   for (Int_t i = 0; i < fTaskObjects->GetEntriesFast(); i++) {
+      ROMETask *task = static_cast<ROMETask*>(fTaskObjects->At(i));
+      if (task->IsActive()) {
+         task->ResetGraph();
+      }
+   }
 }

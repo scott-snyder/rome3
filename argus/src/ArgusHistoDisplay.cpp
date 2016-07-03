@@ -59,9 +59,10 @@ ClassImp(ArgusHistoDisplay)
 
 //______________________________________________________________________________
 ArgusHistoDisplay::ArgusHistoDisplay(ArgusWindow* window, const char* title, ROMEStrArray *drawOpt, 
+                                     Bool_t drawStat, Float_t statW, Float_t statFontSize,
                                      TArrayI *logX, TArrayI *logY, TArrayI *logZ, Int_t nUserMenus, 
                                      const char* inheritName, Int_t nDisplayType)
-:ArgusTab(window, title, drawOpt, logX, logY, logZ, nUserMenus)
+:ArgusTab(window, title, drawOpt, drawStat, statW, statFontSize, logX, logY, logZ, nUserMenus)
 ,fStyle(new TStyle())
 ,fMenuDisplay(0)
 ,fMenuView(0)
@@ -464,7 +465,8 @@ void ArgusHistoDisplay::BaseTabUnSelected()
 void ArgusHistoDisplay::SetStatisticBox(Bool_t flag)
 {
    if (flag && !fStatisticBoxFlag) {
-      fStyle->SetStatW(0.1f);
+      fStyle->SetStatW(fStatW);
+      fStyle->SetStatFontSize(fStatFontSize);
       fStyle->SetOptStat(1110);
       fStyle->SetOptFit(73);
    }
@@ -518,10 +520,17 @@ void ArgusHistoDisplay::BaseSetupPads(Int_t nx, Int_t ny, Bool_t redraw)
             ptr1 = static_cast<TObjArray*>(fObjects->At(fCurrentDisplayType->At(j)))->At(i);
             if (!strcmp(ptr1->ClassName(), "ROMETGraph") || 
                 !strcmp(ptr1->ClassName(), "ROMETCutG")) {
-               if (j==0) {
-                  ptr1->Draw("A L");
+               if (!fDrawOption->At(fDisplayObjIndex).Length()) {
+                  str = "LP ";
                } else {
-                  ptr1->Draw("L SAME");
+                  str = fDrawOption->At(fDisplayObjIndex);
+               }
+               if (j==0) {
+                  str += " A";
+               }
+               TGraph *grp = dynamic_cast<TGraph*>(ptr1);
+               if (grp && grp->GetN()) {
+                  ptr1->Draw(str.Data());
                }
             } else {
                if (j==0) {
@@ -538,7 +547,7 @@ void ArgusHistoDisplay::BaseSetupPads(Int_t nx, Int_t ny, Bool_t redraw)
          for (k = 0; k < TMath::Min(kMax, fNumberOfUserLines);k++) {
             ptr2->At(k)->Draw();
          }
-         SetStatisticBox(true);
+         SetStatisticBox(fDrawStat);
       }
    }
 
@@ -578,7 +587,7 @@ void ArgusHistoDisplay::Modified(Bool_t processEvents)
          }
          if (!strcmp(ptr->ClassName(), "ROMETGraph") ||
              !strcmp(ptr->ClassName(), "ROMETCutG")) {
-            SetStatisticBox(true);
+            SetStatisticBox(fDrawStat);
             // this allows changing X range
             fPad[i]->cd();
             SetLimits(static_cast<TGraph*>(ptr));

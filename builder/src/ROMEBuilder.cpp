@@ -54,8 +54,12 @@ ROMEBuilder::ROMEBuilder()
 ,sqlite(kFALSE)
 ,sqlite3(kFALSE)
 ,noVP(kFALSE)
-,librome(kFALSE)
+,librome(kLIBNone)
+#if defined( R__MACOSX )
+,dynamicLink(kFALSE)
+#else
 ,dynamicLink(kTRUE)
+#endif
 ,pch(kFALSE)
 ,minRebuild(kFALSE)
 ,quietMake(kFALSE)
@@ -204,6 +208,7 @@ ROMEBuilder::ROMEBuilder()
 ,histoSingleObjectTabName(0)
 ,histoSingleObjectTabIndex(0)
 ,histoSingleObjectTabArrayIndex(0)
+,histoSingleObjectTabDrawSamePad(0)
 ,numOfGraphs(0)
 ,graphName(0)
 ,graphTitle(0)
@@ -225,6 +230,7 @@ ROMEBuilder::ROMEBuilder()
 ,graphSingleObjectTabName(0)
 ,graphSingleObjectTabIndex(0)
 ,graphSingleObjectTabArrayIndex(0)
+,graphSingleObjectTabDrawSamePad(0)
 ,numOfTaskHierarchy(0)
 ,taskHierarchyName(0)
 ,taskHierarchyParentIndex(0)
@@ -308,6 +314,7 @@ ROMEBuilder::ROMEBuilder()
 ,tabSingleObjectTaskIndex(0)
 ,tabSingleObjectObjectIndex(0)
 ,tabSingleObjectType(0)
+,tabSingleObjectDrawSamePad(0)
 ,tabSingleObjectIndexMax(0)
 ,numOfTabObjectDisplays(0)
 ,tabObjectDisplayName(0)
@@ -607,6 +614,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(histoSingleObjectTabName);
    FreeArray(histoSingleObjectTabIndex);
    FreeArray(histoSingleObjectTabArrayIndex);
+   FreeArray(histoSingleObjectTabDrawSamePad);
    FreeArray(numOfGraphs);
    FreeArray(graphName);
    FreeArray(graphTitle);
@@ -628,6 +636,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(graphSingleObjectTabName);
    FreeArray(graphSingleObjectTabIndex);
    FreeArray(graphSingleObjectTabArrayIndex);
+   FreeArray(graphSingleObjectTabDrawSamePad);
 
    // task hierarchy
    FreeArray(taskHierarchyName);
@@ -713,6 +722,7 @@ ROMEBuilder::~ROMEBuilder()
    FreeArray(tabSingleObjectTaskIndex);
    FreeArray(tabSingleObjectObjectIndex);
    FreeArray(tabSingleObjectType);
+   FreeArray(tabSingleObjectDrawSamePad);
    FreeArray(tabSingleObjectIndexMax);
    FreeArray(numOfTabObjectDisplays);
    FreeArray(tabObjectDisplayName);
@@ -986,6 +996,8 @@ Bool_t ROMEBuilder::StartBuilder()
             tabSingleObjectTaskIndex[tabNumber][histoNumber] = taskHierarchyClassIndex[i];
             tabSingleObjectObjectIndex[tabNumber][histoNumber] = j;
             tabSingleObjectType[tabNumber][histoNumber] = "Histogram";
+            tabSingleObjectDrawSamePad[tabNumber][histoNumber] =
+               histoSingleObjectTabDrawSamePad[taskHierarchyClassIndex[i]][j][k].ToBool();
             numOfTabSingleObjects[tabNumber]++;
          }
       }
@@ -1051,6 +1063,8 @@ Bool_t ROMEBuilder::StartBuilder()
             tabSingleObjectTaskIndex[tabNumber][graphNumber] = taskHierarchyClassIndex[i];
             tabSingleObjectObjectIndex[tabNumber][graphNumber] = j;
             tabSingleObjectType[tabNumber][graphNumber] = "Graph";
+            tabSingleObjectDrawSamePad[tabNumber][graphNumber]
+               = graphSingleObjectTabDrawSamePad[taskHierarchyClassIndex[i]][j][k].ToBool();
             numOfTabSingleObjects[tabNumber]++;
          }
       }
@@ -1384,12 +1398,19 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
    minRebuild = false;
    quietMake = false;
    makeFlag = "";
-#if defined (HAVE_LIBROME)
-   librome = true;
+#if defined (HAVE_LIBROMESTATIC)
+   librome = kLIBStatic;
+#elif defined (HAVE_LIBROMEDYNAMIC)
+   librome = kLIBDynamic;
 #else
-   librome = false;
+   librome = kLIBNone;
 #endif
-   dynamicLink = true;
+
+#if defined( R__MACOSX )
+   dynamicLink = kFALSE;
+#else
+   dynamicLink = kTRUE;
+#endif
 
    char workDir[kMAXPATHLEN];
    strcpy(workDir,gSystem->WorkingDirectory());
@@ -1611,7 +1632,7 @@ Bool_t ROMEBuilder::ReadCommandLineParameters(int argc, const char *argv[])
       } else if (!strcmp(argv[i],"-nl")) {
          noLink = true;
       } else if (!strcmp(argv[i],"-dl")) {
-#if 0 /* this option is obsolete */
+#if 1
 #if defined(USE_PIC_UPPER) || defined(USE_PIC_LOWER)
 #   if defined( R__UNIX )
          dynamicLink = true;
@@ -1881,7 +1902,15 @@ void ROMEBuilder::Usage()
    cout<<"  -o        Outputfile path"<<endl;
    cout<<"  -v        Verbose Mode (no Argument)"<<endl;
    cout<<"  -nl       No Linking (no Argument)"<<endl;
-   cout<<"  -st       Link all to the executable binary (no Argument)"<<endl;
+#if defined( R__MACOSX )
+   cout<<"  -dl       Makes ROME library and link to generated executable binary (no Argument)"<<endl;
+   cout<<"  -st       Link all compiled objects to the executable binary instead of linking ROME library (no Argument)"<<endl;
+   cout<<"            This option is on by default"<<endl;
+#else
+   cout<<"  -dl       Makes ROME library and link to generated executable binary (no Argument)"<<endl;
+   cout<<"            This option is on by default"<<endl;
+   cout<<"  -st       Link all compiled objects to the executable binary instead of linking ROME library (no Argument)"<<endl;
+#endif
    cout<<"  -pch      Use precompiled header (no Argument)"<<endl;
    cout<<"  -nopch    Not use precompiled header (no Argument)"<<endl;
 #if defined( R__VISUAL_CPLUSPLUS )
@@ -2054,13 +2083,13 @@ bool ROMEBuilder::toMidasODBType(ROMEString& type,ROMEString& midasODBType)
    typeStr.StripSpaces();
    if (typeStr == "char" ||
        typeStr == "Char_t") {
-      midasODBType = "char";
+      midasODBType = "CHAR";
    } else if (typeStr == "unsigned char" ||
               typeStr == "UChar_t") {
-      midasODBType = "unsigned char";
+      midasODBType = "BYTE";
    } else if (typeStr == "short" ||
               typeStr == "Short_t") {
-      midasODBType = "short";
+      midasODBType = "SHORT";
    } else if (typeStr == "unsigned short" ||
               typeStr == "UShort_t") {
       midasODBType = "WORD";
@@ -2075,10 +2104,10 @@ bool ROMEBuilder::toMidasODBType(ROMEString& type,ROMEString& midasODBType)
       midasODBType = "BOOL";
    } else if (typeStr == "float" ||
               typeStr == "Float_t") {
-      midasODBType = "float";
+      midasODBType = "FLOAT";
    } else if (typeStr == "double" ||
               typeStr == "Double_t") {
-      midasODBType = "double";
+      midasODBType = "DOUBLE";
    } else {
       cout<<type<<" no conversion to a midas odb type available"<<endl;
       return false;
