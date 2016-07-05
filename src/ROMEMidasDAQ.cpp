@@ -131,6 +131,23 @@ ROMEMidasDAQ::ROMEMidasDAQ()
 }
 
 //______________________________________________________________________________
+void ROMEMidasDAQ::SetRawDataEventSize(Long_t size)
+{
+   if (fMaxEventSize == size) {
+      return;
+   }
+
+   fMaxEventSize = size;
+   Int_t i;
+   for (i = 0; i < kRawDataEvents; i++) {
+      SafeDeleteArray(fRawDataEvent[i]);
+      if (i < fNumberOfRawDataEvent) {
+         fRawDataEvent[i] = new char[fMaxEventSize];
+      }
+   }
+}
+
+//______________________________________________________________________________
 ROMEMidasDAQ::~ROMEMidasDAQ()
 {
    Int_t i;
@@ -511,6 +528,7 @@ Long64_t ROMEMidasDAQ::StepEvent(Bool_t forward)
                                    "Please increase it by setting your environment variable MIDAS_MAX_EVENT_SIZE.\n"
                                    "Then recompile after removing obj/ROMEMidasDAQ.o\n",
                                    fMaxEventSize, sizeof(EVENT_HEADER) + pevent->data_size);
+                  SetRawDataEventSize(2 * static_cast<Long_t>(sizeof(EVENT_HEADER) + pevent->data_size));
                }
                n = fMidasFile->Read(pevent + 1, pevent->data_size);
                if (n != static_cast<Long_t>(pevent->data_size)) {
@@ -945,6 +963,7 @@ Bool_t ROMEMidasDAQ::ReadODBOffline()
                                 "Please increase it by setting your environment variable MIDAS_MAX_EVENT_SIZE.\n"
                                 "Then recompile after removing obj/ROMEMidasDAQ.o\n",
                                 fMaxEventSize, sizeof(EVENT_HEADER) + pevent->data_size);
+               SetRawDataEventSize(2 * static_cast<Long_t>(sizeof(EVENT_HEADER) + pevent->data_size));
             }
             n = fMidasFile->Read(pevent + 1, pevent->data_size);
             if (n != static_cast<Long_t>(pevent->data_size)) {

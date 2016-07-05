@@ -87,6 +87,7 @@ public:
    }
    size_t         GetRawDataEventSize() const { return fMaxEventSize; }
    void           SwitchRawDataBuffer() { fCurrentRawDataEvent = (fCurrentRawDataEvent + 1) % fNumberOfRawDataEvent; }
+   void           SetRawDataEventSize(Long_t size);
 
    // Event Requests
    Int_t          GetNumberOfEventRequests() const { return fNumberOfEventRequests; }
