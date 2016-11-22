@@ -2377,10 +2377,12 @@ void ROMEBuilder::WriteMakefile() {
 #endif // R__UNIX
 #endif
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0))
-   if (dynamicLink) {
-      buffer.AppendFormatted("pcmfiles += obj/ROMELibDict_rdict.pcm\n");
-   } else {
-      buffer.AppendFormatted("pcmfiles += ROMELibDict_rdict.pcm\n");
+   if (librome != kLIBNone) {
+      if (dynamicLink) {
+         buffer.AppendFormatted("pcmfiles += obj/ROMELibDict_rdict.pcm\n");
+      } else {
+         buffer.AppendFormatted("pcmfiles += ROMELibDict_rdict.pcm\n");
+      }
    }
 #endif
 
@@ -2669,12 +2671,14 @@ void ROMEBuilder::WriteMakefile() {
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0))
 #   if defined( R__VISUAL_CPLUSPLUS )
 #   else
-   if (dynamicLink) {
-      buffer.AppendFormatted("obj/ROMELibDict_rdict.pcm: $(ROMESYS)/bin/ROMELibDict_rdict.pcm\n");
-      buffer.AppendFormatted("\t-@cp -pf $< $@\n");
-   } else {
-      buffer.AppendFormatted("ROMELibDict_rdict.pcm: $(ROMESYS)/bin/ROMELibDict_rdict.pcm\n");
-      buffer.AppendFormatted("\t-@cp -pf $< $@\n");
+   if (librome != kLIBNone) {
+      if (dynamicLink) {
+         buffer.AppendFormatted("obj/ROMELibDict_rdict.pcm: $(ROMESYS)/bin/ROMELibDict_rdict.pcm\n");
+         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
+      } else {
+         buffer.AppendFormatted("ROMELibDict_rdict.pcm: $(ROMESYS)/bin/ROMELibDict_rdict.pcm\n");
+         buffer.AppendFormatted("\t-@cp -pf $< $@\n");
+      }
    }
 #   endif // R__UNIX
 #endif

@@ -7,6 +7,8 @@
 #ifndef ROMETask_H
 #define ROMETask_H
 
+#include <RVersion.h>
+
 #if (ROOT_VERSION_CODE < ROOT_VERSION(5,15,2))
 #   include <TDirectory.h>
 #else
