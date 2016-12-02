@@ -52,7 +52,7 @@ namespace ROMEUtilities {
    const char* FastDecrypt(const char *str);
 
 #if !defined(__CINT__)
-   const char* GetFormat(const type_info &t);
+   const char* GetFormat(const std::type_info &t);
 #endif
 
 }
