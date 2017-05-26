@@ -13883,7 +13883,8 @@ Bool_t ROMEBuilder::WriteReadTreesC()
    for (iTree = 0; iTree < numOfTree; iTree++) {
       buffer.AppendFormatted("   if (read%s) {\n", treeName[iTree].Data());
       buffer.AppendFormatted("      sprintf(filename, \"%s%%05d.root\", run_num);\n", treeName[iTree].Data());
-      buffer.AppendFormatted("      %sFile = new TFile(filename);\n", treeName[iTree].Data());
+      // buffer.AppendFormatted("      %sFile = new TFile(filename);\n", treeName[iTree].Data());
+      buffer.AppendFormatted("      %sFile = TFile::Open(filename);\n", treeName[iTree].Data());
       buffer.AppendFormatted("      %s = ((TTree*) %sFile->Get(\"%s\"));\n", treeName[iTree].Data(),
                              treeName[iTree].Data(), treeName[iTree].Data());
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5,12,0))
@@ -14376,7 +14377,8 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
       }
       buffer.AppendFormatted("\n");
 
-      buffer.AppendFormatted("   inFile  = new TFile(inFileName);\n");
+      // buffer.AppendFormatted("   inFile  = new TFile(inFileName);\n");
+      buffer.AppendFormatted("   inFile  = TFile::Open(inFileName);\n");
       buffer.AppendFormatted("   if (!inFile) {\n");
       buffer.AppendFormatted("      cerr<<\"Failed to open input file\"<<endl;\n");
       buffer.AppendFormatted("      return;\n");
@@ -14432,7 +14434,8 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
       }
       buffer.AppendFormatted("\n");
 
-      buffer.AppendFormatted("   outFile = new TFile(outFileName, \"RECREATE\");\n");
+      // buffer.AppendFormatted("   outFile = new TFile(outFileName, \"RECREATE\");\n");
+      buffer.AppendFormatted("   outFile = TFile::Open(outFileName, \"RECREATE\");\n");
       buffer.AppendFormatted("   if (!outFile) {\n");
       buffer.AppendFormatted("      cerr<<\"Failed to open output file\"<<endl;\n");
       buffer.AppendFormatted("      return;\n");
