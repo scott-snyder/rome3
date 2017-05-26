@@ -51,7 +51,6 @@ Bool_t ROMERootDAQ::BeginOfRun() {
    fRootFiles = new TFile*[nInputFile];
    for (i=0;i<nInputFile;i++) {
       gROME->ConstructFilePath(gROME->GetRawInputDirString(), gROME->GetInputFileNameAt(i), filename);
-      // fRootFiles[i] = new TFile(filename.Data(),"READ");
       fRootFiles[i] = TFile::Open(filename.Data(),"READ");
       if (fRootFiles[i]->IsZombie()) {
          ROMEPrint::Warning("Inputfile '%s' not found.\n", filename.Data());
