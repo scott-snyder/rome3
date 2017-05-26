@@ -819,7 +819,7 @@ Bool_t ROMEEventLoop::DAQBeginOfRun(Long64_t eventLoopIndex)
                   }
                }
                if (!identicalFileNameFound) { // file is not open yet
-                  romeTree->SetFile(new TFile(filename.Data(), "UPDATE"));
+                  romeTree->SetFile(TFile::Open(filename.Data(), "UPDATE"));
                   gROOT->cd();
                } else { // file is already open
                   romeTree->SetFile(identicalFilePointer);
@@ -1629,7 +1629,7 @@ void ROMEEventLoop::ReadHistograms()
    for (ii = 0; ii < runNumbers.GetSize(); ii++) {
       filename.SetFormatted("%s%s", gROME->GetHistosInputPath(), gROME->GetHistosInputFileName(runNumbers.At(ii)));
       gROME->ReplaceWithRunAndEventNumber(filename);
-      file = new TFile(filename.Data(), "READ");
+      file = TFile::Open(filename.Data(), "READ");
       if (file->IsZombie()) {
           ROMEPrint::Warning("Histograms of run " R_LLD " not available.\n", runNumbers.At(ii));
           ROMEPrint::Warning("Please check the run number and the input path.\n\n");
@@ -1780,7 +1780,7 @@ TFile* ROMEEventLoop::CreateTFile(const char *fname, Option_t *option, const cha
       opt = "RECREATE";
    }
 
-   return new TFile(filename.Data(), opt.Data(), ftitle,
+   return TFile::Open(filename.Data(), opt.Data(), ftitle,
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5,30,0))
                     ROOT::CompressionSettings(ROOT::ECompressionAlgorithm(compressionAlgorithm), compressionLevel)
 #else
