@@ -24,6 +24,8 @@
       <RunNumbers>1</RunNumbers>
       <!-- The event numbers, which have to be analyzed. Use the same syntax as for the run numbers. (optional) -->
       <EventNumbers></EventNumbers>
+      <!-- Analyze every N-th events (optional) -->
+      <EventStep>1</EventStep>
       <!-- The input file names containing the runs, which have to be analyzed. If no input file is specified the DAQ systems will work with a run number based file IO. All files must be specified in the 'MainConfiguration' even if they are overriden by a 'RunConfiguration'. (optional) -->
       <InputFileNames></InputFileNames>
     </Offline>
@@ -38,6 +40,8 @@
       <AnalyzerName>Analyzer</AnalyzerName>
       <!-- The name of the memory buffer to be accessed. (optional) -->
       <MemoryBuffer>SYSTEM</MemoryBuffer>
+      <!-- When this is true ODB settings are used instead of config XML -->
+      <ReadConfigFromODB>false</ReadConfigFromODB>
     </Online>
 
     <Paths>
@@ -155,6 +159,42 @@
             <Read>true</Read>
           </Branch>
         </Tree>
+
+        <Tree>
+          <TreeName>scl</TreeName>
+          <!-- Trees can be read into the framework to start the analysis from a previously saved state. Default is false. -->
+          <Read>false</Read>
+          <!-- Trees are written to disc. Default is false. -->
+          <Write>true</Write>
+          <!-- Trees are filled. It will be changed to true when 'Write' is true. Default is false. -->
+          <Fill>true</Fill>
+          <!-- Compression level for all branches of the tree. Default is 1. -->
+          <CompressionLevel>1</CompressionLevel>
+          <!-- Compression algorithm for the output file. ZLIB or LZMA is valid. Default is ZLIB. -->
+          <CompressionAlgorithm>ZLIB</CompressionAlgorithm>
+          <!-- Number of bytes for auto saving. Auto saving is disabled when this is 0. Saving one tree triggers saving all trees to keep consistency of output files. Default is 100000000 for ROOT<v5.26 and 300000000 for ROOT>=v5.26. -->
+          <AutoSaveSize>300000000</AutoSaveSize>
+          <!-- Number of bytes for auto flushing. This is used as the argument of TTree::SetAutoFlush(). Flushing is done independent of other trees. Default is -30000000 (about 30 MB). Available from ROOT 5.26 -->
+          <AutoFlushSize>-30000000</AutoFlushSize>
+          <!-- Set size of the file cache for reading. This is used as the argument of TTree::SetCacheSize(). Default for ROOT>=v5.26 is -1, and that for ROOT<v5.26 is 10000000. -->
+          <CacheSize>-1</CacheSize>
+          <!-- If this value is greater than 0 the tree is a circular tree with the specified size. Default is 0. -->
+          <MaxNumberOfEntries>0</MaxNumberOfEntries>
+          <!-- The name of the trees input file. This value overwrites the value specified in the definition file. (optional) -->
+          <TreeInputFileName></TreeInputFileName>
+          <!-- The name of the trees output file. This value overwrites the value specified in the definition file. (optional) -->
+          <TreeOutputFileName></TreeOutputFileName>
+          <!-- If this is true, content of configuration XML file will be saved in the output file. Default is false -->
+          <SaveConfiguration>false</SaveConfiguration>
+          <Branch>
+            <!-- Description of a branch. -->
+            <BranchName>scaler</BranchName>
+            <!-- Inactive branches are not filled by the framework. (optional) -->
+            <Active>true</Active>
+            <!-- Inactive branches are not read in ROME DAQ mode. This can be true even when Active is false. (optional) -->
+            <Read>true</Read>
+          </Branch>
+        </Tree>
       </Trees>
 
       <GlobalSteeringParameters>
@@ -226,6 +266,12 @@
         </Task>
 
         <Task>
+          <TaskName>ReadScaler</TaskName>
+          <!-- Inactive tasks are not executed by the framework. Default is true. -->
+          <Active>true</Active>
+        </Task>
+
+        <Task>
           <TaskName>FillHistogram</TaskName>
           <!-- Inactive tasks are not executed by the framework. Default is true. -->
           <Active>true</Active>
@@ -285,6 +331,12 @@
           <ScreenShotFileName></ScreenShotFileName>
           <!-- When this is set, a new window is created for the tab. -->
           <NewWindow>false</NewWindow>
+          <!-- Stat box is drawn when this is true. -->
+          <DrawStat>true</DrawStat>
+          <!-- Stat box width. -->
+          <StatW>0.100000</StatW>
+          <!-- Font size in stat box. -->
+          <StatFontSize>0.000000</StatFontSize>
           <!-- The initial number of pads in horizontal direction. This tag is only used for tabs with display objects. -->
           <NumberOfPadsX>2</NumberOfPadsX>
           <!-- The initial number of pads in vertical direction. This tag is only used for tabs with display objects. -->
