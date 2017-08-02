@@ -1616,7 +1616,7 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       // this can be removed after ROOT group fix the problem related to
       // __builtin_va_list in _types.h
       // (this might cause side effect)
-      arguments.AppendFormatted(" -D__builtin_va_list=va_list");
+      // arguments.AppendFormatted(" -D__builtin_va_list=va_list");
 #endif
       buffer.Append(arguments.Data());
 #if defined( R__UNIX )
