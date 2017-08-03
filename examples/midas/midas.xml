@@ -67,6 +67,7 @@
 	<Tasks>
 		<Task>
 			<TaskName>PrintValues</TaskName>
+			<TaskEventId>1</TaskEventId>
 			<SteeringParameters>
 				<SteeringParameterField>
 					<SPFieldName>TaskTestValue</SPFieldName>
@@ -81,6 +82,7 @@
 		</Task>
 		<Task>
 			<TaskName>FillHistogram</TaskName>
+			<TaskEventId>1</TaskEventId>
 			<Histogram>
 				<HistName>ADC</HistName>
 				<HistFolderName>adc</HistFolderName>
