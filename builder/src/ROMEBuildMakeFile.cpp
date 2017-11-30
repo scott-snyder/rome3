@@ -1345,7 +1345,7 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
    buffer.AppendFormatted("SOFLAGS   := $(ossoflags)\n");
    buffer.AppendFormatted("\n");
    buffer.AppendFormatted("## Object specific comiple options\n");
-   buffer.AppendFormatted("NOOPT                     %s -O0\n",kEqualSign);
+   buffer.AppendFormatted("NOOPT                     %s -O0 -U_FORTIFY_SOURCE\n",kEqualSign);
    buffer.AppendFormatted("NOWFMTNLIT                %s -Wno-format-nonliteral -Wno-format-security\n",kEqualSign);
    Int_t n;
    // equal signs below should be '=' to allow change in Makefile.usr
@@ -1616,7 +1616,7 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
       // this can be removed after ROOT group fix the problem related to
       // __builtin_va_list in _types.h
       // (this might cause side effect)
-      arguments.AppendFormatted(" -D__builtin_va_list=va_list");
+      // arguments.AppendFormatted(" -D__builtin_va_list=va_list");
 #endif
       buffer.Append(arguments.Data());
 #if defined( R__UNIX )

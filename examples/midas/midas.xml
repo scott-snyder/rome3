@@ -21,6 +21,15 @@
 			</Field>
 		</Folder>
 		<Folder>
+			<FolderName>Scaler</FolderName>
+			<Field>
+				<FieldName>count</FieldName>
+				<FieldType>Int_t</FieldType>
+				<ArraySize>vector</ArraySize>
+				<FieldComment>Scaler count</FieldComment>
+			</Field>
+		</Folder>
+		<Folder>
 			<FolderName>ODB</FolderName>
 			<DataBaseAccess>true</DataBaseAccess>
 			<Field>
@@ -47,10 +56,18 @@
 				<RelatedFolder>Data</RelatedFolder>
 			</Branch>
 		</Tree>
+		<Tree>
+			<TreeName>scl</TreeName>
+			<Branch>
+				<BranchName>scaler</BranchName>
+				<RelatedFolder>Scaler</RelatedFolder>
+			</Branch>
+		</Tree>
 	</Trees>
 	<Tasks>
 		<Task>
 			<TaskName>PrintValues</TaskName>
+			<TaskEventId>1</TaskEventId>
 			<SteeringParameters>
 				<SteeringParameterField>
 					<SPFieldName>TaskTestValue</SPFieldName>
@@ -60,7 +77,12 @@
 			</SteeringParameters>
 		</Task>
 		<Task>
+			<TaskName>ReadScaler</TaskName>
+			<TaskEventId>2</TaskEventId>
+		</Task>
+		<Task>
 			<TaskName>FillHistogram</TaskName>
+			<TaskEventId>1</TaskEventId>
 			<Histogram>
 				<HistName>ADC</HistName>
 				<HistFolderName>adc</HistFolderName>

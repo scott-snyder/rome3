@@ -78,7 +78,7 @@ Bool_t ROMERomeDAQ::Init()
          fRootFiles = new TObjArray(nInputFile);
          for (i = 0; i < nInputFile; i++) {
             gROME->ConstructFilePath(gROME->GetRawInputDirString(), gROME->GetInputFileNameAt(i), filename);
-            fRootFiles->AddAt(new TFile (filename.Data(), "READ"), i);
+            fRootFiles->AddAt(TFile::Open(filename.Data(), "READ"), i);
             gROOT->cd();
             if (static_cast<TFile*>(fRootFiles->At(i))->IsZombie()) {
                ROMEPrint::Warning("Inputfile '%s' not found.\n", filename.Data());
@@ -160,7 +160,7 @@ Bool_t ROMERomeDAQ::BeginOfRun()
                   gROME->ConstructFilePath(gROME->GetRawInputDirString(), tmpfilename, filename);
                }
                gSystem->ExpandPathName(filename);
-               fRootFiles->AddAt(new TFile (filename.Data(), "READ"), j);
+               fRootFiles->AddAt(TFile::Open(filename.Data(), "READ"), j);
                if (static_cast<TFile*>(fRootFiles->At(j))->IsZombie()) {
                   ROMEPrint::Warning("Inputfile '%s' not found.\n", filename.Data());
                   return false;
