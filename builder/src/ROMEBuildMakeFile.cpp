@@ -1345,7 +1345,7 @@ void ROMEBuilder::WriteMakefileLibsAndFlags(ROMEString& buffer)
    buffer.AppendFormatted("SOFLAGS   := $(ossoflags)\n");
    buffer.AppendFormatted("\n");
    buffer.AppendFormatted("## Object specific comiple options\n");
-   buffer.AppendFormatted("NOOPT                     %s -O0\n",kEqualSign);
+   buffer.AppendFormatted("NOOPT                     %s -O0 -U_FORTIFY_SOURCE\n",kEqualSign);
    buffer.AppendFormatted("NOWFMTNLIT                %s -Wno-format-nonliteral -Wno-format-security\n",kEqualSign);
    Int_t n;
    // equal signs below should be '=' to allow change in Makefile.usr
