@@ -3579,7 +3579,7 @@ Bool_t ROMEBuilder::WriteSteeringClass(ROMEString &buffer,Int_t numSteer,Int_t n
          buffer.AppendFormatted("%s   delete f%s;\n",blank.Data(),
                                 steerName[numTask][steerChildren[numTask][numSteer][i]].Data());
       } else {
-         buffer.AppendFormatted("%s    for (i = 0; i < %s; i++) delete f%s[i]; delete [] f%s;\n",blank.Data(),
+         buffer.AppendFormatted("%s    for (i = 0; i < %s; i++) {delete f%s[i];} delete [] f%s;\n",blank.Data(),
                                 steerArraySize[numTask][steerChildren[numTask][numSteer][i]].Data(),
                                 steerName[numTask][steerChildren[numTask][numSteer][i]].Data(),
                                 steerName[numTask][steerChildren[numTask][numSteer][i]].Data());
