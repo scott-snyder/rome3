@@ -919,7 +919,8 @@ void ROMEBuilder::AddDAQLibraries()
       daqLibraries->AddFormatted("-L$(MIDASSYS)/darwin/lib -lmidas");
 #elif defined( R__LINUX )
    if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/linux/lib -lmidas -lrt");
+     daqLibraries->AddFormatted("-L$(MIDASSYS)/lib -lmidas -lrt"); // for MIDAS from midas-2019-06
+      // daqLibraries->AddFormatted("-L$(MIDASSYS)/linux/lib -lmidas -lrt"); // for MIDAS up to midas-2019-03
 #elif defined( R__SOLARIS )
    if (this->midas)
       daqLibraries->AddFormatted("-L$(MIDASSYS)/solaris/lib -lmidas -lrt");
