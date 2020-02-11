@@ -1623,7 +1623,11 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
 
       // Command
       WriteRootCintCall(buffer);
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,19,0))
       arguments.SetFormatted(" -f dict/%s%d.cpp -c -p",dictionaryName, iFile);
+#else
+      arguments.SetFormatted(" -f dict/%s%d.cpp ",dictionaryName, iFile);
+#endif
       for (i = 0; i < affiliations.GetEntriesFast(); i++) {
          arguments.AppendFormatted(" -DHAVE_%s", static_cast<ROMEString>(affiliations.At(i)).ToUpper(tmp));
       }
@@ -1821,7 +1825,11 @@ void ROMEBuilder::WriteMakefileUserDictionary(ROMEString& buffer)
 #   endif
 #endif
    WriteRootCintCall(buffer);
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,19,0))
    arguments.SetFormatted(" -f dict/%sUserDict.cpp -c -p",shortCut.Data());
+#else
+   arguments.SetFormatted(" -f dict/%sUserDict.cpp ",shortCut.Data());
+#endif
    for (i = 0; i < affiliations.GetEntriesFast(); i++) {
       arguments.AppendFormatted(" -DHAVE_%s", static_cast<ROMEString>(affiliations.At(i)).ToUpper(tmp));
    }
