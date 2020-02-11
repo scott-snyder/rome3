@@ -896,7 +896,7 @@ Bool_t ROMEEventLoop::DAQEvent()
       return false;
    }
    if ((gROME->IsStandAloneROME() || gROME->IsROMEAndARGUS()) &&
-       gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != 1) {
+       gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != kTriggerEventID) {
       // event number is not incremented when non-trigger events.
       fCurrentEvent--;
       gROME->DecrementEventStepCounter();
