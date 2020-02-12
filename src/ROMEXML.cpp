@@ -385,9 +385,10 @@ Bool_t ROMEXML::HasPathChildren(const char* path) const
 //______________________________________________________________________________
 Bool_t ROMEXML::WritePathFile(const char* file)
 {
-   mxml_write_tree(const_cast<char*>(file), fRootNode);
-   fFullFileName = file;
-   fFileName = file;
+   mxml_write_tree(file, fRootNode);
+   ROMEString fullFileName = file;
+   fFullFileName = fullFileName;
+   fFileName = fullFileName;
    fFileName.ReplaceAll('\\', '/');
    if (fFileName.Last('/') == -1) {
       fPath = "";

@@ -724,7 +724,7 @@ Bool_t ROMEEventLoop::DAQInit()
 }
 
 //______________________________________________________________________________
-Bool_t ROMEEventLoop::DAQBeginOfRun(Long64_t eventLoopIndex)
+Bool_t ROMEEventLoop::DAQBeginOfRun(Long64_t /*eventLoopIndex*/)
 {
    // Connect the Analyzer to the current run. Called before the BeginOfRun tasks.
    ROMEPrint::Debug("Executing DAQ BeginOfRun\n");
@@ -778,9 +778,9 @@ Bool_t ROMEEventLoop::DAQBeginOfRun(Long64_t eventLoopIndex)
       ROMEPrint::Error("\nError while reading the data base !\n");
       return false;
    }
-   if (eventLoopIndex==0) {
-      this->InitArrayFolders();
-   }
+   // if (eventLoopIndex==0) {
+   this->InitArrayFolders(); // Set array size at BOR of every run
+   // }
    if (!gROME->ReadArrayDataBaseFolders()) {
       ROMEPrint::Error("\nError while reading the data base !\n");
       return false;
@@ -896,7 +896,7 @@ Bool_t ROMEEventLoop::DAQEvent()
       return false;
    }
    if ((gROME->IsStandAloneROME() || gROME->IsROMEAndARGUS()) &&
-       gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != 1) {
+       gROME->isOffline() && gROME->IsActiveDAQ("midas") && gROME->GetEventID() != kTriggerEventID) {
       // event number is not incremented when non-trigger events.
       fCurrentEvent--;
       gROME->DecrementEventStepCounter();

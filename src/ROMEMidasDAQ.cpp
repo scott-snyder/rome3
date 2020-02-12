@@ -1226,6 +1226,7 @@ Bool_t ROMEMidasDAQ::ConnectExperiment(ROMEMidasDAQ *localThis)
       return kFALSE;
    }
 
+   cm_start_watchdog_thread();
    ss_ctrlc_handler(ROMERint::InterruptHandlerInt);
 
    INT requestId;

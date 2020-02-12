@@ -14,7 +14,7 @@
 #if defined( R__VISUAL_CPLUSPLUS )
 #pragma warning( pop )
 #endif // R__VISUAL_CPLUSPLUS
-
+#include <sys/stat.h>
 #include <Riostream.h>
 #include "ROMEBuilder.h"
 
@@ -900,34 +900,50 @@ void ROMEBuilder::AddMysqlLibraries()
 void ROMEBuilder::AddDAQLibraries()
 {
    daqLibraries = new ROMEStrArray(2);
+   struct stat statBuf;
+
 #if defined( R__VISUAL_CPLUSPLUS )
    if (this->midas)
       daqLibraries->AddFormatted("$(ROMESYS)\\lib_win\\midas.lib");
 #endif
+
 #if defined( R__UNIX )
-#if defined( R__ALPHA )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/osf1/lib -lmidas -lrt");
-#elif defined( R__SGI )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/ultrix/lib -lmidas -lrt");
-#elif defined( R__FBSD )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/freeBSD/lib -lmidas -lrt");
-#elif defined( R__MACOSX )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/darwin/lib -lmidas");
-#elif defined( R__LINUX )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/linux/lib -lmidas -lrt");
-#elif defined( R__SOLARIS )
-   if (this->midas)
-      daqLibraries->AddFormatted("-L$(MIDASSYS)/solaris/lib -lmidas -lrt");
-#else
    if (this->midas) {
-      daqLibraries->AddFormatted("-lmidas -lrt");
-   }
+      TString libpath = "$(MIDASSYS)/lib";
+      if (stat(gSystem->ExpandPathName(libpath.Data()), &statBuf) == 0) {
+         // for MIDAS from midas-2019-06
+#if defined( R__ALPHA ) || defined( R__SGI ) || defined( R__FBSD ) || defined( R__LINUX ) || defined( R__SOLARIS )
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#else
+         daqLibraries->AddFormatted("-L%s -lmidas", libpath.Data());
 #endif
+      } else {
+         // for MIDAS up to midas-2019-03
+#if defined( R__ALPHA )
+         libpath = "$(MIDASSYS)/osf1/lib";
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#elif defined( R__SGI )
+         libpath = "$(MIDASSYS)/ultrix/lib";
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#elif defined( R__FBSD )
+         libpath = "$(MIDASSYS)/freeBSD/lib";
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#elif defined( R__MACOSX )
+         libpath = "$(MIDASSYS)/darwin/lib";
+         daqLibraries->AddFormatted("-L%s -lmidas", libpath.Data());
+#elif defined( R__LINUX )
+         libpath = "$(MIDASSYS)/linux/lib"; 
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#elif defined( R__SOLARIS )
+         libpath = "$(MIDASSYS)/solaris/lib";
+         daqLibraries->AddFormatted("-L%s -lmidas -lrt", libpath.Data());
+#else
+         libpath = "";
+         daqLibraries->AddFormatted("-L%s -lmidas", libpath.Data());
+#endif
+      }
+   }
+
    if (this->xz) {
       daqLibraries->AddFormatted("-llzma");
    }
@@ -1607,7 +1623,11 @@ void ROMEBuilder::WriteMakefileDictionary(ROMEString& buffer,const char* diction
 
       // Command
       WriteRootCintCall(buffer);
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,19,0))
       arguments.SetFormatted(" -f dict/%s%d.cpp -c -p",dictionaryName, iFile);
+#else
+      arguments.SetFormatted(" -f dict/%s%d.cpp ",dictionaryName, iFile);
+#endif
       for (i = 0; i < affiliations.GetEntriesFast(); i++) {
          arguments.AppendFormatted(" -DHAVE_%s", static_cast<ROMEString>(affiliations.At(i)).ToUpper(tmp));
       }
@@ -1805,7 +1825,11 @@ void ROMEBuilder::WriteMakefileUserDictionary(ROMEString& buffer)
 #   endif
 #endif
    WriteRootCintCall(buffer);
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,19,0))
    arguments.SetFormatted(" -f dict/%sUserDict.cpp -c -p",shortCut.Data());
+#else
+   arguments.SetFormatted(" -f dict/%sUserDict.cpp ",shortCut.Data());
+#endif
    for (i = 0; i < affiliations.GetEntriesFast(); i++) {
       arguments.AppendFormatted(" -DHAVE_%s", static_cast<ROMEString>(affiliations.At(i)).ToUpper(tmp));
    }
