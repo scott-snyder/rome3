@@ -69,7 +69,8 @@ ROOTCONFIG := root-config
 ROOTCINT   := rootcint
 endif
 
-INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+#INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ -I$(shell $(ROOTCONFIG) --incdir)
 
 LIBRARY := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread
 TARGET :=  obj bin include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
@@ -128,7 +129,7 @@ ifeq ($(ROMEPROFILE), yes)
 endif
 
 CFLAGS += $(ROMECFLAGS) $(OSCFLAGS)
-CXXFLAGS += $(ROMECXXFLAGS) $(OSCXXFLAGS)
+CXXFLAGS += $(ROMECXXFLAGS) $(OSCXXFLAGS) $(shell $(ROOTCONFIG) --cflags)
 LDFLAGS += $(ROMELDFLAGS) $(OSLDFLAGS)
 
 # -Wno-unused-but-set is available from GCC 4.5.3
@@ -367,19 +368,19 @@ dict: $(DICTIONARIES)
 
 bin/romebuilder.exe: builder/src/main.cpp include/ROMEVersion.h $(BldObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) $(ROMEBLD_FLAGS) $(INCLUDE) -o $@ $< $(BldObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) $(ROMEBLD_FLAGS) $(INCLUDE) -o $@ $< $(BldObjects) $(LIBRARY)
 
 bin/updateVersionH.exe: tools/UpdateVersionH/main.cpp  $(UpHObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) $(INCLUDE) -g -o $@ $< $(UpHObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) $(INCLUDE) -g -o $@ $< $(UpHObjects) $(LIBRARY)
 
 bin/rome-config: tools/rome-config/main.cpp include/ROMEVersion.h
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(LIBRARY)
 
 bin/hadd: tools/hadd/hadd.cxx $(HAddObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(HAddObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(HAddObjects) $(LIBRARY)
 
 include/ROMEVersion.h: bin/updateVersionH.exe
 	$(call romeechoing, "creating  $@")
