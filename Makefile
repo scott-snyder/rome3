@@ -110,8 +110,10 @@ endif
 
 ifeq ($(shell expr $(ROOT_MAJOR) \< 6), 1)
   DICT_HEADER_SUF := .h
+  CINTFLAGS += -c -p
 else
   DICT_HEADER_SUF := _rdict.pcm
+  CINTFLAGS +=
 endif
 
 # reset when ROMEDEBUG, ROMEOPTIMIZE or ROMEPROFILE are yes
@@ -400,19 +402,19 @@ endif
 
 bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp: $(LibDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp $(INCLUDER) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
 
 bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp  $(INCLUDER) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
 
 bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp $(INCLUDER) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
 
 bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(INCLUDER) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.c include/mxml.h
 	$(call romeechoing, "compiling $@")
