@@ -1214,10 +1214,12 @@ Bool_t ROMEBuilder::AddConfigParameters()
             subSubSubGroup->GetLastParameter()->AddSetLine("   }");
             subSubSubGroup->GetLastParameter()->AddSetLine("}");
             subSubSubGroup->GetLastParameter()->AddWriteLine("if (!gAnalyzer->IsROMEMonitor()) {");
-            subSubSubGroup->GetLastParameter()->AddWriteLine("   if (gAnalyzer->GetTreeObjectAt(%d)->GetCompressionAlgorithm() == ROOT::kZSTD) {", i);
-            subSubSubGroup->GetLastParameter()->AddWriteLine("      writeString = \"ZSTD\";");
-            subSubSubGroup->GetLastParameter()->AddWriteLine("   } else if (gAnalyzer->GetTreeObjectAt(%d)->GetCompressionAlgorithm() == ROOT::kLZMA) {", i);
+            subSubSubGroup->GetLastParameter()->AddWriteLine("   if (gAnalyzer->GetTreeObjectAt(%d)->GetCompressionAlgorithm() == ROOT::kLZMA) {", i);
             subSubSubGroup->GetLastParameter()->AddWriteLine("      writeString = \"LZMA\";");
+#   if (ROOT_VERSION_CODE >= ROOT_VERSION(6,19,0))            
+            subSubSubGroup->GetLastParameter()->AddWriteLine("   } else if (gAnalyzer->GetTreeObjectAt(%d)->GetCompressionAlgorithm() == ROOT::kZSTD) {", i);
+            subSubSubGroup->GetLastParameter()->AddWriteLine("      writeString = \"ZSTD\";");
+#   endif
             subSubSubGroup->GetLastParameter()->AddWriteLine("   } else {");
             subSubSubGroup->GetLastParameter()->AddWriteLine("      writeString = \"ZLIB\";");
             subSubSubGroup->GetLastParameter()->AddWriteLine("   }");
