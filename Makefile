@@ -403,19 +403,19 @@ endif
 
 bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp: $(LibDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp $(INCLUDER) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp $(CINTFLAGS) $(INCLUDER) $(LibDictHeaders) include/ROMELibLinkDef.h
 
 bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp  $(INCLUDER) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp  $(CINTFLAGS) $(INCLUDER) $(BldDictHeaders) include/ROMEBuildLinkDef.h
 
 bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp $(INCLUDER) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp $(CINTFLAGS) $(INCLUDER) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
 
 bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(INCLUDER) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(CINTFLAGS) $(INCLUDER) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.c include/mxml.h
 	$(call romeechoing, "compiling $@")
