@@ -69,7 +69,8 @@ ROOTCONFIG := root-config
 ROOTCINT   := rootcint
 endif
 
-INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+#INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ $(shell $(ROOTCONFIG) --cflags)
+INCLUDE  := -I./ -Iinclude/ -Iargus/include/ -Ibuilder/include/ -I$(shell $(ROOTCONFIG) --incdir)
 
 LIBRARY := $(shell $(ROOTCONFIG) --glibs) -lHtml -lThread
 TARGET :=  obj bin include/ROMEVersion.h bin/romebuilder.exe bin/rome-config bin/hadd
@@ -110,8 +111,10 @@ endif
 
 ifeq ($(shell expr $(ROOT_MAJOR) \< 6), 1)
   DICT_HEADER_SUF := .h
+  CINTFLAGS += -c -p
 else
   DICT_HEADER_SUF := _rdict.pcm
+  CINTFLAGS +=
 endif
 
 # reset when ROMEDEBUG, ROMEOPTIMIZE or ROMEPROFILE are yes
@@ -126,7 +129,7 @@ ifeq ($(ROMEPROFILE), yes)
 endif
 
 CFLAGS += $(ROMECFLAGS) $(OSCFLAGS)
-CXXFLAGS += $(ROMECXXFLAGS) $(OSCXXFLAGS)
+CXXFLAGS += $(ROMECXXFLAGS) $(OSCXXFLAGS) $(shell $(ROOTCONFIG) --cflags)
 LDFLAGS += $(ROMELDFLAGS) $(OSLDFLAGS)
 
 # -Wno-unused-but-set is available from GCC 4.5.3
@@ -365,19 +368,19 @@ dict: $(DICTIONARIES)
 
 bin/romebuilder.exe: builder/src/main.cpp include/ROMEVersion.h $(BldObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) $(ROMEBLD_FLAGS) $(INCLUDE) -o $@ $< $(BldObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) $(ROMEBLD_FLAGS) $(INCLUDE) -o $@ $< $(BldObjects) $(LIBRARY)
 
 bin/updateVersionH.exe: tools/UpdateVersionH/main.cpp  $(UpHObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) $(INCLUDE) -g -o $@ $< $(UpHObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) $(INCLUDE) -g -o $@ $< $(UpHObjects) $(LIBRARY)
 
 bin/rome-config: tools/rome-config/main.cpp include/ROMEVersion.h
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(LIBRARY)
 
 bin/hadd: tools/hadd/hadd.cxx $(HAddObjects)
 	$(call romeechoing, "linking   $@")
-	$(Q)$(CXXLD) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(HAddObjects) $(LIBRARY)
+	$(Q)$(CXXLD) $(CXXFLAGS) $(LDFLAGS) -W -Wall $(INCLUDE) -o $@ $< $(HAddObjects) $(LIBRARY)
 
 include/ROMEVersion.h: bin/updateVersionH.exe
 	$(call romeechoing, "creating  $@")
@@ -400,19 +403,19 @@ endif
 
 bin/ROMELibDict$(DICT_HEADER_SUF) bin/ROMELibDict.cpp: $(LibDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(LibDictHeaders) include/ROMELibLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMELibDict.cpp $(CINTFLAGS) $(INCLUDER) $(LibDictHeaders) include/ROMELibLinkDef.h
 
 bin/ROMEBuilderDict$(DICT_HEADER_SUF) bin/ROMEBuilderDict.cpp: $(BldDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(BldDictHeaders) include/ROMEBuildLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/ROMEBuilderDict.cpp  $(CINTFLAGS) $(INCLUDER) $(BldDictHeaders) include/ROMEBuildLinkDef.h
 
 bin/UpdateVersionHDict$(DICT_HEADER_SUF) bin/UpdateVersionHDict.cpp: $(UpHDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/UpdateVersionHDict.cpp $(CINTFLAGS) $(INCLUDER) $(UpHDictHeaders) include/UpdateVersionHLinkDef.h
 
 bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
-	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp -c -p $(INCLUDER) $(CINTFLAGS) $(HAddDictHeaders) include/HAddLinkDef.h
+	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(CINTFLAGS) $(INCLUDER) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.c include/mxml.h
 	$(call romeechoing, "compiling $@")
