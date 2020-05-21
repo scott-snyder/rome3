@@ -2054,6 +2054,7 @@ void ROMEBuilder::setValue(ROMEString* buf,const char *destination,const char *s
    } else if (
          typeStr == "float" ||
          typeStr == "Float_t" ||
+         typeStr == "Float16_t" ||
 
          typeStr == "double" ||
          typeStr == "Double_t" ||
@@ -2120,7 +2121,7 @@ Bool_t ROMEBuilder::isNumber(const char* str)
 {
    ROMEString typeStr = str;
    typeStr.StripSpaces();
-   if (typeStr != "float"          && typeStr != "Float_t"            &&
+   if (typeStr != "float"          && typeStr != "Float_t"            && typeStr != "Float16_t" &&
        typeStr != "double"         && typeStr != "Double_t"           && typeStr != "Double32_t" &&
        typeStr != "char"           && typeStr != "Char_t"             &&
        typeStr != "unsigned char"  && typeStr != "UChar_t"            &&
@@ -2148,6 +2149,7 @@ Bool_t ROMEBuilder::isFloatingType(const char *type)
    if (
          typeStr == "float" ||
          typeStr == "Float_t" ||
+         typeStr == "Float16_t" ||
 
          typeStr == "double" ||
          typeStr == "Double_t" ||
