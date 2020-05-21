@@ -12,7 +12,7 @@
 
   MIDAS XML Library is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
+  the Free Software Foundation, either version 2 of the License, or
   (at your option) any later version.
 
   MIDAS XML Library is distributed in the hope that it will be useful,
@@ -36,7 +36,6 @@
 */
 #ifndef STRLCPY_DEFINED
 
-#ifndef strlcpy
 size_t strlcpy(char *dst, const char *src, size_t size)
 {
    char *d = dst;
@@ -60,7 +59,6 @@ size_t strlcpy(char *dst, const char *src, size_t size)
 
    return (s - src - 1);        /* count does not include NUL */
 }
-#endif
 
 /*-------------------------------------------------------------------*/
 
@@ -71,8 +69,6 @@ size_t strlcpy(char *dst, const char *src, size_t size)
 * Returns strlen(src) + MIN(size, strlen(initial dst)).
 * If retval >= size, truncation occurred.
 */
-
-#ifndef strlcat
 size_t strlcat(char *dst, const char *src, size_t size)
 {
    char *d = dst;
@@ -101,6 +97,5 @@ size_t strlcat(char *dst, const char *src, size_t size)
 }
 
 /*-------------------------------------------------------------------*/
-#endif
 
 #endif // STRLCPY_DEFINED

@@ -10,7 +10,7 @@
 
    MIDAS XML Library is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
+   the Free Software Foundation, either version 2 of the License, or
    (at your option) any later version.
 
    MIDAS XML Library is distributed in the hope that it will be useful,
@@ -78,11 +78,6 @@ typedef struct mxml_struct {
 
 /*------------------------------------------------------------------*/
 
-/* make functions callable from a C++ program */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef EXPRT
 #if defined(EXPORT_DLL)
 #define EXPRT __declspec(dllexport)
@@ -147,10 +142,6 @@ void mxml_free_tree(PMXML_NODE tree);
 
 void mxml_dirname(char* path);
 void mxml_basename(char *path);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _MXML_H_ */
 /*------------------------------------------------------------------*/
