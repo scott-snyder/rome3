@@ -417,13 +417,13 @@ bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(call romeechoing, "creating  $@")
 	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(CINTFLAGS) $(INCLUDER) $(HAddDictHeaders) include/HAddLinkDef.h
 
-obj/mxml.o: src/mxml.c include/mxml.h
+obj/mxml.o: src/mxml.cxx include/mxml.h
 	$(call romeechoing, "compiling $@")
-	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
+	$(Q)$(CXX) $(CXXFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
-obj/strlcpy.o: src/strlcpy.c include/strlcpy.h
+obj/strlcpy.o: src/strlcpy.cxx include/strlcpy.h
 	$(call romeechoing, "compiling $@")
-	$(Q)$(CC) $(CFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
+	$(Q)$(CXX) $(CXXFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
 obj/TArrayL64.o: src/TArrayL64.cpp include/array64/TArrayL64.h
 	$(call romeechoing, "compiling $@")
