@@ -2285,7 +2285,11 @@ Bool_t ROMEBuilder::WriteFolderH()
       }
       buffer.AppendFormatted("};\n\n");
 #if 0
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,00,0))
       buffer.AppendFormatted("#if !defined(__CINT__)\n");
+#else
+      buffer.AppendFormatted("#if !defined(__CLING__) || defined(__ROOTCLING__)\n");
+#endif
       if (folderUserCode[iFold]) {
          buffer.AppendFormatted("ClassImp(%s%s_Base)\n",shortCut.Data(),folderName[iFold].Data());
       } else {
@@ -13855,7 +13859,11 @@ Bool_t ROMEBuilder::WriteReadTreesC()
    }
 
    // Folder includes
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,00,0))
    buffer.AppendFormatted("#if !defined(__CINT__)\n");
+#else
+   buffer.AppendFormatted("#if !defined(__CLING__) || defined(__ROOTCLING__)\n");
+#endif
    buffer.AppendFormatted("#   include \"include/generated/%sAllFolders.h\"\n",shortCut.Data());
    buffer.AppendFormatted("#endif\n");
    buffer.AppendFormatted("\n");
@@ -14205,7 +14213,11 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
 #endif // R__VISUAL_CPLUSPLUS
 
       // Folder includes
+#if (ROOT_VERSION_CODE < ROOT_VERSION(6,00,0))
       buffer.AppendFormatted("#if !defined(__CINT__)\n");
+#else
+      buffer.AppendFormatted("#if !defined(__CLING__) || defined(__ROOTCLING__)\n");
+#endif
       buffer.AppendFormatted("#   include <ROMEString.h>\n");
       buffer.AppendFormatted("#   include <ROMETreeInfo.h>\n");
       buffer.AppendFormatted("#   include \"include/generated/%sAllFolders.h\"\n",shortCut.Data());
