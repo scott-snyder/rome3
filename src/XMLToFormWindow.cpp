@@ -25,6 +25,7 @@
 #include <TGListView.h>
 #include <TGComboBox.h>
 #include <TGCanvas.h>
+#include <TVirtualX.h>
 #include "ROMEiostream.h"
 #if defined( R__VISUAL_CPLUSPLUS )
 #pragma warning( pop )
