@@ -15,6 +15,7 @@
 #endif // R__VISUAL_CPLUSPLUS
 #include <TSystem.h>
 #include <TROOT.h>
+#include <TVirtualX.h>
 #if defined( R__VISUAL_CPLUSPLUS )
 #pragma warning( pop )
 #endif // R__VISUAL_CPLUSPLUS
