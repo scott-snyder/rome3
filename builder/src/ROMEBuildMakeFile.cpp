@@ -299,7 +299,7 @@ void ROMEBuilder::AddRomeSources()
       romeSources->Add("$(ROMESYS)/src/ROMEMidasDAQ.cpp");
    }
    if (librome == kLIBNone) {
-      romeSources->Add("$(ROMESYS)/src/mxml.c");
+      romeSources->Add("$(ROMESYS)/src/mxml.cxx");
       romeSources->Add("$(ROMESYS)/src/ROMEDAQSystem.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMEDataBaseDAQ.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMEGraph.cpp");
