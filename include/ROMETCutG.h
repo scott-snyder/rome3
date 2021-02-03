@@ -18,6 +18,7 @@ public:
    ROMETCutG(Int_t n, const Float_t *x, const Float_t *y):ROMETGraph(n,x,y){}
    ROMETCutG(Int_t n, const Double_t *x, const Double_t *y):ROMETGraph(n,x,y){}
    ROMETCutG(const ROMETGraph &gr):ROMETGraph(gr){}
+   ROMETCutG(const ROMETCutG &gr):ROMETGraph(gr){}
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5,11,4))
    ROMETCutG(const TVectorF &vx, const TVectorF &vy):ROMETGraph(vx,vy){}
 #endif

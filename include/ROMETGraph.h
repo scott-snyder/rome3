@@ -18,6 +18,7 @@ public:
    ROMETGraph(Int_t n, const Float_t *x, const Float_t *y):TGraph(n,x,y){}
    ROMETGraph(Int_t n, const Double_t *x, const Double_t *y):TGraph(n,x,y){}
    ROMETGraph(const TGraph &gr):TGraph(gr){}
+   ROMETGraph(const ROMETGraph &gr):TGraph(gr){}
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5,11,4))
    ROMETGraph(const TVectorF &vx, const TVectorF &vy):TGraph(vx,vy){}
 #endif
