@@ -22,6 +22,7 @@
 #include "ROMEStrArray.h"
 
 using namespace std;
+using namespace ROMEPrint;
 
 Int_t ROMEPrint::gVerboseLevel = kNormal;
 Int_t ROMEPrint::gReportMaxCount = 20;

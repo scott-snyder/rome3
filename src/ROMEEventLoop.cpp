@@ -75,6 +75,7 @@ ClassImp(ROMEEventLoop)
 extern TVirtualMutex *gObjectStorageMutex; // declared in ROMEAnalyzer.cpp
 
 using namespace std;
+using namespace ROMEPrint;
 
 //______________________________________________________________________________
 ROMEEventLoop::ROMEEventLoop(const char *name, const char *title)
