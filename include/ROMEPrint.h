@@ -83,6 +83,6 @@ namespace ROMEPrint
 
 #endif
 
-using namespace ROMEPrint;
+//using namespace ROMEPrint;
 
 #endif   // ROMEPrint_H
