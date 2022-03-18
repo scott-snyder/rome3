@@ -46,7 +46,6 @@ ROMERomeDAQ::ROMERomeDAQ()
 ,fCurrentTreePosition(0)
 ,fTreePositionLookup()
 ,fTreePositionMap()
-,fTreeNEntries(0)
 ,fTimeStamp(0)
 {
 }
@@ -55,7 +54,6 @@ ROMERomeDAQ::ROMERomeDAQ()
 ROMERomeDAQ::~ROMERomeDAQ()
 {
    SafeDelete(fTreeInfo);
-   SafeDeleteArray(fTreeNEntries);
    if (fROMETrees) {
       fROMETrees->Delete();
    }
@@ -97,7 +95,7 @@ Bool_t ROMERomeDAQ::Init()
    fSkipReadTree.Reset();
    fCurrentTreePosition.Set(nTree);
    fCurrentTreePosition.Reset();
-   fTreeNEntries = new Long64_t[nTree];
+   fTreeNEntries.resize(nTree);
 
    fROMETrees = new TObjArray(nTree);
    for (j = 0; j < nTree; j++) {
@@ -125,9 +123,8 @@ Bool_t ROMERomeDAQ::BeginOfRun()
       romeTree->SetName(gROME->GetTreeObjectAt(j)->GetName());
       romeTree->SetCacheSize(gROME->GetTreeObjectAt(j)->GetCacheSize());
       romeTree->AllocateBranchRead(gROME->GetTreeObjectAt(j)->GetNBranchRead());
-      memcpy(romeTree->GetBranchRead(),
-             gROME->GetTreeObjectAt(j)->GetBranchRead(),
-             gROME->GetTreeObjectAt(j)->GetNBranchRead() * sizeof(Bool_t));
+      romeTree->GetBranchRead().assign(gROME->GetTreeObjectAt(j)->GetBranchRead().begin(),
+                                       gROME->GetTreeObjectAt(j)->GetBranchRead().end());
    }
 
    Int_t nKey;
@@ -384,20 +381,22 @@ Bool_t ROMERomeDAQ::BeginOfRun()
       // read ODB (when there are multiple ODB, the first one is actually used)
       const char *odbbuffer = 0;
       TObjString *odbstr    = 0;
-      for (j = 0; j < nTree; j++) {
-         romeTree = static_cast<ROMETree*>(fROMETrees->At(j));
-         if (romeTree->isRead()) {
-            odbstr = static_cast<TObjString*>(romeTree->GetFile()->Get("odb"));
-            if (odbstr) {
-               odbbuffer = odbstr->String().Data();
-               break;
+         for (j = 0; j < nTree; j++) {
+            romeTree = static_cast<ROMETree*>(fROMETrees->At(j));
+            if (romeTree->isRead()) {
+               odbstr = static_cast<TObjString*>(romeTree->GetFile()->Get("odb"));
+               if (odbstr) {
+                  odbbuffer = odbstr->String().Data();
+                  break;
+               }
             }
          }
-      }
-      if (gROME->isDataBaseActive("ODB")) {
-         static_cast<ROMEODBOfflineDataBase*>(gROME->GetDataBase("ODB"))->
-               SetBuffer(odbbuffer);
-      }
+         if (gROME->isDataBaseActive("ODB")) {
+            static_cast<ROMEODBOfflineDataBase*>(gROME->GetDataBase("ODB"))->
+                  SetBuffer(odbbuffer);
+         }
+         SafeDelete(odbstr);
+     
    }
    return true;
 }
@@ -529,6 +528,7 @@ Bool_t ROMERomeDAQ::Terminate()
          }
          SafeDelete(fRootFiles);
       }
+      fTreeNEntries.clear();
    }
    return true;
 }

@@ -33,7 +33,7 @@ protected:
    TArrayL64     fCurrentTreePosition;             //! current tree read positions
    std::vector<std::vector<Long64_t> > fTreePositionLookup; //! Array of lookup table of tree read positions
    std::vector<std::map<std::pair<Long64_t, Long64_t>, Long64_t> > fTreePositionMap; //! Array of lookup table of tree read positions. key:<run,event>, value:position
-   Long64_t*     fTreeNEntries;                    //! Number of entries
+   std::vector<Long64_t> fTreeNEntries;                    //! Number of entries
 
    Int_t         fTimeStamp;                       //! Current time stamp
 
