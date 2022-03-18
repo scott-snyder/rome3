@@ -215,8 +215,7 @@ BldObjects := obj/ROMEBuilder.o \
               obj/ROMEPrint.o \
               obj/ROMEBuilderDict.o \
               obj/ROMEConfigParameter.o \
-              obj/mxml.o \
-              obj/strlcpy.o
+              obj/mxml.o
 
 BldDictHeaders := include/ROMEString.h \
                   include/ROMEStrArray.h \
@@ -232,7 +231,6 @@ UpHObjects := obj/ROMEString.o \
               obj/ROMEXML.o \
               obj/ROMEPrint.o \
               obj/mxml.o \
-              obj/strlcpy.o \
               obj/UpdateVersionHDict.o
 
 UpHDictHeaders := include/ROMEString.h \
@@ -278,8 +276,7 @@ LibObjects := obj/ROMEStr2DArray.o \
               obj/ArgusHistoDisplay.o \
               obj/ArgusTextDialog.o \
               obj/ArgusWindow.o \
-              obj/mxml.o \
-              obj/strlcpy.o
+              obj/mxml.o
 ifeq ($(NEED_TARRAYL64), yes)
 LibObjects += obj/TArrayL64.o
 endif
@@ -418,10 +415,6 @@ bin/HAddDict$(DICT_HEADER_SUF) bin/HAddDict.cpp: $(HAddDictHeaders) Makefile
 	$(Q)$(ROOTCINT) -f bin/HAddDict.cpp $(CINTFLAGS) $(INCLUDER) $(HAddDictHeaders) include/HAddLinkDef.h
 
 obj/mxml.o: src/mxml.cxx include/mxml.h
-	$(call romeechoing, "compiling $@")
-	$(Q)$(CXX) $(CXXFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
-
-obj/strlcpy.o: src/strlcpy.cxx include/strlcpy.h
 	$(call romeechoing, "compiling $@")
 	$(Q)$(CXX) $(CXXFLAGS) $(ROMELIB_FLAGS) $(ROMEPICOPT) $(INCLUDEC) -MMD -MP -MF $(@:.o=.d) -MT $@ -c -o $@ $<
 
