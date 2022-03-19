@@ -379,8 +379,9 @@ Bool_t ROMERomeDAQ::BeginOfRun()
       this->SetAnalyze();
 
       // read ODB (when there are multiple ODB, the first one is actually used)
-      const char *odbbuffer = 0;
-      TObjString *odbstr    = 0;
+      if (gROME->isDataBaseActive("ODB")) {
+         const char *odbbuffer = 0;
+         TObjString *odbstr    = 0;
          for (j = 0; j < nTree; j++) {
             romeTree = static_cast<ROMETree*>(fROMETrees->At(j));
             if (romeTree->isRead()) {
@@ -391,12 +392,10 @@ Bool_t ROMERomeDAQ::BeginOfRun()
                }
             }
          }
-         if (gROME->isDataBaseActive("ODB")) {
-            static_cast<ROMEODBOfflineDataBase*>(gROME->GetDataBase("ODB"))->
-                  SetBuffer(odbbuffer);
-         }
+         static_cast<ROMEODBOfflineDataBase*>(gROME->GetDataBase("ODB"))->
+               SetBuffer(odbbuffer);
          SafeDelete(odbstr);
-     
+      }
    }
    return true;
 }
