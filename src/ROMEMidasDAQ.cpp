@@ -724,26 +724,37 @@ Bool_t ROMEMidasDAQ::ActualReadODBOnline(ROMEStr2DArray *values, const char *dat
          }
          odbPath += "/";
          odbPath += path->GetFieldName();
-         if (db_find_key(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(odbPath.Data()), &hKey) != CM_SUCCESS) {
-            errMsg.SetFormatted("Cannot read online database\n");
-            throw errMsg.Data();
+         Int_t nTrial(0);
+         while (1) {
+            if (db_find_key(gROME->GetMidasOnlineDataBase(), 0, const_cast<char*>(odbPath.Data()), &hKey) != CM_SUCCESS) {
+               nTrial++;
+               if (nTrial < 10) {
+                  gSystem->Sleep(3000);
+               } else {
+                  errMsg.SetFormatted("Cannot read online database 1 %s\n", odbPath.Data());
+                  throw errMsg.Data();
+                  break;
+               }
+            } else {
+               break;
+            }
          }
          if (db_get_key_info(gROME->GetMidasOnlineDataBase(), hKey, name, sizeof(name), &type, &num_values, &item_size) !=
              CM_SUCCESS) {
-            errMsg.SetFormatted("Cannot read online database");
+            errMsg.SetFormatted("Cannot read online database 2 %s",  odbPath.Data());
             throw errMsg.Data();
          }
          if (num_values * item_size > fODBBufferSize) {
             SetODBBufferSize(num_values * item_size);
          }
          if (db_get_data(gROME->GetMidasOnlineDataBase(), hKey, fODBBuffer, &buffersize, type) != CM_SUCCESS) {
-            errMsg.SetFormatted("Cannot read online database");
+            errMsg.SetFormatted("Cannot read online database 3 %s",  odbPath.Data());
             throw errMsg.Data();
          }
          if (path->GetFieldIndexAt(1) == -1) {
             // single field
             if (db_sprintf(value, fODBBuffer, buffersize, 0, type) != CM_SUCCESS) {
-               errMsg.SetFormatted("Cannot read online database");
+               errMsg.SetFormatted("Cannot read online database 4 %s",  odbPath.Data());
                throw errMsg.Data();
             }
             values->SetAt(value, 0, 0);
@@ -752,7 +763,7 @@ Bool_t ROMEMidasDAQ::ActualReadODBOnline(ROMEStr2DArray *values, const char *dat
             iv = 0;
             for (i = path->GetFieldIndexAt(0); i <= path->GetFieldIndexAt(1); i += path->GetFieldIndexAt(2)) {
                if (db_sprintf(value, fODBBuffer, buffersize, i, type) != CM_SUCCESS) {
-                  errMsg.SetFormatted("Cannot read online database");
+                  errMsg.SetFormatted("Cannot read online database 5 %s",  odbPath.Data());
                   throw errMsg.Data();
                }
                values->SetAt(value, iv, 0);
