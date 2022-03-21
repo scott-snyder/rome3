@@ -10586,6 +10586,7 @@ Bool_t ROMEBuilder::WriteRomeDAQCpp()
          buffer.AppendFormatted("            }\n");
       }
       buffer.AppendFormatted("         }\n");
+      buffer.AppendFormatted("         SafeDelete(p);\n"); // this seems needed to avoid memory leak
       buffer.AppendFormatted("         gROOT->cd();\n"); // this is needed for old ROOT(v-4.2.0)
       buffer.AppendFormatted("      }\n");
       buffer.AppendFormatted("   }\n");
