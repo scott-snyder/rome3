@@ -123,8 +123,9 @@ Bool_t ROMERomeDAQ::BeginOfRun()
       romeTree->SetName(gROME->GetTreeObjectAt(j)->GetName());
       romeTree->SetCacheSize(gROME->GetTreeObjectAt(j)->GetCacheSize());
       romeTree->AllocateBranchRead(gROME->GetTreeObjectAt(j)->GetNBranchRead());
-      romeTree->GetBranchRead().assign(gROME->GetTreeObjectAt(j)->GetBranchRead().begin(),
-                                       gROME->GetTreeObjectAt(j)->GetBranchRead().end());
+      memcpy(romeTree->GetBranchRead(),
+             gROME->GetTreeObjectAt(j)->GetBranchRead(),
+             gROME->GetTreeObjectAt(j)->GetNBranchRead() * sizeof(Bool_t));
    }
 
    Int_t nKey;
