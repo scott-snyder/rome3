@@ -36,10 +36,12 @@ typedef int    BOOL;
 typedef UInt_t   DWORD;
 typedef DWORD    BOOL;
 #ifndef TRUE
-   const BOOL TRUE = 1;
+//   const BOOL TRUE = 1;
+#   define TRUE 1;
 #endif
 #ifndef FALSE
-   const BOOL FALSE = 0;
+//   const BOOL FALSE = 0;
+#   define FALSE 0;
 #endif
 #endif
 typedef Int_t    HNDLE;
