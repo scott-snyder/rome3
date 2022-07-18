@@ -44,6 +44,7 @@ ROMEStrArray::~ROMEStrArray()
 //______________________________________________________________________________
 void ROMEStrArray::Delete(Option_t * /*option*/)
 {
+   array->Delete();
    array->RemoveAll();
 }
 
