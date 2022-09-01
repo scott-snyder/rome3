@@ -14260,6 +14260,13 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
                                 branchNameTmp[iTree][iBranch]->Length(), "");
       }
       buffer.AppendFormatted("\n");
+      for (iRunHeader = 0; iRunHeader < numOfRunHeader[iTree]; iRunHeader++) {
+         if (folderUsed[runHeaderFolderIndex[iTree][iRunHeader]]) {
+            buffer.AppendFormatted("const Bool_t kWrite_%s %*s= 0;\n", runHeaderNameTmp[iTree][iRunHeader]->Data(), typeLen -
+                                   runHeaderNameTmp[iTree][iRunHeader]->Length(), "");
+         }
+      }
+      buffer.AppendFormatted("\n");
       buffer.AppendFormatted("// Objects to hold data\n");
       buffer.AppendFormatted("ROMETreeInfo*%*s info;\n",
                              typeLen - static_cast<int>(strlen("ROMETreeInfo")), "");
@@ -14499,7 +14506,28 @@ Bool_t ROMEBuilder::WriteDistillTreesC()
       buffer.AppendFormatted("      }\n");
       buffer.AppendFormatted("   }\n");
       buffer.AppendFormatted("\n");
+
+      // Write tree to file
       buffer.AppendFormatted("   outTree->Write(0, TObject::kOverwrite);\n");
+
+      // Write runheaders to file
+      for (iRunHeader = 0; iRunHeader < numOfRunHeader[iTree]; iRunHeader++) {
+         if (folderUsed[runHeaderFolderIndex[iTree][iRunHeader]]) {
+            if (folderArray[runHeaderFolderIndex[iTree][iRunHeader]] == "1") {
+               buffer.AppendFormatted("   if (kWrite_%s) %s->Write(\"%s\", TObject::kOverwrite);\n",
+                                      runHeaderNameTmp[iTree][iRunHeader]->Data(),
+                                      runHeaderNameTmp[iTree][iRunHeader]->Data(),
+                                      runHeaderName[iTree][iRunHeader].Data());
+            } else {
+               buffer.AppendFormatted("   if (kWrite_%s) %s->Write(\"%s\", TObject::kOverwrite | TObject::kSingleKey);\n",
+                                      runHeaderNameTmp[iTree][iRunHeader]->Data(),
+                                      runHeaderNameTmp[iTree][iRunHeader]->Data(),
+                                      runHeaderName[iTree][iRunHeader].Data());
+            }
+         }
+      }
+      buffer.AppendFormatted("\n");
+
       buffer.AppendFormatted("   outFile->Close();\n");
       buffer.AppendFormatted("\n");
       buffer.AppendFormatted("   SafeDelete(inFile);\n");
