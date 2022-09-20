@@ -130,9 +130,10 @@ int TNetFolderServer::CheckCommand(TSocket *socket,char *str) {
       TObjArray *names = new TObjArray(100);
 
       TCollection *folders = folder->GetListOfFolders();
-      TIterator *iterFolders = folders->MakeIterator();
+      //TIterator *iterFolders = folders->MakeIterator();
+      TIter iterFolders(folders);
       TString name;
-      while ((obj = iterFolders->Next())) {
+      while ((obj = iterFolders.Next())) {
          name = obj->GetName();
          names->Add(new TObjString(name.Data()));
       }
