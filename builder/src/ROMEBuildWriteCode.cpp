@@ -12923,7 +12923,9 @@ Bool_t ROMEBuilder::WriteMain()
 #endif
    buffer.AppendFormatted("      TFolder *fMainFolder = gROOT->GetRootFolder()->AddFolder(\"ROME\",\"ROME Folder\");\n");
    buffer.AppendFormatted("      fMainFolder->Add(gAnalyzer);\n");
-   buffer.AppendFormatted("      gAnalyzer->SetCintInitialisation(\"%sAnalyzer* gAnalyzer = ((%sAnalyzer*)((TFolder*)gROOT->FindObjectAny(\\\"ROME\\\"))->GetListOfFolders()->MakeIterator()->Next());\");\n",
+   // buffer.AppendFormatted("      gAnalyzer->SetCintInitialisation(\"%sAnalyzer* gAnalyzer = ((%sAnalyzer*)((TFolder*)gROOT->FindObjectAny(\\\"ROME\\\"))->GetListOfFolders()->MakeIterator()->Next());\");\n",
+   //                        shortCut.Data(),shortCut.Data());
+   buffer.AppendFormatted("      gAnalyzer->SetCintInitialisation(\"TIter it(((TFolder*)gROOT->FindObjectAny(\\\"ROME\\\"))->GetListOfFolders());%sAnalyzer* gAnalyzer = ((%sAnalyzer*)it.Next());\");\n",
                           shortCut.Data(),shortCut.Data());
    buffer.AppendFormatted("      app->ProcessLine(gAnalyzer->GetCintInitialisation());\n");
    buffer.AppendFormatted("\n");
