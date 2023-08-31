@@ -424,7 +424,7 @@ void XMLToFormWindow::BuildSubFrames(XMLToFormFrame *frame)
       if (currentSubFrame->IsFrameVisible()) {
          // create subframe
          currentSubFrame->fIndex = i+1;
-         currentSubFrame->fLFrame = new TGLayoutHints(kLHintsExpandX | kFixedHeight, frame->framePad, frame->framePad, frame->framePad, frame->framePad);
+         currentSubFrame->fLFrame = new TGLayoutHints(kLHintsExpandX, frame->framePad, frame->framePad, frame->framePad, frame->framePad);
          currentSubFrame->fLInnerFrame = new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad);
          currentSubFrame->fLInnerCheckButtonFrame = new TGLayoutHints(kLHintsExpandX, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad);
          currentSubFrame->fLInnerRadioButtonFrame = new TGLayoutHints(kLHintsExpandX, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad, frame->innerFramePad);
