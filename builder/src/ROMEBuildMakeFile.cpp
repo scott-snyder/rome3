@@ -118,7 +118,7 @@ void ROMEBuilder::AddRomeHeaders()
    romeHeaders->Add("$(ROMESYS)/include/ROMEXML.h");
    romeHeaders->Add("$(ROMESYS)/include/ROMEXMLDataBase.h");
    romeHeaders->Add("$(ROMESYS)/include/mxml.h");
-   romeHeaders->Add("$(ROMESYS)/include/strlcpy.h");
+   //romeHeaders->Add("$(ROMESYS)/include/strlcpy.h");
 #if (ROOT_VERSION_CODE < ROOT_VERSION(5,14,0))
    romeHeaders->Add("$(ROMESYS)/include/array64/TArrayL64.h");
 #endif
@@ -326,7 +326,7 @@ void ROMEBuilder::AddRomeSources()
       romeSources->Add("$(ROMESYS)/src/ROMETGraph.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMETGraphErrors.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMETCutG.cpp");
-      romeSources->Add("$(ROMESYS)/src/strlcpy.c");
+      //romeSources->Add("$(ROMESYS)/src/strlcpy.c");
       romeSources->Add("$(ROMESYS)/src/TNetFolderServer.cpp");
       romeSources->Add("$(ROMESYS)/src/TNetFolder.cpp");
       romeSources->Add("$(ROMESYS)/src/ROMENetFolderServer.cpp");
