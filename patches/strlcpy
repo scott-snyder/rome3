@@ -1,0 +1,6 @@
+Bottom: e44d73699659636e119cc43a20813efeb64e5b8e
+Top:    e44d73699659636e119cc43a20813efeb64e5b8e
+Author: scott snyder <sss@karma>
+Date:   2023-08-31 11:02:25 -0400
+
+Don't try to build a strlcpy.
