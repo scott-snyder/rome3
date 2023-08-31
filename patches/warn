@@ -1,0 +1,6 @@
+Bottom: f82e7518a5041a9dd14609f44e9560d41f3c52b1
+Top:    f82e7518a5041a9dd14609f44e9560d41f3c52b1
+Author: scott snyder <sss@karma>
+Date:   2023-08-31 11:03:07 -0400
+
+Fix compilation warnings.
