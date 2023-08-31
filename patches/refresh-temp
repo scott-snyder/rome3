@@ -1,6 +1,0 @@
-Bottom: e44d73699659636e119cc43a20813efeb64e5b8e
-Top:    f82e7518a5041a9dd14609f44e9560d41f3c52b1
-Author: scott snyder <sss@karma>
-Date:   2023-08-31 11:02:45 -0400
-
-Refresh of strlcpy
