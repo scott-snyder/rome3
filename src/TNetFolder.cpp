@@ -188,7 +188,7 @@ TObject *TNetFolder::FindObject(const char *name) const
 //     xxx/yyy/name
 //     name
 
-   TNetFolder* const localThis = const_cast<TNetFolder* const>(this);
+   TNetFolder* localThis = const_cast<TNetFolder* const>(this);
    TString str = "FindObject ";
    str.Append(name);
    if (!localThis->Send(str.Data()))
@@ -219,7 +219,7 @@ TObject *TNetFolder::FindObjectAny(const char *name) const
 {
 // return a pointer to the first object with name starting at this folder
 
-   TNetFolder* const localThis = const_cast<TNetFolder* const>(this);
+   TNetFolder* localThis = const_cast<TNetFolder* const>(this);
    TString str = "FindObjectAny ";
    str.Append(name);
    if (!localThis->Send(str.Data()))
